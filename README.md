@@ -9,7 +9,7 @@ Ai thích thì cứ bấm vào chơi thử, mở bằng điện thoại hay máy
 
 Gõ 1 từ tiếng Anh, app gợi ý 10 từ có nghĩa bắt đầu bằng chữ cái cuối của từ trước đó. Chọn 1 từ để nối tiếp, đi đủ 20 từ sẽ ra sơ đồ cả hành trình từ vựng của bạn. Học từ vựng mở rộng kiểu vừa học vừa chơi.
 
-👉 [Chơi ngay](https://minhtuyet22498.github.io/word-chain/word-chain.html)
+👉 [Chơi ngay](https://minhtuyet22498.github.io/joella-gera/word-chain.html)
 
 ---
 
@@ -17,7 +17,7 @@ Gõ 1 từ tiếng Anh, app gợi ý 10 từ có nghĩa bắt đầu bằng ch�
 
 Nhập tên người chơi, chọn số lượng gián điệp, quay ngẫu nhiên để chọn ra ai là gián điệp. Mỗi vòng random 1 từ khóa cho cả nhóm cùng diễn tả — gián điệp thì mù tịt, phải dựa vào cách mọi người mô tả để đoán và giả vờ hòa nhập.
 
-👉 [Chơi ngay](https://minhtuyet22498.github.io/word-chain/ai-la-gian-diep.html)
+👉 [Chơi ngay](https://minhtuyet22498.github.io/joella-gera/ai-la-gian-diep.html)
 
 ---
 
@@ -25,7 +25,7 @@ Nhập tên người chơi, chọn số lượng gián điệp, quay ngẫu nhi�
 
 Biến thể khó hơn của game trên: đa số nhận 1 từ, gián điệp nhận 1 từ khác nhưng có liên quan (ví dụ Cà phê / Trà, Chó / Mèo). Cả 2 bên đều mô tả từ của mình, không nói thẳng ra — mọi người vừa phải tìm gián điệp, gián điệp vừa phải mô tả sao cho không bị lộ dù không biết từ thật là gì.
 
-👉 [Chơi ngay](https://minhtuyet22498.github.io/word-chain/tu-lac-gian-diep.html)
+👉 [Chơi ngay](https://minhtuyet22498.github.io/joella-gera/tu-lac-gian-diep.html)
 
 ---
 
