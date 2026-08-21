@@ -1,4 +1,4 @@
-# 🎮 Word Chain — Mấy Game Tự Chế Bằng AI
+# 🎮 Mấy Game Tự Chế Bằng AI
 
 Mấy cái game trong repo này mình nhờ AI (Claude) gen ra chơi cho vui, không có gì to tát 😄
 Ai thích thì cứ bấm vào chơi thử, mở bằng điện thoại hay máy tính đều được, không cần cài đặt gì hết.
