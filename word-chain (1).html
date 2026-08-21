@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Chain — Nối Từ Tiếng Anh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#EAFBF6;
+    --bg2:#F1F0FF;
+    --surface:#FFFFFF;
+    --ink:#1E2534;
+    --ink-soft:#5B6472;
+    --primary:#FF5C7A;
+    --primary-dark:#E8425F;
+    --accent-yellow:#FFC845;
+    --accent-teal:#17C3B2;
+    --noun:#2E7BF6;
+    --verb:#1FAE5C;
+    --adj:#F2427A;
+    --adv:#8B5CF6;
+    --line:#1E253414;
+    --card-shadow: 0 3px 0 rgba(30,37,52,0.18);
+    --card-shadow-hover: 0 6px 0 rgba(30,37,52,0.20);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 8% 8%, rgba(255,92,122,0.16), transparent 38%),
+      radial-gradient(circle at 92% 12%, rgba(23,195,178,0.20), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(139,92,246,0.14), transparent 40%),
+      linear-gradient(160deg, var(--bg1), var(--bg2));
+    background-attachment:fixed;
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    min-height:100vh;
+    padding:32px 16px 64px;
+  }
+  .wrap{max-width:920px;margin:0 auto;}
+
+  /* HEADER */
+  header{margin-bottom:24px;}
+  .eyebrow{
+    font-family:'Poppins',sans-serif;
+    font-size:12.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--primary-dark); font-weight:700; margin-bottom:8px;
+    display:inline-flex; align-items:center; gap:6px;
+    background:#fff; padding:5px 12px; border-radius:20px;
+    box-shadow:0 2px 0 rgba(30,37,52,0.12);
+  }
+  h1{
+    font-family:'Poppins',sans-serif;
+    font-weight:800;
+    font-size:clamp(30px,5vw,42px);
+    margin:10px 0 8px; line-height:1.08;
+    color:var(--ink);
+  }
+  h1 .hl{color:var(--primary);}
+  .sub{color:var(--ink-soft); font-size:15.5px; max-width:62ch; line-height:1.55;}
+
+  /* START PANEL */
+  .panel{
+    background:var(--surface);
+    border-radius:20px;
+    box-shadow: 0 8px 24px rgba(30,37,52,0.10);
+    padding:24px;
+    margin-bottom:22px;
+  }
+  .start-row{display:flex; gap:10px; flex-wrap:wrap;}
+  input#startWord{
+    flex:1; min-width:200px;
+    font-family:'Poppins',sans-serif;
+    font-size:19px; font-weight:600;
+    padding:14px 16px;
+    border:2px solid #E1E4EA;
+    border-radius:14px;
+    background:#F7F8FB;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .15s ease;
+  }
+  input#startWord:focus{border-color:var(--primary);}
+  button{
+    font-family:'Poppins',sans-serif; font-weight:700; font-size:15px;
+    cursor:pointer; border:none; border-radius:14px;
+    padding:14px 22px; background:var(--primary); color:#fff;
+    box-shadow:var(--card-shadow);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  button:hover{transform:translateY(-2px); box-shadow:var(--card-shadow-hover);}
+  button:active{transform:translateY(0); box-shadow:0 1px 0 rgba(30,37,52,0.18);}
+  button.ghost{background:#fff; color:var(--ink); border:2px solid #E1E4EA; box-shadow:none;}
+  button.ghost:hover{transform:none; border-color:var(--primary);}
+  .hint{font-size:13px; color:var(--ink-soft); margin-top:12px;}
+  .error{color:var(--primary-dark); font-size:13px; margin-top:8px; font-weight:600; display:none;}
+
+  /* GAME AREA */
+  #game{display:none;}
+
+  .progress-row{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; gap:10px; flex-wrap:wrap;}
+  .progress-label{font-family:'Poppins',sans-serif; font-weight:700; font-size:13.5px; color:var(--ink);}
+  .progress-bar{flex:1; min-width:120px; height:10px; background:#fff; border-radius:6px; overflow:hidden; box-shadow:inset 0 0 0 2px #E1E4EA;}
+  .progress-fill{height:100%; background:linear-gradient(90deg, var(--accent-teal), var(--primary)); width:0%; transition:width .3s ease; border-radius:6px;}
+
+  /* CHAIN TRAIL */
+  .trail-wrap{overflow-x:auto; padding-bottom:8px; margin-bottom:18px;}
+  .trail{display:flex; align-items:center; gap:6px; min-width:max-content; padding:4px 2px;}
+  .chip{
+    font-family:'Poppins',sans-serif; font-weight:600; font-size:13.5px;
+    padding:8px 14px; border-radius:20px;
+    background:#fff; white-space:nowrap; color:var(--ink);
+    box-shadow:0 2px 0 rgba(30,37,52,0.10);
+  }
+  .chip.start{background:var(--ink); color:#fff;}
+  .arrow{color:var(--ink-soft); font-size:16px;}
+
+  /* STAMP */
+  .stamp-row{display:flex; align-items:center; justify-content:center; margin:8px 0 22px;}
+  .stamp{
+    width:100px; height:100px; border-radius:50%;
+    background:conic-gradient(from 200deg, var(--primary), var(--accent-yellow), var(--accent-teal), var(--primary));
+    padding:5px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 16px rgba(255,92,122,0.28);
+  }
+  .stamp-inner{
+    width:100%; height:100%; border-radius:50%;
+    background:#fff;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .stamp .cap{font-family:'Poppins',sans-serif; font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); font-weight:700;}
+  .stamp .letter{font-family:'Poppins',sans-serif; font-weight:800; font-size:36px; line-height:1; color:var(--ink);}
+
+  /* FILTER PILLS */
+  .filters{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; justify-content:center;}
+  .pill{
+    font-family:'Poppins',sans-serif; font-size:13px; font-weight:600;
+    padding:8px 16px; border-radius:20px; border:2px solid transparent;
+    background:#fff; color:var(--ink-soft); cursor:pointer;
+    box-shadow:0 2px 0 rgba(30,37,52,0.08);
+  }
+  .pill.active{background:var(--ink); color:#fff;}
+  .pill[data-pos="n"].active{background:var(--noun);}
+  .pill[data-pos="v"].active{background:var(--verb);}
+  .pill[data-pos="adj"].active{background:var(--adj);}
+  .pill[data-pos="adv"].active{background:var(--adv);}
+
+  .notice{
+    text-align:center; font-size:13.5px; color:var(--ink);
+    background:#FFF3D6; border-radius:12px; padding:10px 14px; margin-bottom:16px;
+    font-weight:500;
+  }
+
+  /* SUGGESTIONS GRID */
+  .grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+    gap:14px;
+  }
+  .card{
+    background:#fff; border-radius:16px;
+    padding:16px; cursor:pointer; box-shadow:var(--card-shadow);
+    display:flex; flex-direction:column; gap:8px;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .card:hover{transform:translateY(-3px); box-shadow:var(--card-shadow-hover);}
+  .card .word{
+    font-family:'Poppins',sans-serif; font-weight:700; font-size:20px;
+  }
+  .card .word .lead{color:var(--primary);}
+  .tag{
+    align-self:flex-start;
+    font-family:'Poppins',sans-serif; font-size:10.5px; font-weight:700;
+    text-transform:uppercase; letter-spacing:.05em;
+    padding:3px 10px; border-radius:20px; color:#fff;
+  }
+  .tag.n{background:var(--noun);}
+  .tag.v{background:var(--verb);}
+  .tag.adj{background:var(--adj);}
+  .tag.adv{background:var(--adv);}
+  .meaning{font-size:13.5px; color:var(--ink-soft); line-height:1.45;}
+
+  /* END SCREEN */
+  #end{display:none;}
+  .end-head{text-align:center; margin-bottom:20px;}
+  .end-head h2{font-family:'Poppins',sans-serif; font-weight:800; font-size:30px; margin:0 0 8px; color:var(--ink);}
+  .end-head p{color:var(--ink-soft); font-size:14.5px;}
+
+  #mapCard{background:var(--surface); border-radius:20px; padding:16px; box-shadow:0 8px 24px rgba(30,37,52,0.10);}
+  svg#mindmap{width:100%; height:auto; display:block;}
+  .node-word{font-family:'Poppins',sans-serif; font-weight:700;}
+  .node-idx{font-family:'Poppins',sans-serif; font-weight:700;}
+
+  table.summary{width:100%; border-collapse:collapse; margin-top:24px; font-size:13.5px; background:var(--surface); border-radius:16px; overflow:hidden; box-shadow:0 8px 24px rgba(30,37,52,0.08);}
+  table.summary th{
+    font-family:'Poppins',sans-serif; text-align:left; font-size:11px;
+    text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft);
+    background:#F7F8FB; padding:10px 12px;
+  }
+  table.summary td{padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top;}
+  table.summary td.w{font-family:'Poppins',sans-serif; font-weight:700; white-space:nowrap;}
+  table.summary tr:last-child td{border-bottom:none;}
+
+  .end-actions{display:flex; gap:10px; justify-content:center; margin-top:24px;}
+
+  @media (max-width:520px){
+    .stamp{width:84px;height:84px;}
+    .stamp .letter{font-size:30px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">✦ Trò chơi mở rộng từ vựng</div>
+    <h1>Word <span class="hl">Chain</span></h1>
+    <p class="sub">Gõ một từ tiếng Anh bất kỳ. App sẽ gợi ý 10 từ có nghĩa, mỗi từ bắt đầu bằng chữ cái cuối của từ trước đó. Chọn một từ để nối tiếp chuỗi — đi hết 20 từ để xem toàn bộ hành trình từ vựng của bạn.</p>
+  </header>
+
+  <div class="panel" id="startPanel">
+    <div class="start-row">
+      <input id="startWord" type="text" placeholder="Nhập một từ tiếng Anh, ví dụ: hello" maxlength="30" autocomplete="off">
+      <button id="startBtn">Bắt đầu chuỗi</button>
+    </div>
+    <div class="hint">Từ này do bạn chọn nên không cần có trong từ điển nội bộ — các gợi ý tiếp theo mới được kiểm tra nghĩa (kho dữ liệu hơn 1.100 từ phổ biến).</div>
+    <div class="error" id="startError"></div>
+  </div>
+
+  <div id="game">
+    <div class="progress-row">
+      <span class="progress-label" id="progressLabel">0 / 20 từ</span>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <button class="ghost" id="restartBtn" style="font-size:12.5px; padding:8px 14px;">Chơi lại</button>
+    </div>
+
+    <div class="trail-wrap"><div class="trail" id="trail"></div></div>
+
+    <div class="stamp-row">
+      <div class="stamp">
+        <div class="stamp-inner">
+          <div class="cap">nối chữ</div>
+          <div class="letter" id="stampLetter">A</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="filters" id="filters">
+      <button class="pill active" data-pos="all">Tất cả</button>
+      <button class="pill" data-pos="n">Danh từ</button>
+      <button class="pill" data-pos="v">Động từ</button>
+      <button class="pill" data-pos="adj">Tính từ</button>
+      <button class="pill" data-pos="adv">Trạng từ</button>
+    </div>
+
+    <div class="notice" id="notice" style="display:none;"></div>
+
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div id="end">
+    <div class="end-head">
+      <h2>Hành trình 20 từ của bạn 🎉</h2>
+      <p>Đây là sơ đồ chuỗi từ vựng bạn vừa đi qua — mỗi mũi tên là một điểm nối chữ cái.</p>
+    </div>
+    <div id="mapCard">
+      <svg id="mindmap" viewBox="0 0 900 640" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <table class="summary">
+      <thead><tr><th>#</th><th>Từ</th><th>Từ loại</th><th>Nghĩa</th></tr></thead>
+      <tbody id="summaryBody"></tbody>
+    </table>
+    <div class="end-actions">
+      <button id="playAgainBtn">Chơi lại từ đầu</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ---------- DATA (1100+ common English words: word, pos, meaning) ---------- */
+const RAW = [["jacket", "n", "a short coat"], ["jealous", "adj", "feeling envy toward someone"], ["jewel", "n", "a precious stone"], ["jelly", "n", "a soft, semi-solid food made from fruit"], ["join", "v", "to become a member of a group"], ["joke", "n", "something said to cause laughter"], ["journey", "n", "an act of travelling from one place to another"], ["joyful", "adj", "feeling great happiness"], ["judge", "v", "to form an opinion about something"], ["juice", "n", "the liquid part of a fruit or vegetable"], ["jump", "v", "to push off the ground into the air"], ["jungle", "n", "a dense tropical forest"], ["junior", "adj", "lower in rank or younger"], ["just", "adj", "fair and reasonable"], ["justice", "n", "fair treatment of people"], ["jazzy", "adj", "bright and lively"], ["jog", "v", "to run at a slow, steady pace"], ["journal", "n", "a diary or regular publication"], ["jolly", "adj", "happy and cheerful"], ["juvenile", "adj", "relating to young people"], ["keen", "adj", "having enthusiasm or a sharp edge"], ["keep", "v", "to continue having or doing something"], ["kettle", "n", "a container for boiling water"], ["key", "n", "a metal device used to open a lock"], ["kick", "v", "to hit with the foot"], ["kind", "adj", "having a caring, gentle nature"], ["kingdom", "n", "a country ruled by a king or queen"], ["kiss", "v", "to touch with the lips as a sign of affection"], ["kitchen", "n", "a room where food is prepared"], ["knee", "n", "the joint between the thigh and the lower leg"], ["knife", "n", "a tool with a blade used for cutting"], ["knight", "n", "a medieval soldier of noble rank"], ["knit", "v", "to make fabric by looping yarn together"], ["knock", "v", "to strike a surface to attract attention"], ["knot", "n", "a fastening made by tying a piece of string"], ["know", "v", "to have information in your mind"], ["knowledge", "n", "facts and information gained through learning"], ["known", "adj", "recognized or familiar to many people"], ["keyboard", "n", "a set of keys used for typing"], ["kindly", "adv", "in a warm and friendly manner"], ["quality", "n", "the standard of how good something is"], ["quantity", "n", "the amount or number of something"], ["quarrel", "n", "an angry argument"], ["quarter", "n", "one of four equal parts"], ["queen", "n", "a female ruler of a country"], ["question", "n", "a sentence asking for information"], ["quick", "adj", "moving fast"], ["quiet", "adj", "making little or no noise"], ["quilt", "n", "a warm bed cover made of padded fabric"], ["quirky", "adj", "unusual in a charming way"], ["quit", "v", "to stop doing something"], ["quite", "adv", "to a certain extent"], ["quiz", "n", "a short test of knowledge"], ["quota", "n", "a fixed share of something"], ["quote", "v", "to repeat words said by someone else"], ["qualify", "v", "to become entitled to something"], ["quench", "v", "to satisfy your thirst"], ["query", "n", "a question, especially one expressing doubt"], ["queue", "n", "a line of people waiting for something"], ["quest", "n", "a long search for something"], ["unable", "adj", "not having the skill or means to do something"], ["unclear", "adj", "not easy to understand"], ["under", "adv", "in or to a lower position than something"], ["understand", "v", "to know the meaning of something"], ["unfair", "adj", "not treating people equally"], ["uniform", "n", "a special set of clothes worn by members of a group"], ["union", "n", "a group of people joined for a common purpose"], ["unique", "adj", "being the only one of its kind"], ["unit", "n", "a single, complete thing that is part of a larger whole"], ["unite", "v", "to join together as one"], ["universe", "n", "all of space and everything in it"], ["unknown", "adj", "not known or familiar"], ["unless", "adv", "except if something happens"], ["unlike", "adj", "different from"], ["unusual", "adj", "not common or ordinary"], ["upon", "adv", "on top of something"], ["upper", "adj", "situated above another part"], ["upset", "v", "to make someone unhappy or worried"], ["urban", "adj", "relating to a city or town"], ["urge", "v", "to strongly encourage someone to do something"], ["urgent", "adj", "needing immediate attention"], ["useful", "adj", "able to be used for a practical purpose"], ["usual", "adj", "habitually happening; normal"], ["utility", "n", "the state of being useful"], ["utter", "v", "to say something aloud"], ["vague", "adj", "not clearly expressed or defined"], ["valid", "adj", "legally or officially acceptable"], ["valley", "n", "a low area between hills"], ["valuable", "adj", "worth a lot of money or of great use"], ["value", "n", "the importance or worth of something"], ["vanish", "v", "to disappear suddenly"], ["variety", "n", "a number of different types of something"], ["various", "adj", "of different kinds"], ["vast", "adj", "extremely large in area or amount"], ["vegetable", "n", "a plant grown for food"], ["vehicle", "n", "a machine used to transport people or goods"], ["venture", "v", "to dare to do something risky"], ["verse", "n", "writing arranged with a rhythm, as in a poem"], ["version", "n", "a particular form of something"], ["victory", "n", "an act of winning"], ["view", "n", "the ability to see something from a certain point"], ["village", "n", "a small group of houses in a rural area"], ["violent", "adj", "using physical force to cause harm"], ["virtue", "n", "a good moral quality"], ["visible", "adj", "able to be seen"], ["vision", "n", "the ability to see, or a mental image of the future"], ["visit", "v", "to go to see a person or place"], ["vital", "adj", "absolutely necessary or important"], ["vivid", "adj", "producing powerful, clear images in the mind"], ["voice", "n", "the sound produced when a person speaks or sings"], ["volume", "n", "the amount of space something occupies, or loudness"], ["wander", "v", "to walk around without a fixed destination"], ["warmth", "n", "a moderate heat, or friendliness"], ["wealthy", "adj", "having a great deal of money"], ["weave", "v", "to form fabric by interlacing threads"], ["whimsical", "adj", "playfully unusual or fanciful"], ["witness", "v", "to see an event happen"], ["worthy", "adj", "deserving effort, attention, or respect"], ["wrestle", "v", "to fight by grappling and trying to throw down"], ["wisdom", "n", "the quality of having good judgment"], ["wonder", "n", "a feeling of amazement"], ["xylophone", "n", "a musical instrument with wooden bars struck by mallets"], ["xerox", "v", "to make a photocopy of something"], ["xenial", "adj", "relating to hospitality between hosts and guests"], ["yacht", "n", "a medium-sized sailing boat used for pleasure trips"], ["yard", "n", "an area of ground next to a house"], ["yawn", "v", "to open your mouth wide and breathe in when tired"], ["year", "n", "a period of time containing 365 days"], ["yearly", "adv", "happening once every year"], ["yearn", "v", "to have an intense feeling of longing"], ["yell", "v", "to shout loudly"], ["yellow", "adj", "having the color of a lemon or the sun"], ["yesterday", "n", "the day before today"], ["yet", "adv", "up until the present time"], ["yield", "v", "to produce a result, or to give way"], ["young", "adj", "having lived for only a short time"], ["youth", "n", "the period of life when someone is young"], ["youthful", "adj", "having the qualities of youth"], ["yummy", "adj", "very tasty"], ["zebra", "n", "an African animal with black and white stripes"], ["zealous", "adj", "showing great energy in support of a cause"], ["zero", "n", "the number 0"], ["zigzag", "v", "to move in a series of sharp turns"], ["zone", "n", "an area with particular features or use"], ["zoom", "v", "to move very quickly"], ["zest", "n", "great enthusiasm and energy"], ["zip", "v", "to fasten with a zip, or move quickly"], ["time", "n", "an instance or single occasion for some event"], ["new", "adj", "not of long duration"], ["people", "n", "(plural) any group of human beings (men or women or children) collectively"], ["now", "adv", "in the historical present"], ["good", "n", "benefit"], ["after", "adv", "happening at a time subsequent to a reference time"], ["first", "n", "the first or highest in an ordering or series"], ["two", "n", "the cardinal number that is the sum of one and one or a"], ["over", "adv", "at or to a point across intervening space etc."], ["back", "n", "the posterior part of a human (or animal) body from the neck to"], ["way", "n", "how something is done or how it happens"], ["right", "n", "an abstract idea of that which is due to a person or governmental"], ["work", "n", "activity directed toward making or doing something"], ["day", "n", "time for Earth to make a complete rotation on its axis"], ["before", "adv", "earlier in time"], ["life", "n", "a characteristic state or mode of living"], ["world", "n", "everything that exists anywhere"], ["down", "n", "soft fine feathers"], ["great", "adj", "relatively large in size or number or extent"], ["through", "adv", "from beginning to end"], ["last", "n", "the temporal end"], ["while", "n", "a period of indeterminate length (usually short) marked by some action or condition"], ["best", "n", "the supreme effort one can make"], ["love", "n", "a strong positive emotion of regard and affection"], ["home", "n", "where you live at a particular time"], ["long", "adj", "primarily temporal sense"], ["look", "n", "the feelings expressed on a person's face"], ["part", "n", "something determined in relation to something that includes it"], ["state", "n", "the territory occupied by one of the constituent administrative districts of a nation"], ["three", "n", "the cardinal number that is the sum of one and one and one"], ["around", "adv", "in the area or vicinity"], ["between", "adv", "in the interval"], ["better", "n", "something superior in quality or condition or effect"], ["find", "v", "come upon, as if by accident"], ["help", "n", "the activity of contributing to the fulfillment of a need or furtherance of"], ["high", "n", "a lofty level or position or degree"], ["little", "adj", "limited or below average in number or quantity or magnitude or extent"], ["old", "adj", "(used especially of persons) having lived for a relatively long time or attained"], ["things", "n", "any movable possession (especially articles of clothing)"], ["game", "n", "a contest with rules to determine a winner"], ["thing", "n", "a special situation"], ["give", "v", "cause to have, in the abstract sense or physical sense"], ["house", "n", "a dwelling that serves as living quarters for one or more families"], ["place", "n", "a point located with respect to surface features of some region"], ["school", "n", "an educational institution"], ["again", "adv", "anew"], ["next", "adj", "immediately following in time or order"], ["end", "n", "either extremity of something that has length"], ["found", "v", "set up or found"], ["show", "n", "the act of publicly exhibiting or entertaining"], ["big", "adj", "above average in size or number or quantity or magnitude or extent"], ["feel", "n", "an intuitive awareness"], ["sure", "adj", "having or feeling no doubt or uncertainty"], ["team", "n", "a cooperative unit (especially in sports)"], ["family", "n", "a social unit living together"], ["please", "v", "give pleasure to or be pleasing to"], ["put", "v", "put into a certain place or abstract location"], ["money", "n", "the most common medium of exchange"], ["free", "v", "grant freedom to"], ["second", "n", "1/60 of a minute"], ["someone", "n", "a human being"], ["away", "adj", "not present"], ["left", "n", "location near or direction toward the left side"], ["number", "n", "the property possessed by a sum or total or indefinite quantity of units"], ["city", "n", "a large and densely populated urban area"], ["lot", "n", "(often followed by `of') a large number or amount or extent"], ["name", "n", "a language unit by which a person or thing is known"], ["night", "n", "the time after sunset and before sunrise while it is dark outside"], ["play", "n", "a dramatic work intended for performance by actors on a stage"], ["company", "n", "an institution created to conduct business"], ["let", "v", "make it possible through a specific action or lack of action for something"], ["real", "n", "any rational or irrational number"], ["different", "adj", "unlike in nature or quality or form or degree"], ["set", "n", "a group of things of the same kind that belong together and are"], ["done", "adj", "having finished or arrived at completion"], ["however", "adv", "despite anything to the contrary (usually following a concession)"], ["god", "n", "any supernatural being worshipped as controlling some part of the world or some"], ["government", "n", "the organization that is the governing authority of a political unit"], ["group", "n", "any number of entities (members) considered as a unit"], ["public", "n", "people in general considered as a whole"], ["top", "n", "the upper part of anything"], ["business", "n", "a commercial or industrial enterprise and the people who constitute it"], ["care", "n", "the work of providing treatment for or attending to someone or something"], ["start", "n", "the beginning of anything"], ["system", "n", "instrumentality that combines interrelated interacting artifacts designed to work as a coherent entity"], ["times", "n", "a more or less definite period of time now or previously present"], ["week", "n", "any period of seven consecutive days"], ["case", "n", "an occurrence of something"], ["nothing", "n", "a quantity of no importance"], ["person", "n", "a human being"], ["today", "n", "the present time or age"], ["change", "n", "an event that occurs when something passes from one state or phase to"], ["enough", "n", "an adequate quantity"], ["full", "v", "beat for the purpose of cleaning and thickening"], ["live", "v", "inhabit or live in"], ["point", "n", "a geometric element that has position but no extension"], ["read", "v", "interpret something that is written or printed"], ["bad", "adj", "having undesirable or negative qualities"], ["four", "n", "the cardinal number that is the sum of three and one"], ["hard", "adj", "not easy"], ["mean", "v", "mean or intend to express or convey"], ["once", "adv", "on one occasion"], ["support", "n", "the activity of providing for or maintaining by supplying with money or necessities"], ["tell", "v", "express in words"], ["music", "n", "an artistic form of auditory communication incorporating instrumental or vocal tones in a"], ["power", "n", "possession of controlling influence"], ["stop", "n", "the event of something ending"], ["water", "n", "binary compound that occurs at room temperature as a clear colorless odorless tasteless"], ["based", "adj", "having a base"], ["believe", "v", "accept as true"], ["call", "n", "a telephone connection"], ["head", "n", "the upper part of the human body or the front part of the"], ["men", "n", "the force of workers available"], ["national", "adj", "of or relating to or belonging to a nation or country"], ["small", "adj", "limited or below average in number or quantity or magnitude or extent"], ["white", "n", "the quality or state of the achromatic color of greatest lightness (bearing the"], ["far", "adj", "located at a great distance in time or space or degree"], ["side", "n", "a place within a region identified relative to a center or reference location"], ["though", "adv", "(postpositive) however"], ["try", "v", "make an effort or attempt"], ["later", "adj", "coming at a subsequent time or stage"], ["less", "adj", "(comparative of `little' usually used with mass nouns) a quantifier meaning not as"], ["line", "n", "a formation of people or things one beside another"], ["order", "n", "(often plural) a command given by a superior (e.g., a military or law"], ["party", "n", "an organization to gain political power"], ["run", "n", "a score in baseball made by a runner touching all four bases safely"], ["service", "n", "work done by one person or group that benefits another"], ["country", "n", "a politically organized body of people under a single government"], ["open", "n", "a clear or unobstructed space or expanse of land or water"], ["season", "n", "a period of the year marked by special events or activities in some"], ["thank", "v", "express gratitude or show appreciation to"], ["general", "n", "a general officer of the highest rank"], ["area", "n", "a particular geographical region of indefinite boundary (usually serving some special purpose or"], ["black", "n", "the quality or state of the achromatic color of least lightness (bearing the"], ["following", "adj", "about to be mentioned or specified"], ["law", "n", "the collection of rules imposed by authority"], ["together", "adv", "in contact with each other or in proximity"], ["war", "n", "the waging of armed conflict against an enemy"], ["whole", "adj", "including all components without exception"], ["car", "n", "a motor vehicle with four wheels"], ["face", "n", "the front of the human head from the forehead to the chin and"], ["five", "n", "the cardinal number that is the sum of four and one"], ["president", "n", "an executive officer of a firm or corporation"], ["story", "n", "a message that tells the particulars of an act or occurrence or course"], ["course", "n", "education imparted in a series of lessons or meetings"], ["health", "n", "a healthy state of wellbeing free from disease"], ["hope", "n", "a specific instance of feeling hopeful"], ["important", "adj", "of great significance or value"], ["least", "n", "something that is of no importance"], ["within", "adv", "on the inside"], ["able", "adj", "(usually followed by `to') having the necessary means or skill or know-how or"], ["book", "n", "a written work or composition that has been published (printed on pages bound"], ["early", "adj", "at or near the beginning of a period of time or course of"], ["information", "n", "a message received and understood"], ["local", "adj", "relating to or applicable to or concerned with the administration of a city"], ["post", "n", "the position where someone (as a guard or sentry) stands or is assigned"], ["ago", "adj", "gone by"], ["social", "adj", "relating to human society and its members"], ["talk", "n", "an exchange of ideas via conversation"], ["court", "n", "an assembly (including one or more judges) to conduct judicial business"], ["fact", "n", "a piece of information about circumstances that exist or events that have occurred"], ["given", "adj", "acknowledged as a supposition"], ["half", "adj", "consisting of one of two equivalent parts in value or quantity"], ["hand", "n", "the (prehensile) extremity of the superior limb"], ["level", "n", "a position on a scale of intensity or amount or quality"], ["mind", "n", "that which is responsible for one's thoughts and feelings"], ["single", "adj", "being or characteristic of a single thing or person"], ["become", "v", "enter or assume a certain state or condition"], ["body", "n", "the entire structure of an organism (an animal, plant, or human being)"], ["control", "n", "power to direct or determine"], ["death", "n", "the event of dying or departure from life"], ["food", "n", "any substance that can be metabolized by an animal to give energy and"], ["guy", "n", "an informal term for a youth or man"], ["hours", "n", "a period of time assigned for work"], ["office", "n", "place of business where professional or clerical duties are performed"], ["pay", "v", "give money, usually in exchange for goods or services"], ["problem", "n", "a state of difficulty that needs to be resolved"], ["south", "n", "the cardinal compass point that is at 180 degrees"], ["true", "adj", "consistent with fact or reality"], ["almost", "adv", "(of actions or states) slightly short of or not quite accomplished"], ["history", "n", "the aggregate of past events"], ["large", "adj", "above average in size or number or quantity or magnitude or extent"], ["lost", "adj", "no longer in your possession or control"], ["research", "n", "systematic investigation to establish facts"], ["room", "n", "an area within a building enclosed by walls and floor and ceiling"], ["several", "adj", "(used with count nouns) of an indefinite number more than 2 or 3"], ["win", "v", "be the winner in a contest or competition"], ["wrong", "adj", "not correct"], ["along", "adv", "with a forward motion"], ["girl", "n", "a young woman"], ["matter", "n", "a vaguely specified concern"], ["pretty", "adj", "pleasing by delicacy or grace"], ["remember", "v", "recall knowledge from memory"], ["air", "n", "a mixture of gases (especially oxygen) required for breathing"], ["bit", "n", "a small piece or quantity of something"], ["friend", "n", "a person you know well and regard with affection and trust"], ["hit", "n", "(baseball) a successful stroke in an athletic contest (especially in baseball)"], ["nice", "adj", "pleasant or pleasing or agreeable in nature or appearance"], ["class", "n", "a collection of things sharing a common attribute"], ["close", "n", "the temporal end"], ["idea", "n", "the content of cognition"], ["past", "n", "the time that has elapsed"], ["possible", "n", "something that can be done"], ["cause", "n", "events that provide the generative force that is the origin of something"], ["due", "adj", "owed and payable immediately or on demand"], ["happy", "adj", "enjoying or showing or marked by joy or pleasure"], ["human", "adj", "characteristic of humanity"], ["move", "n", "the act of deciding to do something"], ["series", "n", "similar things placed in order or happening one after another"], ["wait", "v", "stay in one place and anticipate or expect something"], ["woman", "n", "an adult female person (as opposed to a man)"], ["ask", "v", "inquire about"], ["community", "n", "a group of people living in a particular local area"], ["data", "n", "a collection of facts from which conclusions may be drawn"], ["late", "adj", "being or occurring at an advanced period of time or after a usual"], ["leave", "n", "the period of time during which you are absent from work or duty"], ["north", "n", "the cardinal compass point that is at 0 or 360 degrees"], ["saw", "n", "a condensed but memorable saying embodying some important fact of experience that is"], ["special", "n", "a special offering (usually temporary and at a reduced price) that is featured"], ["watch", "n", "a small portable timepiece"], ["future", "n", "the time yet to come"], ["light", "n", "(physics) electromagnetic radiation that can produce a visual sensation"], ["low", "n", "an air mass of lower pressure"], ["million", "n", "the number that is represented as a one followed by 6 zeros"], ["morning", "n", "the time period between dawn and noon"], ["police", "n", "the force of policemen and officers"], ["short", "n", "the location on a baseball field where the shortstop is stationed"], ["stay", "n", "continuing or remaining in a place or state"], ["taken", "adj", "understood in a certain way"], ["age", "n", "how long something has existed"], ["buy", "v", "obtain by purchase"], ["deal", "n", "a particular instance of buying or selling"], ["rather", "adv", "on the contrary"], ["reason", "n", "a rational motive for a belief or action"], ["red", "n", "red color or pigment"], ["report", "n", "a written document describing the findings of some individual or group"], ["soon", "adv", "in the near future"], ["third", "n", "one of three equal parts of a divisible whole"], ["turn", "n", "a circular segment of a curve"], ["check", "n", "a written order directing a bank to pay money"], ["development", "n", "act of improving by expanding or enlarging or refining"], ["form", "n", "the phonological or orthographic sound or appearance of a word that can be"], ["further", "adv", "to or at a greater extent or degree or a more advanced stage"], ["heart", "n", "the locus of feelings and intuitions"], ["minutes", "n", "a written account of what transpired at a meeting"], ["services", "n", "performance of duties or provision of space and equipment helpful to others"], ["act", "n", "a legal document codifying the result of deliberations of a committee or society"], ["child", "n", "a young person of either sex"], ["fire", "n", "the event of something burning (often destructive)"], ["fun", "n", "activities that are enjoyable or amusing"], ["living", "n", "the experience of being alive"], ["major", "n", "a commissioned military officer in the United States Army or Air Force or"], ["phone", "n", "electronic equipment that converts sound into electrical signals that can be transmitted over"], ["art", "n", "the products of human creativity"], ["behind", "adv", "in or to or toward the rear"], ["building", "n", "a structure that has a roof and walls and stands more or less"], ["easy", "adj", "posing no difficulty"], ["market", "n", "the world of commercial activity where goods and services are bought and sold"], ["near", "adj", "not far distant in time or space or degree or circumstances"], ["non", "adv", "negation of a word or group of words"], ["plan", "n", "a series of steps to be carried out or goals to be accomplished"], ["political", "adj", "involving or characteristic of politics or parties or politicians"], ["six", "n", "the cardinal number that is the sum of five and one"], ["west", "n", "the cardinal compass point that is a 270 degrees"], ["according", "adj", "(followed by `to') in agreement with or accordant with"], ["available", "adj", "obtainable or accessible and ready for use or service"], ["education", "n", "the activities of educating or instructing"], ["final", "adj", "occurring at or forming an end or termination"], ["former", "adj", "referring to the first of two things or persons mentioned (or the earlier"], ["front", "n", "the side that is forward or prominent"], ["list", "v", "give or make a list of"], ["ready", "adj", "completely prepared or in condition for immediate action or use or progress"], ["son", "n", "a male human offspring"], ["street", "n", "a thoroughfare (usually including sidewalks) that is lined with buildings"], ["bring", "v", "take something or somebody with oneself somewhere"], ["college", "n", "the body of faculty and students of a college"], ["current", "n", "a flow of electricity through a conductor"], ["example", "n", "an item of information that is typical of a class or group"], ["experience", "n", "the accumulation of knowledge or skill that results from direct participation in events"], ["heard", "adj", "detected or perceived by the sense of hearing"], ["meet", "v", "come together"], ["program", "n", "a series of steps to be carried out or goals to be accomplished"], ["type", "n", "a subdivision of a particular kind of thing"], ["baby", "n", "a very young child (birth to 1 year) who has not yet begun"], ["chance", "n", "a possibility due to a favorable combination of circumstances"], ["father", "n", "a male parent (also used as a term of address to your father)"], ["march", "n", "the act of marching"], ["process", "n", "a particular course of action intended to achieve a result"], ["song", "n", "a short musical composition with words"], ["study", "n", "a detailed critical inspection"], ["word", "n", "a unit of language that native speakers can identify"], ["across", "adv", "to the opposite side"], ["action", "n", "something done (usually as opposed to something said)"], ["clear", "v", "rid of obstructions"], ["month", "n", "one of the twelve divisions of the calendar year"], ["outside", "adj", "relating to or being on or near the outer side or limit"], ["self", "n", "your consciousness of your own identity"], ["board", "n", "a committee having supervisory powers"], ["cost", "n", "the total spent for goods or services including money and time and labor"], ["cut", "n", "a share of the profits"], ["field", "n", "a piece of land cleared of trees and usually enclosed"], ["held", "adj", "occupied or in the control of"], ["instead", "adv", "in place of, or as an alternative to"], ["main", "adj", "most important element"], ["moment", "n", "a particular point in time"], ["mother", "n", "a woman who has given birth to a child (also used as a"], ["road", "n", "an open way (generally public) for travel or transportation"], ["town", "n", "an urban area with a fixed boundary that is smaller than a city"], ["department", "n", "a specialized division of a large organization"], ["energy", "n", "(physics) a thermodynamic quantity equivalent to the capacity of a physical system to"], ["fight", "n", "a hostile meeting of opposing military forces in the course of a war"], ["fine", "adj", "being satisfactory or in satisfactory condition"], ["force", "n", "a powerful effect or influence"], ["hear", "v", "perceive (sound) via the auditory sense"], ["issue", "n", "an important question that is in dispute and must be settled"], ["price", "n", "the property of having material worth (often indicated by the amount of money"], ["rest", "n", "something left after other parts have been taken away"], ["running", "n", "(American football) a play in which a player attempts to carry the ball"], ["space", "n", "the unlimited expanse in which everything is located"], ["summer", "n", "the warmest season of the year"], ["term", "n", "a word or expression used for some particular thing"], ["wife", "n", "a married woman"], ["beautiful", "adj", "delighting the senses or exciting intellectual or emotional admiration"], ["date", "n", "the specified day of the month"], ["land", "n", "the land on which real estate is located"], ["miss", "v", "fail to perceive or to catch with the senses or the mind"], ["project", "v", "communicate vividly"], ["sex", "n", "activities associated with sexual intercourse"], ["shot", "n", "the act of firing a projectile"], ["site", "n", "the piece of land on which something is located (or is to be"], ["strong", "adj", "having strength or power greater than average or expected"], ["account", "n", "a record or narrative description of past events"], ["especially", "adv", "to a distinctly greater extent or degree than is common"], ["eyes", "n", "opinion or judgment"], ["include", "v", "have as a part, be made up out of"], ["period", "n", "an amount of time"], ["position", "n", "the particular portion of space occupied by something"], ["record", "n", "anything (such as a document or a phonograph record or a photograph) providing"], ["similar", "adj", "marked by correspondence or resemblance"], ["total", "v", "add up in number or quantity"], ["above", "adv", "at an earlier place"], ["club", "n", "a team of professional baseball players who play and travel together"], ["common", "adj", "belonging to or participated in by a community as a whole"], ["film", "n", "a form of entertainment that enacts a story by sound and a sequence"], ["lead", "n", "an advantage held by a competitor in a race"], ["likely", "adj", "has a good chance of being the case or of coming about"], ["military", "adj", "of or relating to the study of the principles of warfare"], ["perfect", "adj", "being complete of its kind and without defect or blemish"], ["personal", "adj", "concerning or affecting a particular person or his or her private life and"], ["security", "n", "the state of being free from danger or injury"], ["share", "n", "assets belonging to or due to or contributed by an individual person or"], ["won", "n", "the basic unit of money in South Korea"], ["center", "n", "an area that is approximately central within some larger region"], ["county", "n", "(United Kingdom) a region created by territorial division for the purpose of local"], ["couple", "n", "a pair who associate with one another"], ["dead", "adj", "no longer having or seeming to have or expecting to have life"], ["happen", "v", "come to pass"], ["hold", "n", "the act of grasping"], ["industry", "n", "the people or companies engaged in a particular kind of commercial enterprise"], ["inside", "adj", "relating to or being on the side closer to the center or within"], ["online", "adj", "on a regular route of a railroad or bus or airline system"], ["player", "n", "a person who participates in or is skilled at some game"], ["private", "adj", "confined to particular persons or groups or providing privacy"], ["return", "n", "document giving the tax collector information about the taxpayer's tax liability"], ["sense", "n", "a general conscious awareness"], ["star", "n", "(astronomy) a celestial body of hot gases that radiates energy derived from thermonuclear"], ["test", "n", "trying something to find out about it"], ["break", "n", "some abrupt occurrence that interrupts an ongoing activity"], ["event", "n", "something that happens at a given place and time"], ["higher", "adj", "advanced in complexity or elaboration"], ["hour", "n", "a period of time equal to 1/24th of a day"], ["member", "n", "one of the persons who compose a social group (especially individuals who have"], ["middle", "n", "an area that is approximately central within some larger region"], ["present", "n", "the period of time that is happening now"], ["result", "n", "a phenomenon that follows and is caused by some previous phenomenon"], ["sorry", "adj", "feeling or expressing regret or sorrow or a sense of loss over something"], ["training", "n", "activity leading to skilled behavior"], ["wish", "n", "a specific feeling of desire"], ["answer", "n", "a statement (either spoken or written) that is made to reply to a"], ["boy", "n", "a youthful male person"], ["design", "n", "the act of working out the form of something (as by making a"], ["finally", "adv", "after an unspecified period of time or an especially long delay"], ["gold", "n", "coins made of gold"], ["guess", "v", "expect, believe, or suppose"], ["interest", "n", "a sense of concern with and curiosity about someone or something"], ["learn", "v", "gain knowledge or skills"], ["policy", "n", "a plan of action adopted by an individual or social group"], ["society", "n", "an extended social group having a distinctive cultural and economic organization"], ["alone", "adj", "isolated from others"], ["average", "n", "a statistic describing the location of a distribution"], ["bank", "n", "sloping land (especially the slope beside a body of water)"], ["certain", "adj", "definite but not specified or identified"], ["church", "n", "one of the groups of Christians who have their own beliefs and forms"], ["east", "n", "the cardinal compass point that is at 90 degrees"], ["hot", "adj", "used of physical heat"], ["longer", "n", "a person with a strong desire for something"], ["medical", "adj", "relating to the study or practice of medicine"], ["movie", "n", "a form of entertainment that enacts a story by sound and a sequence"], ["original", "adj", "preceding all others in time or being as first made or performed"], ["park", "n", "a large area of land preserved in its natural state as public property"], ["performance", "n", "a dramatic or musical entertainment"], ["press", "n", "the state of demanding notice or attention"], ["received", "adj", "conforming to the established language usage of educated native speakers"], ["role", "n", "the actions and activities assigned to or required or expected of a person"], ["sent", "n", "100 senti equal 1 kroon in Estonia"], ["tried", "adj", "tested and proved useful or correct"], ["worth", "n", "an indefinite quantity of something having a specified value"], ["bill", "n", "a statute in draft before it becomes law"], ["cool", "v", "make cool or cooler"], ["director", "n", "someone who controls resources and expenditures"], ["exactly", "adv", "indicating exactness or preciseness"], ["giving", "n", "the act of giving"], ["ground", "n", "the solid part of the earth's surface"], ["provide", "v", "give something useful or necessary to"], ["relationship", "n", "a relation between people"], ["sound", "n", "the particular auditory effect produced by a given cause"], ["source", "n", "the place where something begins, where it springs into being"], ["evidence", "n", "your basis for belief or disbelief"], ["follow", "v", "to travel behind, go after, come after"], ["official", "adj", "having official authority or sanction"], ["production", "n", "the act or process of producing something"], ["rate", "n", "a magnitude or frequency relative to a time unit"], ["round", "n", "a charge of ammunition for a single shot"], ["save", "v", "save from ruin, destruction, or harm"], ["stand", "n", "a support or foundation"], ["stuff", "n", "the tangible substance that goes into the makeup of a physical object"], ["tax", "v", "levy a tax on"], ["whatever", "adj", "one or some or every or all without specification"], ["amount", "n", "a quantity of money"], ["blue", "n", "blue color or pigment"], ["drive", "n", "the act of applying force to propel something"], ["eat", "v", "take in solid food"], ["fall", "n", "the season when the leaves fall from the trees"], ["fast", "adj", "acting or moving or capable of acting or moving quickly"], ["federal", "adj", "national"], ["felt", "v", "mat together and make felt-like"], ["green", "n", "green color or pigment"], ["league", "n", "an association of sports teams that organizes matches for its members"], ["management", "n", "the act of managing something"], ["match", "n", "lighter consisting of a thin piece of wood or cardboard tipped with combustible"], ["model", "n", "a hypothetical description of a complex entity or process"], ["picture", "n", "a visual representation (of an object or scene or person or abstraction) produced"], ["size", "n", "the physical magnitude of something (how big it is)"], ["step", "n", "any maneuver made as part of progress toward a goal"], ["trust", "n", "something (as property) held by one party (the trustee) for the benefit of"], ["central", "adj", "serving as an essential component"], ["forward", "adj", "at or near or directed toward the front"], ["mom", "n", "informal terms for a mother"], ["page", "n", "one side of one leaf (of a book or magazine or newspaper or"], ["paid", "adj", "marked by the reception of pay"], ["range", "n", "an area in which something acts or operates or has power or control:"], ["review", "n", "a new appraisal or evaluation"], ["science", "n", "a particular branch of scientific knowledge"], ["trade", "n", "the commercial exchange (buying and selling on domestic or international markets) of goods"], ["attention", "n", "the process whereby a person concentrates on some features of the environment to"], ["brother", "n", "a male with the same parents as someone else"], ["character", "n", "an imaginary person represented in a work of fiction (play or film or"], ["chief", "n", "a person who is in charge"], ["cup", "n", "a small open container usually used for drinking"], ["football", "n", "any of various games played with a ball (round or oval) in which"], ["hate", "n", "the emotion of intense dislike"], ["lower", "v", "move something or somebody to a lower position"], ["natural", "n", "someone regarded as certain to succeed"], ["property", "n", "something owned"], ["send", "v", "cause to go somewhere"], ["style", "n", "how something is done or how it happens"], ["amazing", "adj", "surprising greatly"], ["august", "adj", "of or befitting a lord"], ["blood", "n", "the fluid (red in vertebrates) that is pumped through the body by the"], ["china", "n", "high quality porcelain originally made only in China"], ["complete", "v", "come or bring to a finish or an end"], ["dog", "n", "a common four-legged animal kept as a pet"], ["economic", "adj", "of or relating to an economy, the system of production and management of"], ["involved", "adj", "connected by participation or association or use"], ["language", "n", "a systematic means of communicating by the use of sounds or conventional symbols"], ["lord", "n", "a person who has general authority over others"], ["oil", "n", "a slippery or viscous liquid or liquefiable substance not miscible with water"], ["related", "adj", "being connected either logically or causally or by shared characteristics"], ["serious", "adj", "concerned with work or important matters rather than play or trivialities"], ["stage", "n", "any distinct time period in a sequence of events"], ["title", "n", "a heading that names a statute or legislative bill"], ["add", "v", "make an addition (to)"], ["article", "n", "nonfictional prose forming an independent part of a publication"], ["attack", "n", "(military) an offensive against an enemy (using weapons)"], ["born", "adj", "brought into existence"], ["decided", "adj", "recognizable"], ["decision", "n", "the act of making up your mind about something"], ["enjoy", "v", "derive or receive pleasure from"], ["entire", "adj", "constituting the full quantity or extent"], ["poor", "adj", "deserving or inciting pity"], ["release", "n", "merchandise issued for sale or public showing (especially a record or film)"], ["situation", "n", "the general state of things"], ["technology", "n", "the practical application of science to commerce or industry"], ["website", "n", "a computer connected to the internet that maintains a series of web pages"], ["written", "adj", "set down in writing in any of various ways"], ["choice", "n", "the person or thing chosen or selected"], ["code", "n", "a set of rules or principles or laws (especially written ones)"], ["considered", "adj", "carefully weighed"], ["continue", "v", "continue a certain state, condition, or activity"], ["council", "n", "a body serving in an administrative capacity"], ["cover", "n", "a covering that serves to conceal or shelter something"], ["currently", "adv", "at this time or period"], ["door", "n", "a swinging or sliding barrier that will close the entrance to a room"], ["election", "n", "a vote to select the winner of a position or political office"], ["financial", "adj", "involving financial matters"], ["foreign", "adj", "of concern to or concerning the affairs of other nations (other than your"], ["hair", "n", "a covering for the body (or parts of it) consisting of a dense"], ["increase", "n", "a quantity that is added"], ["legal", "adj", "established by or founded upon law or official or accepted rules"], ["lose", "v", "fail to keep or to maintain"], ["pick", "n", "the person or thing chosen or selected"], ["race", "n", "any competition"], ["seem", "v", "give a certain impression or have a certain outward aspect"], ["seven", "n", "the cardinal number that is the sum of six and one"], ["sign", "n", "a perceptible indication of something not immediately apparent (as a visible clue that"], ["simple", "adj", "having few parts"], ["simply", "adv", "and nothing more"], ["staff", "n", "personnel who assist their superior in carrying out an assigned task"], ["super", "adj", "of the highest quality"], ["walk", "n", "the act of traveling by foot"], ["bed", "n", "a piece of furniture that provides a place to sleep"], ["built", "adj", "(used of soaps or cleaning agents) having a substance (an abrasive or filler)"], ["career", "n", "the particular occupation for which you are trained"], ["changed", "adj", "made or become different in nature or form"], ["crazy", "adj", "affected with madness or insanity"], ["daily", "adj", "of or belonging to or occurring every day"], ["daughter", "n", "a female human offspring"], ["die", "n", "a small cube with 1 to 6 spots on the six faces"], ["difficult", "adj", "not easy"], ["figure", "n", "a diagram or picture illustrating textual material"], ["hospital", "n", "a health facility where patients receive treatment"], ["loss", "n", "something that is lost"], ["modern", "adj", "belonging to the modern era"], ["paper", "n", "a material made of cellulose pulp derived mainly from wood or rags or"], ["popular", "adj", "regarded with great favor, approval, or affection especially by the general public"], ["published", "adj", "prepared and printed for distribution and sale"], ["safe", "n", "strongbox where valuables can be safely kept"], ["writing", "n", "the act of creating written works"], ["army", "n", "a permanent organization of the military land forces of a nation or state"], ["earth", "n", "the 3rd planet from the sun"], ["forget", "v", "dismiss from the mind"], ["goal", "n", "the state of affairs that a plan is intended to achieve and that"], ["huge", "adj", "unusually great in size or amount or degree or especially extent or scope"], ["internet", "n", "a computer network consisting of a worldwide network of computer networks that use"], ["listen", "v", "hear with intention"], ["practice", "n", "a customary way of operation or behavior"], ["sea", "n", "a division of an ocean or a large body of salt water partially"], ["sir", "n", "term of address for a man"], ["success", "n", "an event that accomplishes its intended purpose"], ["access", "n", "the right to enter"], ["base", "n", "installation from which a military force initiates operations"], ["below", "adv", "in or to a place that is lower"], ["deep", "n", "the central and most intense or profound part"], ["mark", "n", "a number or letter indicating quality (especially of a student's performance)"], ["offer", "n", "the verbal act of offering"], ["pass", "n", "(baseball) an advance to first base by a batter who receives four balls"], ["professional", "n", "a person engaged in one of the learned professions"], ["risk", "n", "a source of danger"], ["sleep", "n", "a natural and periodic state of rest during which consciousness of the world"], ["table", "n", "a set of data arranged in rows and columns"], ["ten", "n", "the cardinal number that is the sum of nine and one"], ["truth", "n", "a fact that has been verified"], ["ball", "n", "round object that is hit or thrown or kicked in games"], ["box", "n", "a (usually rectangular) container"], ["build", "v", "make by combining materials and parts"], ["card", "n", "one of a set of small pieces of stiff paper marked in various"], ["dark", "n", "absence of light or illumination"], ["district", "n", "a region marked off for administrative or other purposes"], ["minister", "n", "a person authorized to conduct religious worship"], ["note", "n", "a brief written record"], ["percent", "n", "a proportion in relation to a whole (which is usually the amount per"], ["piece", "n", "a separate part of a whole"], ["recent", "adj", "new"], ["straight", "n", "a heterosexual person"], ["wall", "n", "an architectural partition with a height and length greater than its thickness"], ["culture", "n", "a particular society at a particular time and place"], ["growth", "n", "(biology) the process of an individual organism growing organically"], ["included", "adj", "enclosed in the same envelope or package"], ["married", "adj", "joined in matrimony"], ["officer", "n", "any person in the armed services who holds a position of authority or"], ["pain", "n", "a symptom of some physical hurt or disorder"], ["respect", "n", "(usually preceded by `in') a detail or point"], ["response", "n", "a result"], ["river", "n", "a large natural stream of water (larger than a creek)"], ["rock", "n", "a lump or mass of hard consolidated mineral matter"], ["speak", "v", "express in speech"], ["specific", "adj", "(sometimes followed by `to') applying to or characterized by or distinguishing something particular"], ["standard", "n", "a basis for comparison"], ["tonight", "n", "the present or immediately coming night"], ["write", "v", "produce a literary work"], ["album", "n", "one or more recordings issued together"], ["century", "n", "a period of 100 years"], ["charge", "n", "an impetuous rush toward someone or something"], ["cold", "n", "a mild viral infection involving the nose and respiratory passages (but not the"], ["create", "v", "make or cause to be or to become"], ["effect", "n", "a phenomenon that follows and is caused by some previous phenomenon"], ["eight", "n", "the cardinal number that is the sum of seven and one"], ["except", "v", "take exception to"], ["eye", "n", "the organ of sight"], ["funny", "adj", "arousing or provoking laughter"], ["limited", "adj", "small in range or scope"], ["moving", "adj", "in motion"], ["network", "n", "an interconnected system of things or people"], ["peace", "n", "the state prevailing during the absence of war"], ["recently", "adv", "in the recent past"], ["required", "adj", "necessary for relief or supply"], ["sales", "n", "income (at invoice values) received for goods and services over some given period"], ["spent", "adj", "depleted of energy, force, or strength"], ["store", "n", "a mercantile establishment for the retail sale of goods or services"], ["student", "n", "a learner who is enrolled in an educational institution"], ["tomorrow", "n", "the day after today"], ["track", "n", "a line or route along which something travels or moves"], ["weight", "n", "the vertical force exerted by a mass as a result of gravity"], ["addition", "n", "a component that is added to something to improve it"], ["ahead", "adv", "at or in the front"], ["allow", "v", "make it possible through a specific action or lack of action for something"], ["anti", "n", "a person who is opposed (to an action or policy or practice etc.)"], ["association", "n", "a formal organization of people or groups of people"], ["beat", "n", "a regular route for a sentry or policeman"], ["brown", "v", "fry in a pan until it changes color"], ["capital", "n", "assets available for use in the production of further assets"], ["committee", "n", "a special group delegated to consider some matter"], ["conference", "n", "a prearranged meeting for consultation or exchange of information or discussion (especially one"], ["difference", "n", "the quality of being unlike or dissimilar"], ["double", "n", "a base hit on which the batter stops safely at second base"], ["expect", "v", "regard something as probable or likely"], ["gas", "n", "the state of matter distinguished from the solid and liquid states by: relatively"], ["island", "n", "a land mass (smaller than a continent) that is surrounded by water"], ["moved", "adj", "being excited or provoked to the expression of an emotion"], ["normal", "adj", "conforming with or constituting a norm or standard or level or type or"], ["population", "n", "the people who inhabit a territory or state"], ["potential", "n", "the inherent capacity for coming into being"], ["pressure", "n", "the force applied to a unit area of surface"], ["radio", "n", "medium for communication"], ["station", "n", "a facility equipped with special equipment and personnel for a particular purpose"], ["text", "n", "the words of something written"], ["treatment", "n", "care provided to improve a situation (especially medical procedures or applications that are"], ["western", "adj", "relating to or characteristic of the western parts of the world or the"], ["beginning", "n", "the event consisting of the start of something"], ["campaign", "n", "a race between candidates for elective office"], ["certainly", "adv", "definitely or positively (`sure' is sometimes used informally for `surely')"], ["completely", "adv", "to a complete degree or to the full or entire extent (`whole' is"], ["content", "n", "everything that is included in a collection and that is held or included"], ["credit", "n", "approval"], ["cross", "n", "a wooden structure consisting of an upright post with a transverse piece"], ["described", "adj", "represented in words especially with sharpness and detail"], ["despite", "n", "lack of respect accompanied by a feeling of intense dislike"], ["female", "adj", "being the sex (of plant or animal) that produces fertilizable gametes (ova) from"], ["focus", "n", "the concentration of attention or energy on something"], ["husband", "n", "a married man"], ["ice", "n", "water frozen in the solid state"], ["individual", "adj", "being or characteristic of a single thing or person"], ["loved", "adj", "held dear"], ["message", "v", "send a message to"], ["nearly", "adv", "(of actions or states) slightly short of or not quite accomplished"], ["particular", "n", "a fact about some part (as opposed to general)"], ["previous", "adj", "just preceding something else in time or order"], ["region", "n", "the extended spatial location of something"], ["section", "n", "a self-contained part of a larger composition (written or musical)"], ["sort", "n", "a category of things distinguished by some common characteristic or quality"], ["speed", "n", "distance travelled per unit time"], ["travel", "n", "the act of going from one place to another"], ["consider", "v", "deem to be"], ["contact", "n", "close interaction"], ["drop", "n", "a shape that is spherical and small"], ["fair", "n", "a traveling show"], ["link", "n", "the means of connection between things linked in series"], ["positive", "adj", "characterized by or displaying affirmation or acceptance or certainty etc."], ["sale", "n", "a particular instance of selling"], ["throughout", "adv", "from first to last"], ["tour", "n", "a journey or route all the way around a particular place or area"], ["welcome", "v", "accept gladly"], ["absolutely", "adv", "completely and without qualification"], ["additional", "adj", "further or added"], ["beyond", "adv", "farther along in space or time or degree"], ["conditions", "n", "the prevailing context that influences the performance or the outcome of a process"], ["earlier", "adv", "earlier in time"], ["extra", "n", "a minor actor in crowd scenes"], ["immediately", "adv", "without delay or hesitation"], ["leaving", "n", "the act of departing"], ["minute", "n", "a unit of time equal to 60 seconds or 1/60th of an hour"], ["nature", "n", "the essential qualities or characteristics by which something is recognized"], ["sell", "v", "exchange or deliver for money or its equivalent"], ["significant", "adj", "important in effect or meaning"], ["winning", "adj", "having won"], ["agree", "v", "be in accord"], ["clean", "v", "make clean by removing dirt, filth, or unwanted substances from"], ["computer", "n", "a machine for performing calculations automatically"], ["construction", "n", "the act of constructing something"], ["episode", "n", "a happening that is distinctive in a series of related events"], ["favorite", "n", "something regarded with special favor or liking"], ["income", "n", "the financial gain (earned or unearned) accruing over a given period of time"], ["manager", "n", "someone who controls resources and expenditures"], ["movement", "n", "a change of position that does not entail a change of location"], ["photo", "n", "a representation of a person or scene in the form of a print"], ["safety", "n", "the state of being certain that adverse effects will not be caused by"], ["scene", "n", "the place where some action occurs"], ["sold", "adj", "disposed of to a purchaser"], ["spend", "v", "pass time in a specific way"], ["statement", "n", "a message that is stated or declared"], ["sun", "n", "the star that is the source of light and heat for the planets"], ["ability", "n", "the quality of being able to perform"], ["announced", "adj", "declared publicly"], ["coach", "n", "(sports) someone in charge of training an athlete or a team"], ["collection", "n", "several things grouped together or considered as a whole"], ["continued", "adj", "without stop or interruption"], ["gun", "n", "a weapon that discharges a missile at high velocity (especially from a metal"], ["heavy", "adj", "of comparatively great physical weight or density"], ["particularly", "adv", "to a distinctly greater extent or degree than is common"], ["search", "n", "the activity of looking thoroughly in order to find something or someone"], ["subject", "n", "the subject matter of a conversation or discussion"], ["train", "n", "public transport provided by a line of railway cars coupled together and drawn"], ["wide", "adj", "having great (or a certain) extent from one side to the other"], ["wow", "n", "a joke that seems extremely funny"], ["author", "n", "writes (books or stories or articles or the like) professionally (for pay)"], ["centre", "n", "an area that is approximately central within some larger region"], ["claim", "n", "an assertion of a right (as to money or property)"], ["dad", "n", "an informal term for a father"], ["developed", "adj", "being changed over time so as to be e.g. stronger or more complete"], ["fear", "n", "an emotion experienced in anticipation of some specific pain or danger (usually accompanied"], ["fit", "n", "a display of bad temper"], ["generally", "adv", "usually"], ["global", "adj", "involving the entire earth"], ["hotel", "n", "a building where travelers can pay for lodging and meals and other services"], ["lady", "n", "a polite name for any woman"], ["leader", "n", "a person who rules or guides or inspires others"], ["letter", "n", "a written message addressed to a person or organization"], ["material", "n", "the tangible substance that goes into the makeup of a physical object"], ["nobody", "n", "a person of no influence"], ["opportunity", "n", "a possibility due to a favorable combination of circumstances"], ["plus", "n", "a useful or valuable quality"], ["product", "n", "commodities offered for sale"], ["regular", "n", "a regular patron"], ["secretary", "n", "a person who is head of an administrative department of government"], ["sister", "n", "a female person who has the same parents as another person"], ["annual", "n", "(botany) a plant that completes its entire life cycle within the space of"], ["anymore", "adv", "at the present or from now on"], ["bar", "n", "a room or establishment where alcoholic drinks are served over a counter"], ["battle", "n", "a hostile meeting of opposing military forces in the course of a war"], ["brain", "n", "that part of the central nervous system that includes all the higher nervous"], ["contract", "n", "a binding agreement between two or more persons that is enforceable by law"], ["degree", "n", "a position on a scale of intensity or amount or quality"], ["finished", "adj", "(of materials or goods) brought to the desired final state"], ["floor", "n", "the inside lower horizontal surface (as of a room, hallway, tent, or other"], ["growing", "n", "(biology) the process of an individual organism growing organically"], ["hurt", "n", "any physical damage to the body caused by violence or accident or fracture"], ["image", "n", "an iconic mental representation"], ["insurance", "n", "promise of reimbursement in the case of loss"], ["majority", "n", "the property resulting from being or relating to the greater in number of"], ["opinion", "n", "a personal belief or judgment that is not founded on proof or certainty"], ["physical", "adj", "involving the body as distinguished from the mind or spirit"], ["pro", "n", "an athlete who plays for pay"], ["reach", "n", "the limits within which something can be effective"], ["rule", "n", "a principle or condition that customarily governs behavior"], ["seriously", "adv", "in a serious manner"], ["stupid", "adj", "lacking or marked by lack of intellectual acuity"], ["successful", "adj", "having succeeded or being marked by a favorable outcome"], ["active", "n", "chemical agent capable of activity"], ["approach", "n", "ideas or actions intended to deal with a problem or situation"], ["cancer", "n", "any malignant growth or tumor caused by abnormal and uncontrolled cell division"], ["civil", "adj", "applying to ordinary citizens as contrasted with the military"], ["dance", "n", "an artistic form of nonverbal communication"], ["defense", "n", "(military) military action or resources protecting a country against potential enemies"], ["direction", "n", "a line leading to a place or point"], ["independent", "adj", "free from external control and constraint"], ["master", "n", "an artist of consummate skill"], ["none", "n", "a canonical hour that is the ninth hour of the day counting from"], ["ship", "v", "transport commercially"], ["stock", "n", "the capital raised by a corporation through the issue of shares entitling holders"], ["trump", "n", "a playing card in the suit that has been declared trumps"], ["weekend", "n", "a time period usually extending from Friday night through Sunday"], ["worst", "n", "the least favorable outcome"], ["awesome", "adj", "inspiring awe or admiration or wonder"], ["band", "n", "an unofficial association of people or groups"], ["beach", "n", "an area of sand sloping down to the water of a sea or"], ["cash", "n", "money in the form of bills or coins"], ["clearly", "adv", "without doubt or question"], ["commercial", "adj", "connected with or engaged in or sponsored by or used in commerce or"], ["effort", "n", "earnest and conscientious activity intended to do or accomplish something"], ["fan", "n", "a device for creating a current of air by movement of a surface"], ["imagine", "v", "form a mental image of something that is not present or that is"], ["impact", "n", "the striking of one body against another"], ["lack", "n", "the state of needing something that is absent or unavailable"], ["latest", "adj", "up to the immediate present"], ["multiple", "n", "the product of a quantity by an integer"], ["older", "adj", "advanced in years"], ["operation", "n", "the state of being in effect or being operative"], ["organization", "n", "a group of people who work together"], ["protect", "v", "shield from danger, injury, destruction, or damage"], ["secret", "n", "something that should remain hidden from others (especially information that is not to"], ["senior", "adj", "older"], ["spring", "n", "the season of growth"], ["wear", "n", "impairment resulting from long use"], ["address", "n", "(computer science) the code that identifies where a piece of information is stored"], ["analysis", "n", "an investigation of the component parts of a whole and their relations in"], ["anyway", "adv", "used to indicate that a statement explains or supports a previous statement"], ["choose", "v", "pick out, select, or choose from a number of alternatives"], ["color", "n", "a visual attribute of things that results from the light they emit or"], ["commission", "n", "a special group delegated to consider some matter"], ["competition", "n", "a business relation in which two parties compete to gain customers"], ["details", "n", "true confidential information"], ["direct", "v", "command with authority"], ["dream", "n", "a series of mental images and emotions occurring during sleep"], ["easily", "adv", "with ease (`easy' is sometimes used informally for `easily')"], ["finish", "n", "a decorative texture or appearance of a surface (or the substance that gives"], ["grand", "adj", "of behavior that is impressive and ambitious in scale or scope"], ["increased", "adj", "made greater in size or amount or degree"], ["luck", "n", "your overall circumstances or condition in life (including everything that happens to you)"], ["marriage", "n", "the state of being a married couple voluntarily joined for life (or until"], ["names", "n", "verbal abuse"], ["necessary", "adj", "absolutely essential"], ["rich", "adj", "possessing material wealth"], ["skin", "n", "a natural protective body covering and site of the sense of touch"], ["supposed", "adj", "required or under orders"], ["sweet", "n", "a dish served as the last course of a meal"], ["thus", "adv", "(used to introduce a logical conclusion) from that fact or reason or as"], ["touch", "n", "the event of something coming in contact with the body"], ["closed", "adj", "not open or affording passage or access"], ["congress", "n", "a meeting of elected or appointed representatives"], ["damage", "n", "the occurrence of a change for the worse"], ["directly", "adv", "without deviation"], ["disease", "n", "an impairment of health or a condition of abnormal functioning"], ["doctor", "n", "a licensed medical practitioner"], ["doubt", "n", "the state of being unsure of something"], ["drink", "n", "a single serving of a beverage"], ["driving", "n", "hitting a golf ball off of a tee with a driver"], ["established", "adj", "brought about or set up or accepted"], ["fish", "n", "an animal that lives in water and breathes through gills"], ["glad", "adj", "showing or causing joy and pleasure"], ["greater", "adj", "greater in size or importance or degree"], ["grow", "v", "pass into a condition gradually, take on a specific property or attribute"], ["machine", "n", "any mechanical or electrical device that transmits or modifies energy to perform or"], ["notice", "n", "an announcement containing information about an event"], ["overall", "n", "(usually plural) work clothing consisting of denim trousers (usually with a bib and"], ["planning", "n", "an act of formulating a program for a definite course of action"], ["professor", "n", "someone who is a member of the faculty at a college or university"], ["sit", "v", "be seated"], ["trip", "n", "a journey for some purpose (usually including the return)"], ["basic", "adj", "pertaining to or constituting a base or basis"], ["captain", "n", "an officer holding a rank below a major but above a lieutenant"], ["carry", "v", "move while supporting, either in a vehicle or in one's hands or on"], ["crime", "n", "(criminal law) an act punishable by law"], ["effective", "adj", "producing or capable of producing an intended result or having a striking effect"], ["explain", "v", "make plain and comprehensible"], ["fully", "adv", "to the greatest degree or extent"], ["highly", "adv", "to a high degree or extent"], ["male", "adj", "being the sex (of plant or animal) that produces gametes (spermatozoa) that perform"], ["plant", "n", "buildings for carrying on industrial labor"], ["reality", "n", "all of your experiences that determine how things appear to you"], ["smith", "n", "someone who works at something specified"], ["spot", "n", "a point located with respect to surface features of some region"], ["winter", "n", "the coldest season of the year"], ["worse", "adj", "(comparative of `bad') inferior to another in quality or condition or desirability"], ["advice", "n", "a proposal for an appropriate course of action"], ["agreement", "n", "the statement (oral or written) of an exchange of promises"], ["award", "n", "a grant made by a law court"], ["block", "n", "a solid piece of something (usually having flat rectangular sides)"], ["broken", "adj", "physically and forcibly separated into pieces or cracked or split"], ["challenge", "n", "a demanding or stimulating situation"], ["christian", "adj", "following the teachings or manifesting the qualities or spirit of Jesus Christ"], ["comment", "n", "a statement that expresses a personal opinion or belief or adds information"], ["equipment", "n", "an instrumentality needed for an undertaking or to perform a service"], ["eventually", "adv", "after an unspecified period of time or an especially long delay"], ["holy", "n", "a sacred place of pilgrimage"], ["nation", "n", "a politically organized body of people under a single government"], ["otherwise", "adv", "in other respects or ways"], ["primary", "n", "a preliminary election where delegates or nominees are chosen"], ["purpose", "n", "an anticipated outcome that is intended or that guides your planned actions"], ["rates", "n", "a local tax on property (usually used in the plural)"], ["responsible", "adj", "worthy of or requiring responsibility or trust"], ["shop", "n", "a mercantile establishment for the retail sale of goods or services"], ["sick", "adj", "affected by an impairment of normal physical or mental function"], ["teacher", "n", "a person whose occupation is teaching"], ["theory", "n", "a well-substantiated explanation of some aspect of the natural world"], ["agency", "n", "an administrative unit of government"], ["avoid", "v", "stay clear from"], ["camera", "n", "equipment for taking photographs (usually consisting of a lightproof box with a lens"], ["catch", "n", "a drawback or difficulty that is not readily evident"], ["cell", "n", "any small compartment"], ["coast", "n", "the shore of a sea or ocean"], ["drug", "v", "administer a drug to"], ["economy", "n", "the system of production and distribution and consumption"], ["environment", "n", "the totality of surrounding conditions"], ["executive", "n", "a person responsible for the administration of a business"], ["foot", "n", "the part of the leg of a human being below the ankle joint"], ["hall", "n", "an interior passage or corridor onto which rooms open"], ["mass", "n", "the property of a body that causes it to have weight in a"], ["mission", "n", "an organization of missionaries in a foreign land sent to carry on religious"], ["nine", "n", "the cardinal number that is the sum of eight and one"], ["politics", "n", "social relations involving intrigue to gain authority or power"], ["pop", "n", "an informal term for a father"], ["status", "n", "the relative position or standing of things or especially persons in a society"], ["therefore", "adv", "(used to introduce a logical conclusion) from that fact or reason or as"], ["trial", "n", "the act of testing something"], ["truly", "adv", "in accordance with truth or fact or reality"], ["weather", "v", "face and withstand with courage"], ["activity", "n", "any specific behavior"], ["application", "n", "the act of bringing something to bear"], ["coffee", "n", "a beverage consisting of an infusion of ground coffee beans"], ["complex", "n", "a conceptual whole made up of complicated and related parts"], ["condition", "n", "a state at a particular time"], ["division", "n", "an army unit large enough to sustain combat"], ["flight", "n", "a formation of aircraft in flight"], ["freedom", "n", "the condition of being free"], ["google", "v", "search the internet (for information) using the Google search engine"], ["heat", "n", "a form of energy that is transferred by a difference in temperature"], ["interview", "v", "conduct an interview in television, newspaper, and radio reporting"], ["library", "n", "a room where books are kept"], ["located", "adj", "situated in a particular spot or position"], ["location", "n", "a point or extent in space"], ["murder", "v", "kill intentionally and with premeditation"], ["putting", "n", "hitting a golf ball that is on the green using a putter"], ["sitting", "n", "(photography) the act of assuming a certain position (as for a photograph or"], ["accept", "v", "consider or hold as true"], ["actual", "adj", "presently existing in fact and not merely potential or possible"], ["appear", "v", "give a certain impression or have a certain outward aspect"], ["attempt", "n", "earnest and conscientious activity intended to do or accomplish something"], ["broke", "adj", "lacking funds"], ["channel", "n", "a path over which electrical signals can pass"], ["distance", "n", "the property created by the space between two objects or points"], ["exchange", "n", "chemical process in which one atom or ion or group changes places with"], ["fat", "n", "a soft greasy substance occurring in organic tissue and consisting of a mixture"], ["fell", "n", "the dressed skin of an animal (especially a large animal)"], ["glass", "n", "a brittle transparent solid with irregular atomic structure"], ["mobile", "adj", "migratory"], ["northern", "adj", "in or characteristic of a region of the United States north of (approximately)"], ["placed", "adj", "situated in a particular spot or position"], ["powerful", "adj", "having great power or force or potency or effect"], ["prior", "n", "the head of a religious order"], ["protection", "n", "the activity of protecting someone or something"], ["receive", "v", "get something"], ["religious", "adj", "concerned with sacred matters or religion or the church"], ["ride", "v", "sit and travel on the back of animal, usually while controlling its motions"], ["royal", "adj", "of or relating to or indicative of or issued or performed by a"], ["screen", "n", "a white or silvered surface where pictures can be projected for viewing"], ["serve", "v", "serve a purpose, role, or function"], ["slow", "v", "lose velocity"], ["species", "n", "(biology) taxonomic group whose members can interbreed"], ["speech", "n", "the act of delivering a formal spoken communication to an audience"], ["traffic", "n", "the aggregation of things (pedestrians or vehicles) coming and going in a particular"], ["tree", "n", "a tall plant with a trunk, branches, and leaves"], ["wonderful", "adj", "extraordinarily good or great"], ["agreed", "adj", "united by being of the same opinion"], ["airport", "n", "an airfield equipped with control tower and hangars as well as accommodations for"], ["begin", "v", "take the first step or steps in carrying out an action"], ["bottom", "n", "the lower side of anything"], ["demand", "n", "an urgent or peremptory request"], ["engine", "n", "motor that converts thermal energy to mechanical work"], ["famous", "adj", "widely known and esteemed"], ["investment", "n", "the act of investing"], ["lie", "v", "be located or situated somewhere"], ["partner", "n", "a person's partner in marriage"], ["raised", "adj", "located or moved above the surround or above the normal position"], ["sad", "adj", "experiencing or showing sorrow or unhappiness"], ["solution", "n", "a homogeneous mixture of two or more substances"], ["southern", "adj", "in or characteristic of a region of the United States south of (approximately)"], ["square", "n", "(geometry) a plane rectangle with four equal sides and four right angles"]];
+
+const DB = RAW.map(([w,p,m])=>({w, p: p.split("|"), m}));
+
+/* ---------- STATE ---------- */
+const TARGET = 20;
+let chain = [];        // {w,p,m,isStart}
+let usedWords = new Set();
+let currentFilter = 'all';
+
+/* ---------- DOM ---------- */
+const startPanel = document.getElementById('startPanel');
+const startWordInput = document.getElementById('startWord');
+const startBtn = document.getElementById('startBtn');
+const startError = document.getElementById('startError');
+const gameEl = document.getElementById('game');
+const endEl = document.getElementById('end');
+const trailEl = document.getElementById('trail');
+const stampLetter = document.getElementById('stampLetter');
+const gridEl = document.getElementById('grid');
+const noticeEl = document.getElementById('notice');
+const progressLabel = document.getElementById('progressLabel');
+const progressFill = document.getElementById('progressFill');
+const restartBtn = document.getElementById('restartBtn');
+const playAgainBtn = document.getElementById('playAgainBtn');
+
+document.querySelectorAll('.pill').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.pos;
+    // Changing the filter always regenerates a fresh set of 10 words for that
+    // part of speech straight from the full database — it does not just
+    // hide/show cards from the previously displayed list.
+    renderSuggestions();
+  });
+});
+
+startBtn.addEventListener('click', tryStart);
+startWordInput.addEventListener('keydown', e=>{ if(e.key==='Enter') tryStart(); });
+restartBtn.addEventListener('click', resetGame);
+playAgainBtn.addEventListener('click', resetGame);
+
+function tryStart(){
+  const raw = startWordInput.value.trim().toLowerCase();
+  const cleaned = raw.replace(/[^a-z]/g,'');
+  if(cleaned.length < 2){
+    startError.style.display='block';
+    startError.textContent = 'Nhập một từ tiếng Anh có ít nhất 2 chữ cái nhé.';
+    return;
+  }
+  startError.style.display='none';
+  chain = [{w:cleaned, p:['?'], m:'Từ bạn tự nhập', isStart:true}];
+  usedWords = new Set([cleaned]);
+  startPanel.style.display='none';
+  gameEl.style.display='block';
+  endEl.style.display='none';
+  renderAll();
+}
+
+function lastLetter(word){ return word[word.length-1]; }
+
+function renderAll(){
+  renderTrail();
+  renderProgress();
+  renderStamp();
+  renderSuggestions();
+}
+
+function renderTrail(){
+  trailEl.innerHTML='';
+  chain.forEach((item,i)=>{
+    if(i>0){
+      const arrow = document.createElement('span');
+      arrow.className='arrow'; arrow.textContent='→';
+      trailEl.appendChild(arrow);
+    }
+    const chip = document.createElement('span');
+    chip.className='chip'+(item.isStart?' start':'');
+    chip.textContent = item.w;
+    trailEl.appendChild(chip);
+  });
+}
+
+function renderProgress(){
+  const n = chain.length;
+  progressLabel.textContent = n+' / '+TARGET+' từ';
+  progressFill.style.width = Math.min(100,(n/TARGET)*100)+'%';
+}
+
+function renderStamp(){
+  const last = chain[chain.length-1].w;
+  stampLetter.textContent = lastLetter(last).toUpperCase();
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+// Builds the candidate pool fresh from the FULL database every time —
+// filtered by starting letter and by the currently active part-of-speech
+// filter. This is what makes switching filters generate a brand-new set
+// of 10 words for that word type, rather than filtering the 10 cards
+// already on screen.
+function pool(letter, filter){
+  return DB.filter(e => e.w[0]===letter && !usedWords.has(e.w) && (filter==='all' || e.p.includes(filter)));
+}
+
+function renderSuggestions(){
+  if(chain.length >= TARGET){ endGame(); return; }
+  const letter = lastLetter(chain[chain.length-1].w);
+  let candidates = pool(letter, currentFilter);
+  let usedFallback = false;
+
+  if(candidates.length===0 && currentFilter!=='all'){
+    candidates = pool(letter,'all');
+    usedFallback = true;
+  }
+
+  if(candidates.length===0){
+    noticeEl.style.display='block';
+    noticeEl.textContent = 'Đã hết từ trong kho dữ liệu bắt đầu bằng chữ "'+letter.toUpperCase()+'". Dừng chuỗi tại đây và xem sơ đồ nhé!';
+    gridEl.innerHTML='';
+    setTimeout(endGame, 900);
+    return;
+  }
+
+  noticeEl.style.display = usedFallback ? 'block' : 'none';
+  if(usedFallback){
+    noticeEl.textContent = 'Không có từ loại đã chọn bắt đầu bằng chữ "'+letter.toUpperCase()+'" — đang hiển thị tất cả từ loại cho lượt này.';
+  }
+
+  const chosen = shuffle(candidates).slice(0,10);
+  gridEl.innerHTML='';
+  chosen.forEach(entry=>{
+    const card = document.createElement('div');
+    card.className='card';
+    const posLabel = {n:'Noun',v:'Verb',adj:'Adj',adv:'Adv'};
+    const tags = entry.p.map(p=>'<span class="tag '+p+'">'+(posLabel[p]||p)+'</span>').join(' ');
+    card.innerHTML =
+      '<div class="word"><span class="lead">'+entry.w[0].toUpperCase()+'</span>'+entry.w.slice(1)+'</div>'+
+      tags+
+      '<div class="meaning">'+entry.m+'</div>';
+    card.addEventListener('click', ()=> selectWord(entry));
+    gridEl.appendChild(card);
+  });
+}
+
+function selectWord(entry){
+  chain.push({...entry, isStart:false});
+  usedWords.add(entry.w);
+  if(chain.length >= TARGET){
+    endGame();
+  } else {
+    renderTrail();
+    renderProgress();
+    renderStamp();
+    renderSuggestions();
+  }
+}
+
+function resetGame(){
+  chain = [];
+  usedWords = new Set();
+  currentFilter='all';
+  document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.pill[data-pos="all"]').classList.add('active');
+  startWordInput.value='';
+  startError.style.display='none';
+  gameEl.style.display='none';
+  endEl.style.display='none';
+  startPanel.style.display='block';
+  startWordInput.focus();
+}
+
+/* ---------- END / MINDMAP ---------- */
+function endGame(){
+  gameEl.style.display='none';
+  endEl.style.display='block';
+  drawMindmap();
+  drawSummary();
+}
+
+function drawSummary(){
+  const posLabel = {n:'Noun', v:'Verb', adj:'Adjective', adv:'Adverb', '?':'—'};
+  const body = document.getElementById('summaryBody');
+  body.innerHTML='';
+  chain.forEach((item,i)=>{
+    const tr = document.createElement('tr');
+    const posText = item.p.map(p=>posLabel[p]||p).join(', ');
+    tr.innerHTML = '<td>'+(i+1)+'</td><td class="w">'+item.w+'</td><td>'+posText+'</td><td>'+(item.m||'')+'</td>';
+    body.appendChild(tr);
+  });
+}
+
+function drawMindmap(){
+  const svg = document.getElementById('mindmap');
+  const colors = {n:'#2E7BF6', v:'#1FAE5C', adj:'#F2427A', adv:'#8B5CF6', '?':'#1E2534'};
+  const perRow = 5;
+  const colGap = 165, rowGap = 130, marginX = 90, marginY = 70;
+  const rows = Math.ceil(chain.length/perRow);
+  const width = marginX*2 + (perRow-1)*colGap;
+  const height = marginY*2 + (rows-1)*rowGap;
+  svg.setAttribute('viewBox','0 0 '+width+' '+height);
+
+  const pos = chain.map((item,i)=>{
+    const row = Math.floor(i/perRow);
+    let col = i % perRow;
+    if(row % 2 === 1) col = (perRow-1) - col;
+    const x = marginX + col*colGap;
+    const y = marginY + row*rowGap;
+    return {x,y,item};
+  });
+
+  let svgContent = '';
+
+  for(let i=0;i<pos.length-1;i++){
+    const a = pos[i], b = pos[i+1];
+    svgContent += '<line x1="'+a.x+'" y1="'+a.y+'" x2="'+b.x+'" y2="'+b.y+'" stroke="#C9CEDA" stroke-width="3" stroke-dasharray="1 8" stroke-linecap="round"/>';
+  }
+
+  pos.forEach((p,i)=>{
+    const mainPos = p.item.p[0];
+    const color = colors[mainPos] || '#1E2534';
+    const r = p.item.isStart ? 34 : 28;
+    svgContent += '<circle cx="'+p.x+'" cy="'+p.y+'" r="'+r+'" fill="#fff" stroke="'+color+'" stroke-width="4"/>';
+    svgContent += '<text x="'+p.x+'" y="'+(p.y+5)+'" text-anchor="middle" class="node-idx" font-size="13" fill="'+color+'">'+(i+1)+'</text>';
+    svgContent += '<text x="'+p.x+'" y="'+(p.y+r+20)+'" text-anchor="middle" class="node-word" font-size="13.5" fill="#1E2534">'+p.item.w+'</text>';
+  });
+
+  svg.innerHTML = svgContent;
+}
+</script>
+</body>
+</html>
