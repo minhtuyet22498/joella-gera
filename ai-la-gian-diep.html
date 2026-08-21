@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ai Là Gián Điệp?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --violet-1:#4C2A9A;
+    --violet-2:#7B3FE4;
+    --surface:#FFFFFF;
+    --surface-soft:#F4F1FE;
+    --ink:#241B45;
+    --ink-soft:#6B6289;
+    --red:#FF3B5C;
+    --red-dark:#D6234A;
+    --yellow:#FFD23F;
+    --yellow-dark:#E8AE00;
+    --green:#22C55E;
+    --green-dark:#16A34A;
+    --blue:#3B82F6;
+    --line:#E7E2FA;
+    --shadow: 0 10px 0 rgba(36,27,69,0.12);
+    --shadow-sm: 0 5px 0 rgba(36,27,69,0.12);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(255,210,63,0.20), transparent 40%),
+      radial-gradient(circle at 85% 15%, rgba(255,59,92,0.18), transparent 42%),
+      radial-gradient(circle at 50% 100%, rgba(59,130,246,0.16), transparent 45%),
+      linear-gradient(160deg, var(--violet-2), var(--violet-1));
+    background-attachment:fixed;
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    padding:32px 16px 64px;
+  }
+  .wrap{max-width:640px;margin:0 auto;}
+
+  header{text-align:center; margin-bottom:24px;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'Inter',sans-serif; font-weight:700; font-size:12.5px;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--violet-1);
+    background:#fff; padding:7px 16px; border-radius:20px; margin-bottom:14px;
+    box-shadow:var(--shadow-sm);
+  }
+  h1{
+    font-family:'Baloo 2',sans-serif; font-weight:800;
+    font-size:clamp(32px,7vw,46px); margin:0 0 10px; line-height:1.05;
+    color:#fff; text-shadow:0 3px 0 rgba(36,27,69,0.25);
+  }
+  h1 .hl{color:var(--yellow);}
+  .sub{color:rgba(255,255,255,0.88); font-size:15.5px; max-width:50ch; margin:0 auto; line-height:1.55; font-weight:500;}
+
+  .panel{
+    background:var(--surface); border-radius:24px; padding:24px;
+    box-shadow:var(--shadow); margin-bottom:20px;
+  }
+  .panel h2{
+    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:19px;
+    margin:0 0 14px; color:var(--ink);
+  }
+
+  /* SETUP */
+  textarea#playerInput{
+    width:100%; font-family:'Inter',sans-serif; font-size:16px; font-weight:500;
+    padding:14px 16px; border-radius:14px; border:2px solid var(--line);
+    background:var(--surface-soft); color:var(--ink); outline:none;
+    resize:vertical; min-height:76px; line-height:1.5;
+  }
+  textarea#playerInput:focus{border-color:var(--violet-2);}
+  textarea#playerInput::placeholder{color:#A79FC7;}
+
+  button{
+    font-family:'Inter',sans-serif; font-weight:700; font-size:15px;
+    cursor:pointer; border:none; border-radius:14px; padding:14px 22px;
+    background:var(--green); color:#fff; box-shadow:var(--shadow-sm);
+    transition:transform .1s ease, box-shadow .1s ease;
+  }
+  button:hover{transform:translateY(-2px);}
+  button:active{transform:translateY(2px); box-shadow:0 2px 0 rgba(36,27,69,0.12);}
+  button.secondary{background:var(--surface-soft); color:var(--ink); box-shadow:none; border:2px solid var(--line);}
+  button.secondary:hover{border-color:var(--violet-2);}
+  button:disabled{opacity:.4; cursor:not-allowed; transform:none;}
+
+  .preview-hint{font-size:13.5px; color:var(--ink-soft); margin-top:10px; font-weight:500;}
+  .preview-chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;}
+  .preview-chips .chip{
+    font-size:12.5px; font-weight:600; padding:5px 12px; border-radius:20px;
+    background:var(--surface-soft); color:var(--violet-1);
+  }
+  .error{color:var(--red-dark); font-size:13.5px; margin-top:10px; font-weight:700; display:none;}
+
+  #setupActions{margin-top:18px; display:flex; justify-content:flex-end;}
+
+  /* GAME */
+  #game{display:none;}
+  .player-strip{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:20px;}
+  .player-strip .tag{
+    font-size:13px; font-weight:700; padding:6px 13px; border-radius:20px;
+    background:rgba(255,255,255,0.16); color:#fff;
+  }
+
+  /* SPY COUNT STEPPER */
+  .stepper-row{
+    display:flex; align-items:center; justify-content:space-between;
+    background:var(--surface-soft); border-radius:16px; padding:12px 16px; margin-bottom:0;
+  }
+  .stepper-label{font-weight:700; font-size:14.5px; color:var(--ink);}
+  .stepper-controls{display:flex; align-items:center; gap:14px;}
+  .stepper-btn{
+    width:38px; height:38px; border-radius:50%; padding:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; font-weight:800; background:var(--violet-2); box-shadow:none;
+  }
+  .stepper-value{
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:24px;
+    min-width:28px; text-align:center; color:var(--ink);
+  }
+
+  .wheel-stage{position:relative; display:flex; flex-direction:column; align-items:center; margin:22px 0;}
+  .wheel-frame{position:relative; width:min(300px,78vw); height:min(300px,78vw);}
+  .pointer{
+    position:absolute; top:-6px; left:50%; transform:translateX(-50%);
+    width:0; height:0; z-index:3;
+    border-left:15px solid transparent; border-right:15px solid transparent;
+    border-top:24px solid var(--yellow);
+    filter:drop-shadow(0 2px 2px rgba(36,27,69,0.35));
+  }
+  #wheel{
+    width:100%; height:100%; border-radius:50%;
+    transition: transform 4s cubic-bezier(.15,.85,.25,1);
+    box-shadow:0 0 0 6px #fff, 0 0 0 9px var(--violet-1), var(--shadow);
+  }
+  .hub{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:48px; height:48px; border-radius:50%;
+    background:var(--yellow); z-index:2;
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; box-shadow:0 3px 0 rgba(36,27,69,0.25);
+  }
+
+  #spinBtn{margin-top:20px; font-size:16.5px; padding:16px 32px; background:var(--red);}
+
+  /* SPY REVEAL LIST */
+  .spy-list{display:flex; flex-direction:column; gap:10px; margin-bottom:6px;}
+  .spy-row{
+    position:relative; border-radius:14px; padding:14px 16px;
+    background:var(--surface-soft); cursor:pointer;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    overflow:hidden;
+  }
+  .spy-row .idx{
+    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:13px; color:var(--red-dark);
+    background:rgba(255,59,92,0.12); padding:4px 10px; border-radius:20px; flex-shrink:0;
+  }
+  .spy-row .name{
+    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:18px; color:var(--red-dark);
+    filter:blur(8px); transition:filter .2s ease; flex:1; text-align:right;
+  }
+  .spy-row.revealed .name{filter:blur(0);}
+  .spy-row .tap-hint{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:12.5px; font-weight:700; color:var(--ink-soft);
+    background:rgba(244,241,254,0.85);
+  }
+  .spy-row.revealed .tap-hint{display:none;}
+
+  /* KEYWORD BUTTON */
+  .keyword-cta{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    background:linear-gradient(135deg, var(--yellow), var(--yellow-dark));
+    border-radius:16px; padding:16px 18px; margin-top:16px; cursor:pointer;
+  }
+  .keyword-cta .kw-label{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:15.5px; color:#4A3600;}
+  .keyword-cta .kw-icon{font-size:22px;}
+
+  .used-hint{text-align:center; font-size:12.5px; color:var(--ink-soft); margin-top:14px; font-weight:500;}
+
+  .round-actions{display:flex; gap:10px; justify-content:center; margin-top:22px; flex-wrap:wrap;}
+
+  /* FULLSCREEN KEYWORD OVERLAY */
+  #keywordOverlay{
+    display:none; position:fixed; inset:0; z-index:50;
+    background:linear-gradient(160deg, var(--violet-2), var(--violet-1));
+    align-items:center; justify-content:center; flex-direction:column; text-align:center;
+    padding:32px;
+  }
+  #keywordOverlay .kw-eyebrow{
+    font-weight:700; letter-spacing:.08em; text-transform:uppercase; font-size:14px;
+    color:var(--yellow); margin-bottom:18px;
+  }
+  #keywordOverlay .kw-word{
+    font-family:'Baloo 2',sans-serif; font-weight:800; color:#fff;
+    font-size:clamp(36px,11vw,84px); line-height:1.1; text-shadow:0 4px 0 rgba(0,0,0,0.18);
+    word-break:break-word;
+  }
+  #closeKeywordBtn{margin-top:36px; background:#fff; color:var(--violet-1);}
+
+  @media (max-width:480px){
+    .wheel-frame{width:78vw; height:78vw;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">🕵️ Trò chơi nhóm</div>
+    <h1>Ai Là <span class="hl">Gián Điệp?</span></h1>
+    <p class="sub">Nhập tên người chơi, chọn số gián điệp, quay 1 lần để chọn ngẫu nhiên — rồi bốc từ khóa cho cả nhóm cùng diễn tả. Gián điệp không biết từ đó là gì.</p>
+  </header>
+
+  <div class="panel" id="setupPanel">
+    <h2>Danh sách người chơi</h2>
+    <textarea id="playerInput" placeholder="Nhập tên, cách nhau bằng dấu phẩy. Ví dụ: An, Bình, Chi, Dũng, Em"></textarea>
+    <div class="preview-hint" id="previewHint">Cần tối thiểu 3 người chơi.</div>
+    <div class="preview-chips" id="previewChips"></div>
+    <div class="error" id="setupError"></div>
+    <div id="setupActions">
+      <button id="startGameBtn" disabled>Bắt đầu chơi</button>
+    </div>
+  </div>
+
+  <div id="game">
+    <div class="player-strip" id="playerStrip"></div>
+
+    <div class="panel" style="padding:14px 16px;">
+      <div class="stepper-row">
+        <span class="stepper-label">Số lượng gián điệp</span>
+        <div class="stepper-controls">
+          <button class="stepper-btn" id="decSpyBtn">−</button>
+          <span class="stepper-value" id="spyCountValue">1</span>
+          <button class="stepper-btn" id="incSpyBtn">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="wheel-stage">
+      <div class="wheel-frame">
+        <div class="pointer"></div>
+        <svg id="wheel" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="hub">🎯</div>
+      </div>
+      <button id="spinBtn">Quay để chọn gián điệp</button>
+    </div>
+
+    <div class="panel" id="revealPanel" style="display:none;">
+      <h2 id="revealTitle">Gián điệp vòng này (chạm để xem riêng)</h2>
+      <div class="spy-list" id="spyList"></div>
+
+      <div class="keyword-cta" id="keywordCta">
+        <div>
+          <div class="kw-label">Xem từ khóa toàn màn hình</div>
+        </div>
+        <div class="kw-icon">🔑</div>
+      </div>
+
+      <div class="used-hint" id="usedHint"></div>
+      <div class="round-actions">
+        <button id="newRoundBtn">Vòng mới</button>
+        <button class="secondary" id="editPlayersBtn">Đổi người chơi</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="keywordOverlay">
+  <div class="kw-eyebrow">Từ khóa vòng này</div>
+  <div class="kw-word" id="kwOverlayWord">—</div>
+  <button id="closeKeywordBtn">Đóng</button>
+</div>
+
+<script>
+const WORDS = ["cái bàn", "cái ghế", "cây bút", "quyển sách", "chiếc gương", "cái đồng hồ", "cái ô", "cái ba lô", "chiếc vali", "cái ví", "cây kim", "cuộn chỉ", "cái kéo", "cái búa", "cái đinh", "ổ khóa", "chiếc chìa khóa", "đèn pin", "cây nến", "cái quạt", "cái chăn", "cái gối", "tấm thảm", "bức tranh", "lọ hoa", "chiếc nhẫn", "dây chuyền", "vòng tay", "đôi giày", "đôi dép", "cái mũ", "khăn quàng cổ", "áo mưa", "cây thước kẻ", "cục tẩy", "hộp bút chì", "máy tính bỏ túi", "cái loa", "tai nghe", "sạc điện thoại", "cục pin", "ổ cắm điện", "bình nước", "cái ly", "cái tô", "đôi đũa", "cái muỗng", "cái nồi", "cái chảo", "cái thớt", "cái rổ", "cái xô", "cây chổi", "cái cân", "cái gương soi", "cái lược", "bàn chải đánh răng", "kem đánh răng", "xà phòng", "khăn tắm", "con chó", "con mèo", "con gà", "con vịt", "con heo", "con bò", "con trâu", "con dê", "con cừu", "con ngựa", "con voi", "con hổ", "con sư tử", "con gấu", "con khỉ", "con hươu cao cổ", "con cá sấu", "con rùa", "con rắn", "con thằn lằn", "con ếch", "con cá", "con tôm", "con cua", "con mực", "con sò", "con chim", "con công", "con đại bàng", "con cú", "con dơi", "con chuột", "con thỏ", "con sóc", "con nhím", "con kiến", "con ong", "con bướm", "con nhện", "con muỗi", "con lạc đà", "con gấu trúc", "con cáo", "con sói", "con nai", "con chuồn chuồn", "con sên", "con ốc sên", "bác sĩ", "y tá", "giáo viên", "kỹ sư", "luật sư", "cảnh sát", "lính cứu hỏa", "phi công", "tiếp viên hàng không", "đầu bếp", "thợ may", "thợ điện", "thợ mộc", "ca sĩ", "diễn viên", "họa sĩ", "nhạc sĩ", "nhà văn", "nhà báo", "phóng viên", "nông dân", "ngư dân", "thợ săn", "hướng dẫn viên du lịch", "tài xế", "thợ hớt tóc", "nha sĩ", "dược sĩ", "kế toán", "lập trình viên", "kiến trúc sư", "thẩm phán", "công an", "bộ đội", "thư ký", "người mẫu", "vận động viên", "huấn luyện viên", "thợ sửa xe", "người giao hàng", "bệnh viện", "trường học", "thư viện", "công viên", "sân bay", "nhà ga", "bến xe", "siêu thị", "chợ", "quán cà phê", "nhà hàng", "rạp chiếu phim", "sở thú", "bãi biển", "ngọn núi", "khu rừng", "sa mạc", "hòn đảo", "hồ nước", "con sông", "thác nước", "nhà thờ", "ngôi chùa", "viện bảo tàng", "tòa nhà chọc trời", "sân vận động", "hồ bơi", "khách sạn", "nhà tù", "đồn công an", "bưu điện", "ngân hàng", "tiệm bánh", "tiệm tạp hóa", "tiệm sửa xe", "công trường xây dựng", "nông trại", "bến cảng", "quảng trường", "đại sứ quán", "phở", "bún chả", "bánh mì", "cơm tấm", "bánh xèo", "bánh cuốn", "chả giò", "gỏi cuốn", "hủ tiếu", "bún bò Huế", "bánh chưng", "xôi", "cháo", "mì gói", "lẩu", "nem rán", "thịt kho", "canh chua", "cá kho", "tôm rang", "gà rán", "pizza", "hamburger", "mì Ý", "sushi", "kim chi", "kem", "bánh kem", "bánh quy", "chocolate", "kẹo", "trà sữa", "cà phê sữa đá", "nước cam", "sinh tố", "nước dừa", "bia", "rượu vang", "trà đá", "sữa chua", "bánh flan", "chè", "xoài", "dưa hấu", "sầu riêng", "bánh tráng trộn", "chè đậu xanh", "bánh bao", "xe máy", "xe đạp", "ô tô", "xe buýt", "xe tải", "xe taxi", "xe cứu thương", "xe cứu hỏa", "tàu hỏa", "tàu thủy", "chiếc thuyền", "máy bay", "máy bay trực thăng", "khinh khí cầu", "xe lửa", "xích lô", "xe ba gác", "xe điện", "xe cẩu", "xe ủi đất", "bóng đá", "bóng rổ", "bóng chuyền", "cầu lông", "bơi lội", "chạy bộ", "đạp xe", "leo núi", "câu cá", "cắm trại", "nhảy dây", "đá cầu", "cờ vua", "cờ tướng", "chơi bida", "bowling", "đánh golf", "quyền anh", "võ thuật", "tập yoga", "khiêu vũ", "hát karaoke", "vẽ tranh", "chụp ảnh", "nấu ăn", "làm vườn", "đọc sách", "chơi game", "xem phim", "đi mua sắm", "cơn mưa", "ánh nắng", "cơn gió", "cơn bão", "sấm sét", "cầu vồng", "sương mù", "tuyết rơi", "động đất", "sóng thần", "núi lửa", "nhật thực", "nguyệt thực", "hoàng hôn", "bình minh", "đám mây", "sao băng", "thủy triều", "lũ lụt", "hạn hán"];
+/* ---------- STATE ---------- */
+let players = [];
+let wordBag = [];
+let currentRotation = 0;
+let spinning = false;
+let spyCount = 1;
+
+/* ---------- DOM ---------- */
+const playerInput = document.getElementById('playerInput');
+const previewHint = document.getElementById('previewHint');
+const previewChips = document.getElementById('previewChips');
+const setupError = document.getElementById('setupError');
+const startGameBtn = document.getElementById('startGameBtn');
+const setupPanel = document.getElementById('setupPanel');
+const gameEl = document.getElementById('game');
+const playerStrip = document.getElementById('playerStrip');
+const wheelSvg = document.getElementById('wheel');
+const spinBtn = document.getElementById('spinBtn');
+const revealPanel = document.getElementById('revealPanel');
+const revealTitle = document.getElementById('revealTitle');
+const spyList = document.getElementById('spyList');
+const keywordCta = document.getElementById('keywordCta');
+const usedHint = document.getElementById('usedHint');
+const newRoundBtn = document.getElementById('newRoundBtn');
+const editPlayersBtn = document.getElementById('editPlayersBtn');
+const decSpyBtn = document.getElementById('decSpyBtn');
+const incSpyBtn = document.getElementById('incSpyBtn');
+const spyCountValue = document.getElementById('spyCountValue');
+const keywordOverlay = document.getElementById('keywordOverlay');
+const kwOverlayWord = document.getElementById('kwOverlayWord');
+const closeKeywordBtn = document.getElementById('closeKeywordBtn');
+
+let currentKeyword = '—';
+
+const WHEEL_COLORS = ['#7B3FE4','#FF3B5C','#FFD23F','#22C55E','#3B82F6','#FF8A3D','#14C7B8','#E056E0'];
+
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ---------- SETUP: parse comma-separated names ---------- */
+function parsePlayers(raw){
+  const parts = raw.split(',').map(s=>s.trim()).filter(s=>s.length>0);
+  const seen = new Set();
+  const uniq = [];
+  parts.forEach(p=>{
+    const key = p.toLowerCase();
+    if(!seen.has(key)){
+      seen.add(key);
+      uniq.push(p);
+    }
+  });
+  return uniq;
+}
+
+function updateSetupPreview(){
+  const list = parsePlayers(playerInput.value);
+  previewChips.innerHTML = '';
+  list.forEach(name=>{
+    const chip = document.createElement('span');
+    chip.className='chip';
+    chip.textContent = name;
+    previewChips.appendChild(chip);
+  });
+  setupError.style.display='none';
+
+  if(list.length === 0){
+    previewHint.textContent = 'Cần tối thiểu 3 người chơi.';
+    startGameBtn.disabled = true;
+  } else if(list.length < 3){
+    previewHint.textContent = 'Cần tối thiểu 3 người chơi (hiện có '+list.length+').';
+    startGameBtn.disabled = true;
+  } else if(list.length > 20){
+    previewHint.textContent = 'Tối đa 20 người chơi cho một vòng (hiện có '+list.length+').';
+    startGameBtn.disabled = true;
+  } else {
+    previewHint.textContent = 'Đã nhận diện '+list.length+' người chơi — sẵn sàng bắt đầu!';
+    startGameBtn.disabled = false;
+  }
+  return list;
+}
+
+playerInput.addEventListener('input', updateSetupPreview);
+
+startGameBtn.addEventListener('click', ()=>{
+  const list = updateSetupPreview();
+  if(list.length < 3 || list.length > 20) return;
+  players = list;
+  spyCount = 1;
+  spyCountValue.textContent = spyCount;
+
+  setupPanel.style.display='none';
+  gameEl.style.display='block';
+  renderPlayerStrip();
+  buildWheel();
+  resetWordBag();
+  revealPanel.style.display='none';
+  spinBtn.disabled=false;
+  spinBtn.textContent='Quay để chọn gián điệp';
+  clampSpyCount();
+});
+
+editPlayersBtn.addEventListener('click', ()=>{
+  playerInput.value = players.join(', ');
+  updateSetupPreview();
+  gameEl.style.display='none';
+  setupPanel.style.display='block';
+});
+
+function renderPlayerStrip(){
+  playerStrip.innerHTML='';
+  players.forEach(name=>{
+    const tag = document.createElement('span');
+    tag.className='tag';
+    tag.textContent = name;
+    playerStrip.appendChild(tag);
+  });
+}
+
+/* ---------- SPY COUNT STEPPER ---------- */
+function maxSpyCount(){
+  return Math.max(1, players.length - 2);
+}
+function clampSpyCount(){
+  const max = maxSpyCount();
+  if(spyCount > max) spyCount = max;
+  if(spyCount < 1) spyCount = 1;
+  spyCountValue.textContent = spyCount;
+}
+decSpyBtn.addEventListener('click', ()=>{
+  if(spyCount > 1){ spyCount--; spyCountValue.textContent = spyCount; }
+});
+incSpyBtn.addEventListener('click', ()=>{
+  const max = maxSpyCount();
+  if(spyCount < max){ spyCount++; spyCountValue.textContent = spyCount; }
+});
+
+/* ---------- WORD BAG (no repeat until exhausted) ---------- */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function resetWordBag(){
+  wordBag = shuffle(WORDS);
+  usedHint.textContent = 'Còn '+wordBag.length+' / '+WORDS.length+' từ khóa chưa dùng trong bộ này.';
+}
+
+function drawKeyword(){
+  if(wordBag.length===0){
+    resetWordBag();
+  }
+  const w = wordBag.pop();
+  usedHint.textContent = 'Còn '+wordBag.length+' / '+WORDS.length+' từ khóa chưa dùng trong bộ này.';
+  return w;
+}
+
+/* ---------- WHEEL ---------- */
+function polarToCartesian(cx,cy,r,angleDeg){
+  const rad = (angleDeg-90) * Math.PI/180;
+  return { x: cx + r*Math.cos(rad), y: cy + r*Math.sin(rad) };
+}
+
+function buildWheel(){
+  const n = players.length;
+  const cx=150, cy=150, r=140;
+  const sliceAngle = 360/n;
+  let svgContent='';
+  for(let i=0;i<n;i++){
+    const startA = i*sliceAngle;
+    const endA = (i+1)*sliceAngle;
+    const p1 = polarToCartesian(cx,cy,r,startA);
+    const p2 = polarToCartesian(cx,cy,r,endA);
+    const largeArc = sliceAngle > 180 ? 1 : 0;
+    const color = WHEEL_COLORS[i % WHEEL_COLORS.length];
+    svgContent += '<path d="M'+cx+','+cy+' L'+p1.x.toFixed(2)+','+p1.y.toFixed(2)+' A'+r+','+r+' 0 '+largeArc+',1 '+p2.x.toFixed(2)+','+p2.y.toFixed(2)+' Z" fill="'+color+'" stroke="#fff" stroke-width="2"/>';
+
+    const midA = startA + sliceAngle/2;
+    const labelR = r*0.62;
+    const lp = polarToCartesian(cx,cy,labelR,midA);
+    svgContent += '<text x="'+lp.x.toFixed(2)+'" y="'+lp.y.toFixed(2)+'" text-anchor="middle" dominant-baseline="middle" font-family="Inter, sans-serif" font-weight="700" font-size="12" fill="#fff" transform="rotate('+midA+' '+lp.x.toFixed(2)+' '+lp.y.toFixed(2)+')">'+escapeHtml(truncateLabel(players[i]))+'</text>';
+  }
+  wheelSvg.innerHTML = svgContent;
+  wheelSvg.style.transition='none';
+  wheelSvg.style.transform='rotate(0deg)';
+  currentRotation = 0;
+  void wheelSvg.offsetWidth;
+  wheelSvg.style.transition='';
+}
+
+function truncateLabel(name){
+  return name.length > 10 ? name.slice(0,9)+'…' : name;
+}
+
+/* Single spin: the wheel spins once as an exciting randomizer, then the
+   full set of spies for this round is drawn independently (so however many
+   spies are needed, they all come from this one spin). */
+function spinWheel(){
+  if(spinning) return;
+  spinning = true;
+  spinBtn.disabled = true;
+  revealPanel.style.display='none';
+
+  const n = players.length;
+  const sliceAngle = 360/n;
+  const visualIndex = Math.floor(Math.random()*n);
+  const sliceCenter = visualIndex*sliceAngle + sliceAngle/2;
+  const jitter = (Math.random()-0.5) * sliceAngle * 0.6;
+  const targetCenter = sliceCenter + jitter;
+
+  const extraSpins = 6;
+  const finalRotationMod = ((360 - (targetCenter % 360)) % 360 + 360) % 360;
+  const curMod = ((currentRotation % 360) + 360) % 360;
+  const deltaToTarget = ((finalRotationMod - curMod) + 360) % 360;
+  currentRotation = currentRotation + extraSpins*360 + deltaToTarget;
+  wheelSvg.style.transform = 'rotate('+currentRotation+'deg)';
+
+  wheelSvg.addEventListener('transitionend', function handler(){
+    wheelSvg.removeEventListener('transitionend', handler);
+    spinning = false;
+    finishRound();
+  }, {once:true});
+}
+
+spinBtn.addEventListener('click', spinWheel);
+
+/* ---------- ROUND RESULT ---------- */
+function finishRound(){
+  clampSpyCount();
+  const indices = shuffle(players.map((_,i)=>i)).slice(0, spyCount);
+  const spyNames = indices.map(i => players[i]);
+  currentKeyword = drawKeyword();
+
+  revealTitle.textContent = spyCount === 1
+    ? 'Gián điệp vòng này (chạm để xem riêng)'
+    : spyCount + ' gián điệp vòng này (chạm từng dòng để xem riêng)';
+
+  spyList.innerHTML = '';
+  spyNames.forEach((name,i)=>{
+    const row = document.createElement('div');
+    row.className='spy-row';
+    row.innerHTML =
+      '<span class="idx">Gián điệp '+(i+1)+'</span>'+
+      '<span class="name">'+escapeHtml(name)+'</span>'+
+      '<span class="tap-hint">Bấm để xem</span>';
+    row.addEventListener('click', ()=> row.classList.toggle('revealed'));
+    spyList.appendChild(row);
+  });
+
+  revealPanel.style.display='block';
+  spinBtn.textContent='Quay lại (đổi gián điệp)';
+  spinBtn.disabled=false;
+}
+
+/* ---------- FULLSCREEN KEYWORD ---------- */
+keywordCta.addEventListener('click', ()=>{
+  kwOverlayWord.textContent = currentKeyword;
+  keywordOverlay.style.display='flex';
+});
+closeKeywordBtn.addEventListener('click', ()=>{
+  keywordOverlay.style.display='none';
+});
+keywordOverlay.addEventListener('click', (e)=>{
+  if(e.target === keywordOverlay) keywordOverlay.style.display='none';
+});
+
+newRoundBtn.addEventListener('click', ()=>{
+  revealPanel.style.display='none';
+  spinWheel();
+});
+</script>
+</body>
+</html>
