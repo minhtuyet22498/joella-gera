@@ -280,7 +280,7 @@
 </div>
 
 <div id="keywordOverlay">
-  <div class="kw-eyebrow" id="kwOverlayLabel">Từ của Đa số</div>
+  <div class="kw-eyebrow" id="kwOverlayLabel">Từ của Bạn</div>
   <div class="kw-word" id="kwOverlayWord">—</div>
   <button id="closeKeywordBtn">Đóng</button>
 </div>
@@ -562,14 +562,14 @@ function finishRound(){
 
 /* ---------- FULLSCREEN KEYWORD (two separate views) ---------- */
 majorityCta.addEventListener('click', ()=>{
-  kwOverlayLabel.textContent = 'Từ của Đa số';
+  kwOverlayLabel.textContent = 'Từ của Bạn';
   kwOverlayWord.textContent = currentMajorityWord;
   keywordOverlay.classList.remove('spy');
   keywordOverlay.classList.add('majority');
   keywordOverlay.style.display='flex';
 });
 spyCta.addEventListener('click', ()=>{
-  kwOverlayLabel.textContent = 'Từ của Gián điệp';
+  kwOverlayLabel.textContent = 'Từ của Bạn';
   kwOverlayWord.textContent = currentSpyWord;
   keywordOverlay.classList.remove('majority');
   keywordOverlay.classList.add('spy');
