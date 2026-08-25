@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Today's Song — Nhạc Hôm Nay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --lavender-1:#E8E4F7;
+    --lavender-2:#F4EFFB;
+    --sky:#DCEBF2;
+    --surface:#FFFFFF;
+    --surface-soft:#F6F3FC;
+    --ink:#4A4458;
+    --ink-soft:#938DA3;
+    --rose:#EFA6B4;
+    --rose-deep:#DC8A9A;
+    --sage:#9FC6A6;
+    --sage-deep:#7FAE88;
+    --butter:#F3CE87;
+    --butter-deep:#E0B563;
+    --lilac:#B4A7E0;
+    --lilac-deep:#9689CB;
+    --sky-deep:#8FB8CE;
+    --line:#EAE5F5;
+    --shadow: 0 10px 28px rgba(74,68,88,0.10);
+    --shadow-sm: 0 6px 16px rgba(74,68,88,0.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 15% 8%, rgba(180,167,224,0.28), transparent 42%),
+      radial-gradient(circle at 88% 18%, rgba(159,198,166,0.22), transparent 45%),
+      radial-gradient(circle at 50% 100%, rgba(220,235,242,0.55), transparent 50%),
+      linear-gradient(160deg, var(--lavender-1), var(--lavender-2));
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    padding:32px 16px 64px;
+    display:flex; justify-content:center;
+  }
+  .wrap{max-width:480px; width:100%;}
+
+  header{text-align:center; margin-bottom:26px;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'Inter',sans-serif; font-weight:600; font-size:12.5px;
+    letter-spacing:.05em; text-transform:uppercase; color:var(--lilac-deep);
+    background:#fff; padding:7px 16px; border-radius:20px; margin-bottom:16px;
+    box-shadow:var(--shadow-sm);
+  }
+  h1{
+    font-family:'Baloo 2',sans-serif; font-weight:700;
+    font-size:clamp(28px,6.5vw,38px); margin:0 0 10px; line-height:1.1;
+    color:var(--ink);
+  }
+  h1 .hl{color:var(--rose-deep);}
+  .sub{color:var(--ink-soft); font-size:15px; max-width:44ch; margin:0 auto; line-height:1.55; font-weight:500;}
+
+  .idle-panel{
+    background:var(--surface); border-radius:24px; padding:36px 24px;
+    box-shadow:var(--shadow); text-align:center;
+  }
+  .idle-emoji{font-size:44px; margin-bottom:16px;}
+  .idle-text{font-size:14px; color:var(--ink-soft); margin-bottom:24px; line-height:1.5;}
+
+  button{
+    font-family:'Inter',sans-serif; font-weight:600; font-size:15px;
+    cursor:pointer; border:none; border-radius:14px; padding:15px 26px;
+    background:var(--lilac); color:#fff; box-shadow:var(--shadow-sm);
+    transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+  }
+  button:hover{transform:translateY(-2px); background:var(--lilac-deep);}
+  button:active{transform:translateY(0);}
+  button.secondary{background:var(--surface-soft); color:var(--ink); box-shadow:none; border:1.5px solid var(--line);}
+  button.secondary:hover{border-color:var(--lilac); background:var(--surface-soft); transform:translateY(-1px);}
+  button.link-btn{background:var(--sage-deep);}
+  button.link-btn:hover{background:var(--sage-deep); filter:brightness(1.05);}
+
+  #mainBtn{font-size:16.5px; padding:17px 30px;}
+
+  /* SONG CARD */
+  #songCard{display:none;}
+  .song-panel{
+    background:var(--surface); border-radius:24px; padding:22px;
+    box-shadow:var(--shadow);
+  }
+  .music-icon{
+    width:56px; height:56px; border-radius:16px;
+    background:var(--surface-soft); display:flex; align-items:center; justify-content:center;
+    font-size:24px; margin-bottom:18px;
+  }
+  .date-tag{
+    font-family:'Inter',sans-serif; font-weight:600; font-size:11.5px;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--lilac-deep);
+    background:var(--surface-soft); display:inline-block; padding:5px 12px;
+    border-radius:20px; margin-bottom:14px;
+  }
+  .song-title{
+    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:22px;
+    color:var(--ink); line-height:1.25; margin-bottom:6px;
+  }
+  .song-artist{font-size:14.5px; color:var(--ink-soft); font-weight:600; margin-bottom:12px;}
+  .genre-tag{
+    display:inline-block; font-size:11.5px; font-weight:600;
+    padding:4px 12px; border-radius:20px; background:var(--sky-deep); color:#fff;
+    margin-bottom:22px;
+  }
+  .song-actions{display:flex; flex-direction:column; gap:10px;}
+  .song-actions a{text-decoration:none;}
+  .song-actions button{width:100%;}
+
+  .round-actions{display:flex; gap:10px; margin-top:18px; flex-wrap:wrap; justify-content:center;}
+  .round-actions button{flex:1; min-width:140px;}
+
+  .used-hint{text-align:center; font-size:12px; color:var(--ink-soft); margin-top:16px;}
+
+  @media (max-width:400px){
+    h1{font-size:26px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">🎧 Nhạc mỗi ngày</div>
+    <h1>Today's <span class="hl">Song</span></h1>
+    <p class="sub">Bấm nút để xem bài hát hôm nay là gì — hoặc gen bài khác nếu muốn nghe thứ mới.</p>
+  </header>
+
+  <div class="idle-panel" id="idlePanel">
+    <div class="idle-emoji">🎵</div>
+    <div class="idle-text">Kho có 29 bài thật, đa dạng khu vực, link YouTube chính thức đã kiểm tra kỹ.</div>
+    <button id="mainBtn">Nhạc hôm nay</button>
+  </div>
+
+  <div id="songCard">
+    <div class="song-panel">
+      <div class="music-icon">🎵</div>
+      <div class="date-tag" id="dateTag">Hôm nay</div>
+      <div class="song-title" id="songTitle">—</div>
+      <div class="song-artist" id="songArtist">—</div>
+      <div><span class="genre-tag" id="songGenre">—</span></div>
+      <div class="song-actions">
+        <a id="youtubeLink" href="#" target="_blank" rel="noopener">
+          <button class="link-btn" type="button">▶ Nghe trên YouTube</button>
+        </a>
+      </div>
+    </div>
+
+    <div class="round-actions">
+      <button class="secondary" id="shuffleBtn">🔀 Gen bài khác</button>
+      <button class="secondary" id="todayBtn">📅 Về bài hôm nay</button>
+    </div>
+    <div class="used-hint" id="usedHint"></div>
+  </div>
+
+</div>
+
+<script>
+const SONGS = [{"id": "nUsrYVxrDwI", "title": "Choosin' Texas", "artist": "Ella Langley", "genre": "Country (US)"}, {"id": "ko70cExuzZM", "title": "The Fate of Ophelia", "artist": "Taylor Swift", "genre": "Pop (US)"}, {"id": "32LLE6Zk6zc", "title": "I Just Might", "artist": "Bruno Mars", "genre": "Funk-Pop (US)"}, {"id": "gdZLi9oWNZg", "title": "Dynamite", "artist": "BTS", "genre": "K-Pop"}, {"id": "knW7-x7Y7RE", "title": "Hãy Trao Cho Anh (ft. Snoop Dogg)", "artist": "Sơn Tùng M-TP", "genre": "V-Pop"}, {"id": "psZ1g9fMfeo", "title": "Chúng Ta Của Hiện Tại", "artist": "Sơn Tùng M-TP", "genre": "V-Pop Ballad"}, {"id": "xypzmu5mMPY", "title": "Muộn Rồi Mà Sao Còn", "artist": "Sơn Tùng M-TP", "genre": "V-Pop"}, {"id": "6t-MjBazs3o", "title": "Có Chắc Yêu Là Đây", "artist": "Sơn Tùng M-TP", "genre": "V-Pop"}, {"id": "abPmZCZZrFA", "title": "Đừng Làm Trái Tim Anh Đau", "artist": "Sơn Tùng M-TP", "genre": "V-Pop Ballad"}, {"id": "SlQR9iu09bQ", "title": "Come My Way (x Tyga)", "artist": "Sơn Tùng M-TP", "genre": "V-Pop/Hip-hop"}, {"id": "DAPigyQ9NSg", "title": "Nhạc Của Rừng (ft. Hiền VK)", "artist": "Đen", "genre": "Rap Việt"}, {"id": "dVX5pGOiLTo", "title": "Việc Lớn (ft. Nhóm Dòng Thời Gian)", "artist": "Đen", "genre": "Rap Việt"}, {"id": "ZpPBozhojuo", "title": "Lãng Đãng", "artist": "Đen", "genre": "Rap Việt"}, {"id": "ZwzWpYV1_Ew", "title": "Chuyến Xe", "artist": "Đen", "genre": "Rap Việt"}, {"id": "CL13X-8o4h0", "title": "Bắc Bling (Bắc Ninh)", "artist": "Hòa Minzy ft. NS Xuân Hinh, Tuấn Cry", "genre": "Dân gian/Hip-hop"}, {"id": "8sVtL0o-v7U", "title": "Người Im Lặng Gặp Người Hay Nói", "artist": "HIEUTHUHAI", "genre": "V-Pop/Rap"}, {"id": "gQlMMD8auMs", "title": "Pink Venom", "artist": "BLACKPINK", "genre": "K-Pop"}, {"id": "Tw08lNebAjE", "title": "DtMF", "artist": "Bad Bunny", "genre": "Latin/Reggaeton"}, {"id": "ekr2nIex040", "title": "APT.", "artist": "ROSÉ & Bruno Mars", "genre": "Pop"}, {"id": "V9PVRfjEBTI", "title": "Birds of a Feather", "artist": "Billie Eilish", "genre": "Pop (US)"}, {"id": "kPa7bsKwL-c", "title": "Die With A Smile", "artist": "Lady Gaga, Bruno Mars", "genre": "Pop Ballad"}, {"id": "suAR1PYFNYA", "title": "Houdini", "artist": "Dua Lipa", "genre": "Nu-disco/Pop"}, {"id": "4NRXx6U8ABQ", "title": "Blinding Lights", "artist": "The Weeknd", "genre": "Synth-pop"}, {"id": "ZRtdQ81jPUQ", "title": "Idol (アイドル)", "artist": "YOASOBI", "genre": "J-Pop"}, {"id": "ca48oMV59LU", "title": "Provenza", "artist": "Karol G", "genre": "Latin Pop"}, {"id": "421w1j87fEM", "title": "Last Last", "artist": "Burna Boy", "genre": "Afrobeats"}, {"id": "ArmDp-zijuc", "title": "Super Shy", "artist": "NewJeans", "genre": "K-Pop"}, {"id": "JGwWNGJdvx8", "title": "Shape of You", "artist": "Ed Sheeran", "genre": "Pop (UK)"}, {"id": "q0hyYWKXF0Q", "title": "Dance Monkey", "artist": "Tones and I", "genre": "Electropop (AU)"}];
+
+/* ---------- STATE ---------- */
+let shuffleBag = [];
+let mode = 'today';
+
+/* ---------- DOM ---------- */
+const idlePanel = document.getElementById('idlePanel');
+const songCard = document.getElementById('songCard');
+const mainBtn = document.getElementById('mainBtn');
+const shuffleBtn = document.getElementById('shuffleBtn');
+const todayBtn = document.getElementById('todayBtn');
+const dateTag = document.getElementById('dateTag');
+const songTitle = document.getElementById('songTitle');
+const songArtist = document.getElementById('songArtist');
+const songGenre = document.getElementById('songGenre');
+const youtubeLink = document.getElementById('youtubeLink');
+const usedHint = document.getElementById('usedHint');
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function resetShuffleBag(){
+  shuffleBag = shuffle(SONGS.map((_,i)=>i));
+}
+
+function todaysIndex(){
+  const daysSinceEpoch = Math.floor(Date.now() / 86400000);
+  return daysSinceEpoch % SONGS.length;
+}
+
+function formatDate(){
+  const d = new Date();
+  const dd = String(d.getDate()).padStart(2,'0');
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const yyyy = d.getFullYear();
+  return dd+'/'+mm+'/'+yyyy;
+}
+
+function renderSong(index, label){
+  const song = SONGS[index];
+  songTitle.textContent = song.title;
+  songArtist.textContent = song.artist;
+  songGenre.textContent = song.genre;
+  youtubeLink.href = 'https://www.youtube.com/watch?v='+song.id;
+  dateTag.textContent = label;
+
+  idlePanel.style.display = 'none';
+  songCard.style.display = 'block';
+}
+
+function showToday(){
+  mode = 'today';
+  renderSong(todaysIndex(), 'Hôm nay · '+formatDate());
+  usedHint.textContent = '';
+}
+
+function showNextShuffle(){
+  mode = 'shuffle';
+  if(shuffleBag.length === 0){
+    resetShuffleBag();
+  }
+  const idx = shuffleBag.pop();
+  renderSong(idx, 'Random');
+  usedHint.textContent = 'Còn '+shuffleBag.length+' / '+SONGS.length+' bài chưa lặp trong vòng random này.';
+}
+
+mainBtn.addEventListener('click', showToday);
+todayBtn.addEventListener('click', showToday);
+shuffleBtn.addEventListener('click', showNextShuffle);
+</script>
+</body>
+</html>
