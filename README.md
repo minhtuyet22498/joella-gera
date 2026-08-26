@@ -31,7 +31,7 @@ Biến thể khó hơn của game trên: đa số nhận 1 từ, gián điệp n
 
 ## 🎧 Today's Song — Nhạc Hôm Nay
 
-Bấm 1 nút là ra ngay 1 bài hát hôm nay (tự đổi bài mỗi ngày, ai bấm cùng ngày cũng ra bài giống nhau), kèm nút mở nghe trực tiếp trên YouTube. Không thích bài hôm nay thì bấm "Gen bài khác" để random bài trong kho — có sẵn gần 30 bài đa dạng vùng miền (Vpop, Rap Việt, US-UK, Kpop, Latin, Afrobeats, J-pop...), mỗi bài đều đã kiểm tra link YouTube chính thức.
+Bấm 1 nút là ra ngay 1 bài hát hôm nay (tự đổi bài mỗi ngày, ai bấm cùng ngày cũng ra bài giống nhau), kèm nút mở nghe trực tiếp trên YouTube. Không thích bài hôm nay thì bấm "Gen bài khác" để random bài trong kho — có sẵn gần 100 bài đa dạng vùng miền (Vpop, Rap Việt, US-UK, Kpop, Latin, Afrobeats, J-pop...), mỗi bài đều đã kiểm tra link YouTube chính thức.
 
 👉 [Nghe ngay](https://minhtuyet22498.github.io/joella-gera/today-song.html)
 
