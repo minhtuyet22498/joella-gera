@@ -19,6 +19,10 @@ Học tiếng Trung HSK1 cho người Việt. Mục tiêu: 150 từ trong 30 ng�
 > Tiến độ lưu trên trình duyệt của từng máy. Dùng "Mã tiến độ" ở tab Thành tích để chuyển sang máy khác.
 > iPhone: mở bằng Safari, rồi chọn **Thêm vào Màn hình chính** để không bị mất tiến độ.
 
+### B1-B2 English
+
+▶️ **[Mở app](https://minhtuyet22498.github.io/joella-gera/worktalk-b1b2.html)**
+
 # 🎮 Mấy App/Game Tự Chế Bằng AI
 
 Mấy cái app/game trong repo này mình nhờ AI (Claude) gen ra cho vui, không có gì to tát 😄
