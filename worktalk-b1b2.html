@@ -170,6 +170,7 @@ summary{cursor:pointer;font-weight:700}
 .opt.sel{border-color:var(--sky);background:var(--soft)}
 .tin{width:100%;font:20px var(--fb);padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink)}
 .tin:focus{border-color:var(--sky);outline:none}
+.grp{font-size:19px;margin:24px 0 2px}
 @media (prefers-reduced-motion:reduce){.mic.rec{animation:none}*{scroll-behavior:auto!important}}
 </style>
 </head>
@@ -1550,28 +1551,593 @@ disagree:[["I understand/I see/I know","but"],["willing/happy to/would like to h
 present:[["good morning/good afternoon","today I'd like/I'd like to/I'm going to"],["good question","I'll/I will","email/send/check/find out"],["to sum up/in summary/in conclusion/to conclude","thank you"]],
 smalltalk:[["pretty good/good thanks/not bad/fine thanks","how about you/and you/what about you"],["I'm thinking/I'm going/I'm planning/I might","are you/what about you/how about you/and you"],["I'd love to/sure/yes please/sounds great"]]};
 
+/* ===================== DATA: LISTENING EXPANSION (formats + accents) ===================== */
+LS[0].ac={Sarah:"en-GB",Duc:"en-US"};LS[0].lv="B1";
+LS[1].ac={"Mr. Kumar":"en-IN",Linh:"en-US"};LS[1].lv="B1";
+LS[2].ac={Karen:"en-AU"};LS[2].lv="B1";
+LS[3].ac={Tuan:"en-US","Mrs. Harris":"en-GB"};LS[3].lv="B1";
+LS[4].ac={Peter:"en-GB",Ngoc:"en-US"};LS[4].lv="B2";
+LS.push(
+{t:"Business news on the radio",vi:"Bản tin kinh tế trên radio",type:"Bản tin",lv:"B2",ac:{Newsreader:"en-GB"},
+d:[["Newsreader","Good evening. Here is the business news."],
+["Newsreader","Electronics maker Vinatech has announced plans to open a new factory in Da Nang, creating around two thousand jobs."],
+["Newsreader","The company says production will begin in early twenty twenty-eight, with the first products aimed at the Japanese and Korean markets."],
+["Newsreader","Local officials welcomed the news, but some business groups are concerned about a shortage of skilled workers in the region."],
+["Newsreader","To address this, Vinatech has promised to work with local universities on a training programme for engineers."],
+["Newsreader","In other news, fuel prices rose for the third month in a row, which transport companies say will push up delivery costs."],
+["Newsreader","And finally, a survey of five hundred managers found that more than half now allow staff to work from home at least one day a week."]],
+q:[{q:"Where will the new factory be?",o:["Da Nang","Hanoi","Japan","Korea"]},
+{q:"How many jobs will it create?",o:["About 2,000","About 200","About 20,000","About 500"]},
+{q:"What are some business groups worried about?",o:["Not enough skilled workers","Pollution","Higher taxes","Competition from Japan"]},
+{q:"What has happened to fuel prices?",o:["They have risen for three months","They have fallen","They have stayed the same","They have doubled"]},
+{q:"What did the survey find?",o:["More than half of managers allow some home working","Most staff want a four-day week","Managers want more training","Delivery costs have fallen"]}]},
+{t:"Podcast: beating Monday overload",vi:"Podcast: hết quá tải sáng thứ Hai",type:"Podcast",lv:"B2",ac:{Host:"en-US",Emma:"en-AU"},
+d:[["Host","Welcome back to Work Smarter. My guest today is Emma Clarke, a productivity coach. Emma, why do so many people feel overwhelmed on Monday mornings?"],
+["Emma","Mostly because they open their inbox first. Within ten minutes, other people's problems have taken over their whole day."],
+["Host","So what should they do instead?"],
+["Emma","Spend the first thirty minutes on your most important task, before you check email. Even half an hour of real progress changes how the rest of the day feels."],
+["Host","Some listeners say their boss expects an instant reply, though."],
+["Emma","That's fair. In that case, agree on a rule with your team, for example that urgent issues come by phone, not email. Then nobody worries about missing something."],
+["Host","And what about meetings?"],
+["Emma","I'd suggest cutting every regular meeting by ten minutes. People rarely notice the difference, but over a month you save hours."],
+["Host","Great tips. Where can people find you?"],
+["Emma","My weekly newsletter is free, and every Friday I send one practical idea."]],
+q:[{q:"What is Emma's job?",o:["Productivity coach","Podcast host","Office manager","Journalist"]},
+{q:"What does Emma say causes Monday overload?",o:["Checking email first","Too many meetings","Working late on Sunday","Slow computers"]},
+{q:"What does she recommend for the first thirty minutes?",o:["Work on the most important task","Answer urgent emails","Plan the whole week","Have a team meeting"]},
+{q:"What should a team agree if the boss expects fast replies?",o:["Urgent issues come by phone","Everyone checks email every hour","Meetings start later","Email is banned"]},
+{q:"How much should regular meetings be cut?",o:["By ten minutes","By half","By thirty minutes","Completely"]}]},
+{t:"Three voicemail messages",vi:"Ba lời nhắn thoại",type:"Lời nhắn thoại",lv:"B1",ac:{System:"en-US",Priya:"en-IN",James:"en-GB",Kelly:"en-US#1"},
+d:[["System","Message one."],
+["Priya","Hi, it's Priya from the Mumbai office. The samples you asked for were sent this morning by courier, so they should arrive on Thursday. Please let me know when they're there."],
+["System","Message two."],
+["James","Hello, this is James from Fresh Print. Your business cards are ready, but there's a spelling mistake in the email address. Could you call me back to check it before we print the rest?"],
+["System","Message three."],
+["Kelly","Hey, it's Kelly. The client dinner on Friday has moved from seven to seven thirty, and it's now at the Riverside Hotel, not the Park Hotel. See you there!"]],
+q:[{q:"When should the samples arrive?",o:["Thursday","This morning","Friday","Next week"]},
+{q:"What is the problem with the business cards?",o:["A spelling mistake in the email address","The wrong phone number","They are late","The wrong colour"]},
+{q:"What does James want?",o:["A call back","A payment","New photos","A bigger order"]},
+{q:"What time is the client dinner now?",o:["7:30","7:00","8:00","6:30"]},
+{q:"Where is the dinner now?",o:["The Riverside Hotel","The Park Hotel","The office","Kelly's house"]}]},
+{t:"Business trip: airport and hotel",vi:"Công tác: sân bay và khách sạn",type:"Thông báo + hội thoại",lv:"B1",ac:{Announcer:"en-AU",Receptionist:"en-GB",Guest:"en-US"},
+d:[["Announcer","Attention, please. Passengers on flight QF fifty-two to Sydney, please note that the departure gate has changed to gate fifteen. Boarding will start at ten forty."],
+["Announcer","Passengers are reminded that liquids over one hundred millilitres are not allowed in hand luggage."],
+["Receptionist","Good evening, welcome to the Harbour View Hotel. Do you have a reservation?"],
+["Guest","Yes, it's under Nguyen. I booked a single room for three nights."],
+["Receptionist","Thank you, Mr. Nguyen. Breakfast is served from six thirty to ten on the ground floor, and the Wi-Fi password is on your key card."],
+["Guest","Great. Is there a shuttle bus to the conference centre?"],
+["Receptionist","Yes, it leaves every thirty minutes from the main entrance, starting at seven a.m. It's free for hotel guests."],
+["Guest","Perfect. And could I have a late check-out on Friday?"],
+["Receptionist","I can give you until one p.m. at no extra charge."]],
+q:[{q:"Which gate does flight QF 52 now leave from?",o:["Gate 15","Gate 50","Gate 10","Gate 40"]},
+{q:"How many nights is the guest staying?",o:["Three","One","Two","Four"]},
+{q:"Where can the guest find the Wi-Fi password?",o:["On the key card","At reception","In an email","On the TV"]},
+{q:"How often does the shuttle bus leave?",o:["Every 30 minutes","Every hour","Every 15 minutes","Only at 7 a.m."]},
+{q:"Until what time can the guest stay on Friday?",o:["1 p.m.","11 a.m.","12 p.m.","3 p.m."]}]},
+{t:"Panel interview: logistics coordinator",vi:"Phỏng vấn hội đồng: điều phối logistics",type:"Phỏng vấn",lv:"B2",ac:{Helen:"en-GB",Raj:"en-IN",Minh:"en-US"},
+d:[["Helen","Thanks for coming in, Minh. Let's start with your current role. What does a typical day look like?"],
+["Minh","I coordinate deliveries for about forty clients. In the morning I check the delivery schedule, and in the afternoon I mostly deal with problems, such as late trucks or missing documents."],
+["Raj","Can you tell us about a time when something went seriously wrong?"],
+["Minh","Last year, a typhoon closed the port for three days. I contacted every client personally, explained the situation and arranged air freight for the most urgent orders. We didn't lose a single customer."],
+["Helen","Impressive. Why do you want to leave your current company?"],
+["Minh","I've learned a lot there, but I'd like to work with international routes, and your company ships to over twenty countries."],
+["Raj","This role involves managing two junior staff. Have you led a team before?"],
+["Minh","Not officially, but I've trained three new colleagues and I often organise the team's weekly plan."],
+["Helen","Thank you. We'll let you know by the end of next week."]],
+q:[{q:"How many clients does Minh coordinate deliveries for?",o:["About 40","About 14","About 20","About 4"]},
+{q:"What problem did the typhoon cause?",o:["The port closed for three days","Trucks were damaged","Staff couldn't get to work","Documents were lost"]},
+{q:"How did Minh deal with the most urgent orders?",o:["He arranged air freight","He cancelled them","He delayed them","He sent them by truck"]},
+{q:"Why does Minh want to change jobs?",o:["To work with international routes","For a higher salary","Because of his manager","To work fewer hours"]},
+{q:"What leadership experience does Minh mention?",o:["Training new colleagues","Managing a large team","Running his own company","Leading a project abroad"]}]},
+{t:"Training video: the new expenses app",vi:"Video hướng dẫn: app thanh toán chi phí",type:"Video hướng dẫn",lv:"B1",ac:{Trainer:"en-US"},
+d:[["Trainer","Hi everyone. In this short video, I'll show you how to use the new expenses app."],
+["Trainer","First, take a photo of your receipt as soon as you get it. The app reads the date and the amount automatically, but please check them before you save."],
+["Trainer","Next, choose a category, for example travel, meals or hotels. If you're not sure, choose other and add a short note."],
+["Trainer","Remember that meals are limited to twenty dollars per person, unless you're with a client. In that case, add the client's name."],
+["Trainer","Claims must be submitted within thirty days of the purchase. After that, the system won't accept them."],
+["Trainer","Your manager will approve or reject each claim within five working days, and the money will be paid with your next salary."],
+["Trainer","That's it. If you have any problems, contact the finance team, not IT."]],
+q:[{q:"What does the app read automatically from receipts?",o:["The date and the amount","The category","The client's name","The manager's name"]},
+{q:"What should you choose if you're not sure of the category?",o:["Other","Travel","Meals","Hotels"]},
+{q:"When can a meal cost more than $20 per person?",o:["When you're with a client","At weekends","When travelling abroad","When your manager agrees"]},
+{q:"What is the deadline for submitting claims?",o:["30 days after the purchase","5 working days","The end of the month","20 days after the purchase"]},
+{q:"Who should you contact if you have problems?",o:["The finance team","IT support","Your manager","HR"]}]},
+{t:"Video call: connection problems",vi:"Họp online: sự cố kết nối",type:"Cuộc gọi video",lv:"B1",ac:{Anna:"en-GB",Raj:"en-IN",Ben:"en-US"},
+d:[["Anna","Hi everyone, can you all hear me?"],
+["Raj","I can hear you, Anna, but your video is frozen."],
+["Anna","Sorry about that. My connection is a bit unstable today. I'll turn my camera off to save bandwidth."],
+["Ben","Raj, you're breaking up. Could you say that again?"],
+["Raj","Sorry, I said the client wants the report by Wednesday instead of Friday."],
+["Ben","Wednesday? That's tight. We still need the sales figures from the Hanoi office."],
+["Anna","I'll call Hanoi straight after this call and ask them to send the figures today."],
+["Raj","Great. Ben, could you share your screen so we can look at the draft?"],
+["Ben","Sure, one moment. Can you see it now?"],
+["Raj","Yes, that's fine. Let's go through it page by page."]],
+q:[{q:"What is wrong with Anna's video?",o:["It is frozen","It is too dark","There is no sound","It is upside down"]},
+{q:"What does Anna do to improve the call?",o:["Turns off her camera","Restarts her computer","Moves to another room","Calls by phone instead"]},
+{q:"When does the client now want the report?",o:["Wednesday","Friday","Today","Next week"]},
+{q:"What information is still missing?",o:["Sales figures from Hanoi","The client's address","The draft report","The budget"]},
+{q:"What does Raj ask Ben to do?",o:["Share his screen","Call Hanoi","Write the report","End the call"]}]}
+);
+const ACN={"en-US":"Mỹ","en-GB":"Anh","en-AU":"Úc","en-IN":"Ấn Độ"};
+const EXT=[
+{t:"BBC Learning English: Business English",lv:"B1–B2",u:"https://www.bbc.co.uk/learningenglish/english/business-english",d:"Các series về tiếng Anh công sở, trong đó có podcast Office English (khoảng 7 phút/tập) với transcript và phụ đề. Giọng Anh-Anh."},
+{t:"BBC Learning English: 6 Minute English",lv:"B1–B2",u:"https://www.bbc.co.uk/learningenglish/english/features/6-minute-english",d:"Hai người dẫn nói về một chủ đề thời sự trong 6 phút, có transcript và từ vựng. Hợp để nghe mỗi ngày."},
+{t:"British Council: B1 listening",lv:"B1",u:"https://learnenglish.britishcouncil.org/free-resources/listening/b1",d:"Bài nghe B1 có bài chuẩn bị và 2 bài tập: cuộc gọi khách hàng, họp nhóm, phỏng vấn radio về cân bằng công việc."},
+{t:"British Council: B2 listening",lv:"B2",u:"https://learnenglish.britishcouncil.org/free-resources/listening/b2",d:"Bài nghe B2: phỏng vấn kinh doanh, thuyết trình sản phẩm, bản tin kinh tế, podcast. Có bài tập kiểm tra."},
+{t:"British Council: Podcasts for professionals",lv:"B2",u:"https://learnenglish.britishcouncil.org/business/podcasts-professionals",d:"Bài nói, thuyết trình và hội thoại về quản lý, xung đột, kiệt sức trong công việc. Có transcript và bài tập."},
+{t:"TED Talks",lv:"B2+",u:"https://www.ted.com/talks",d:"Bài nói thật với nhiều giọng từ khắp thế giới, có transcript và phụ đề. Chọn bài ngắn dưới 10 phút về chủ đề công việc."}];
+
+/* ===================== DATA: LEVEL-UP TESTS ===================== */
+const LT_B1_TEXT="Hi team,<br><br>From next Monday, the office will open at 7:30 instead of 8:00, so that staff can leave earlier on Fridays. On Fridays, everyone can go home at 3:30 if they have finished their work.<br><br>The coffee machine on the second floor is broken, so please use the one in the kitchen until it is repaired.<br><br>Finally, don't forget that Linh's leaving party is on Thursday at 5 p.m. in the meeting room.<br><br>Thanks,<br>Sara";
+const LT_B2_TEXT="<b>The four-day week: early results</b><br><br>A growing number of companies are testing a four-day working week without cutting salaries. In a recent trial involving 60 firms, most reported that productivity stayed the same or improved, while staff took fewer sick days.<br><br>However, the results were not equally positive in every sector. Customer-facing businesses, such as call centres, found it harder to cover all their opening hours and in some cases had to hire extra staff, which increased costs.<br><br>Researchers point out that the success of the trial depended largely on how well companies redesigned their work. Firms that simply squeezed five days of tasks into four reported higher stress levels. By contrast, those that cut unnecessary meetings and introduced clear priorities saw the biggest benefits.<br><br>Most of the companies involved have decided to continue with the scheme, although several are planning to review it after another year.";
+const LT={
+B1:{name:"B1",need:15,items:[
+{sec:"Ngữ pháp và từ vựng",q:"I ___ my keys. Can you help me look for them?",o:["have lost","lost","am losing","lose"]},
+{sec:"Ngữ pháp và từ vựng",q:"If it ___ tomorrow, we'll cancel the trip.",o:["rains","will rain","rained","raining"]},
+{sec:"Ngữ pháp và từ vựng",q:"She ___ in Hanoi since 2019.",o:["has lived","lives","is living","lived"]},
+{sec:"Ngữ pháp và từ vựng",q:"The documents ___ to you yesterday.",o:["were sent","sent","have sent","are sent"]},
+{sec:"Ngữ pháp và từ vựng",q:"You ___ wear a helmet here. It's required.",o:["must","could","might","would"]},
+{sec:"Ngữ pháp và từ vựng",q:"I'm looking forward ___ you next week.",o:["to meeting","meeting","to meet","meet"]},
+{sec:"Ngữ pháp và từ vựng",q:"He asked me where I ___.",o:["worked","do work","work did","did work"]},
+{sec:"Ngữ pháp và từ vựng",q:"This is the colleague ___ helped me on my first day.",o:["who","which","where","whose"]},
+{sec:"Ngữ pháp và từ vựng",q:"I ___ work in a bank, but now I'm a teacher.",o:["used to","use to","am used to","was used"]},
+{sec:"Ngữ pháp và từ vựng",q:"Could you ___ the meeting to Friday?",o:["move","make","do","take"]},
+{sec:"Ngữ pháp và từ vựng",q:"I'm afraid the manager is not ___ at the moment.",o:["available","possible","able","free time"]},
+{sec:"Ngữ pháp và từ vựng",q:"Sales were ___ than we expected.",o:["better","more good","best","gooder"]},
+{sec:"Đọc",passage:LT_B1_TEXT,q:"What time will the office open from next Monday?",o:["7:30","8:00","3:30","5:00"]},
+{sec:"Đọc",passage:LT_B1_TEXT,q:"Why is the opening time changing?",o:["So staff can leave early on Fridays","Because of traffic","Because the coffee machine is broken","Because of Linh's party"]},
+{sec:"Đọc",passage:LT_B1_TEXT,q:"Where should staff get coffee?",o:["In the kitchen","On the second floor","In the meeting room","Outside the office"]},
+{sec:"Đọc",passage:LT_B1_TEXT,q:"What is happening on Thursday?",o:["A leaving party","A training session","A client visit","The office will close"]},
+{sec:"Nghe",audio:"Hi, this is Tom. I'm sorry, but I'm stuck in traffic. I'll be about twenty minutes late for our meeting. Please start without me.",q:"Why will Tom be late?",o:["Because of traffic","He is ill","His train was cancelled","He forgot the meeting"]},
+{sec:"Nghe",audio:"The training room has changed. Today's session will be in Room two oh four on the second floor, not Room one oh four.",q:"Where is the training today?",o:["Room 204","Room 104","On the first floor","Room 240"]},
+{sec:"Nghe",audio:"Good morning, BrightTech. I'm afraid Mr. Lee is out of the office until Wednesday. Can I take a message?",q:"When will Mr. Lee be back?",o:["Wednesday","Today","Tomorrow","Next week"]},
+{sec:"Nghe",audio:"Thanks for your order. Your parcel will be delivered tomorrow between nine and twelve. You don't need to be at home; the driver will leave it at reception.",q:"What is true about the delivery?",o:["It will be left at reception","It will arrive in the afternoon","You must be at home","It will arrive next week"]}]},
+B2:{name:"B2",need:15,items:[
+{sec:"Ngữ pháp và từ vựng",q:"If we had left earlier, we ___ the flight.",o:["wouldn't have missed","wouldn't miss","didn't miss","won't miss"]},
+{sec:"Ngữ pháp và từ vựng",q:"Not until the end of the meeting ___ the real problem.",o:["did we realise","we realised","we did realise","realised we"]},
+{sec:"Ngữ pháp và từ vựng",q:"By the time the project ends, we ___ over $2 million.",o:["will have spent","will spend","are spending","spent"]},
+{sec:"Ngữ pháp và từ vựng",q:"She must ___ the email. She replied straight away.",o:["have read","read","be reading","had read"]},
+{sec:"Ngữ pháp và từ vựng",q:"I'd rather you ___ this information to anyone.",o:["didn't show","don't show","won't show","not show"]},
+{sec:"Ngữ pháp và từ vựng",q:"We had the machines ___ last month.",o:["serviced","service","to service","servicing"]},
+{sec:"Ngữ pháp và từ vựng",q:"___ the instructions carefully, he started the machine.",o:["Having read","Read","Being read","To read"]},
+{sec:"Ngữ pháp và từ vựng",q:"The proposal was rejected, ___ surprised everyone.",o:["which","that","what","it"]},
+{sec:"Ngữ pháp và từ vựng",q:"Despite ___ a smaller budget, the team finished on time.",o:["having","have","had","to have"]},
+{sec:"Ngữ pháp và từ vựng",q:"The new policy will ___ effect from 1 January.",o:["take","make","have","do"]},
+{sec:"Ngữ pháp và từ vựng",q:"We need to ___ a balance between cost and quality.",o:["strike","hit","make","do"]},
+{sec:"Ngữ pháp và từ vựng",q:"Her proposal was ___ by the board.",o:["turned down","turned off","put down","taken down"]},
+{sec:"Đọc",passage:LT_B2_TEXT,q:"What happened to productivity in most firms?",o:["It stayed the same or improved","It fell sharply","It was not measured","It depended on salaries"]},
+{sec:"Đọc",passage:LT_B2_TEXT,q:"Why did customer-facing businesses find the trial difficult?",o:["They struggled to cover their opening hours","Their staff refused to take part","Their salaries were cut","They had too many meetings"]},
+{sec:"Đọc",passage:LT_B2_TEXT,q:"According to the researchers, success depended mainly on...",o:["how companies reorganised their work","the size of the company","the number of sick days","the location of the office"]},
+{sec:"Đọc",passage:LT_B2_TEXT,q:"What is the writer's overall view of the results?",o:["Positive, but with some limitations","Completely negative","Too early to say anything","Positive only for call centres"]},
+{sec:"Nghe",audio:"While the new software has undoubtedly sped up invoicing, I'm not convinced it's worth the cost. We're paying for features we simply don't use, so I'd suggest we renegotiate the contract before it renews in June.",q:"What is the speaker's main point?",o:["They should renegotiate the software contract","The software is too slow","Invoicing should stop in June","They need more features"]},
+{sec:"Nghe",audio:"Contrary to what many people assume, the delay wasn't caused by our supplier. The parts arrived on time; it was our own quality checks that took longer than planned, because two inspectors were off sick.",q:"What caused the delay?",o:["Slow quality checks","The supplier","Late parts","A shipping problem"]},
+{sec:"Nghe",audio:"Had we launched in March as originally planned, we'd have been competing directly with two major brands. Waiting until September was frustrating, but in hindsight it gave us a much clearer space in the market.",q:"How does the speaker feel about the later launch now?",o:["It was the right decision","It was a mistake","It made no difference","It was too early"]},
+{sec:"Nghe",audio:"I'd be happy to take on the Singapore account, provided that someone else can cover my current clients. Otherwise, I don't think I could give either of them the attention they deserve.",q:"What condition does the speaker set?",o:["Someone must cover her current clients","She needs a higher salary","She wants to move to Singapore","She needs more training"]}]}};
+
+/* ===================== DATA: C1–C2 PROFESSIONAL TRACK (ERP, accounting, negotiation, leadership) ===================== */
+const ADVRAW=[
+["ERP & systems","ERP và hệ thống",`implementation|việc triển khai (hệ thống)|The ERP implementation took eighteen months.
+go-live|ngày vận hành chính thức|We postponed go-live by two weeks.
+rollout|triển khai diện rộng|The rollout to the Hanoi branch starts in May.
+legacy system|hệ thống cũ|We need to migrate data from the legacy system.
+data migration|chuyển đổi dữ liệu|Data migration is the riskiest part of the project.
+customisation|tùy biến|Too much customisation makes upgrades expensive.
+configuration|cấu hình|Most requirements can be met through configuration.
+out-of-the-box|có sẵn theo chuẩn|Use out-of-the-box features wherever possible.
+workaround|cách xử lý tạm thời|We found a workaround until the patch is released.
+user acceptance testing|kiểm thử chấp nhận người dùng (UAT)|User acceptance testing starts next Monday.
+sign-off|phê duyệt chính thức|We need the client's sign-off before go-live.
+change request|yêu cầu thay đổi|Any new feature must go through a change request.
+scope creep|phình phạm vi|Scope creep is the main reason for the delay.
+requirement gathering|thu thập yêu cầu|Requirement gathering took longer than planned.
+gap analysis|phân tích khoảng trống|The gap analysis showed twenty missing processes.
+integration|tích hợp|The integration with the bank's system failed.
+interface|giao diện kết nối giữa hệ thống|The interface sends invoices to the tax portal.
+master data|dữ liệu gốc|Clean master data is essential for reporting.
+module|phân hệ|We will launch the finance module first.
+workflow|luồng quy trình (trên hệ thống)|The approval workflow has three levels.
+audit trail|dấu vết kiểm toán|The system keeps an audit trail of every change.
+access rights|quyền truy cập|Access rights are reviewed every quarter.
+downtime|thời gian ngừng hệ thống|Planned downtime is from 10 p.m. to 2 a.m.
+cutover|chuyển đổi sang hệ thống mới|The cutover weekend went smoothly.
+hypercare|giai đoạn hỗ trợ sát sau go-live|Hypercare will last four weeks.
+roadmap|lộ trình|The product roadmap includes AI features next year.
+vendor|nhà cung cấp (phần mềm)|We compared three ERP vendors.
+licence|giấy phép sử dụng|The licence fee is charged per user.
+stakeholder buy-in|sự ủng hộ của các bên liên quan|Without stakeholder buy-in, the project will fail.
+end user|người dùng cuối|End users need hands-on training.`],
+["Accounting & finance","Kế toán và tài chính",`accounts payable|công nợ phải trả|Accounts payable processes 500 invoices a month.
+accounts receivable|công nợ phải thu|Accounts receivable increased by 12%.
+general ledger|sổ cái|All entries are posted to the general ledger.
+journal entry|bút toán|Please reverse the incorrect journal entry.
+accrual|khoản dồn tích|We booked an accrual for unpaid electricity.
+depreciation|khấu hao|Depreciation is calculated monthly.
+reconciliation|đối chiếu|The bank reconciliation must be done by day three.
+month-end close|khóa sổ cuối tháng|Month-end close now takes five days instead of eight.
+balance sheet|bảng cân đối kế toán|The balance sheet shows strong cash reserves.
+income statement|báo cáo kết quả kinh doanh|Revenue on the income statement fell slightly.
+cash flow|dòng tiền|Cash flow is our biggest concern this quarter.
+working capital|vốn lưu động|We need to improve working capital.
+audit|cuộc kiểm toán|The external audit starts in March.
+auditor|kiểm toán viên|The auditors asked for more evidence.
+compliance|sự tuân thủ|Tax compliance is a priority for the board.
+provision|khoản dự phòng|We made a provision for bad debts.
+write off|xóa sổ (khoản nợ)|We had to write off the unpaid invoice.
+variance|chênh lệch so với kế hoạch|There is a large variance in marketing costs.
+cost centre|trung tâm chi phí|Each department is a separate cost centre.
+VAT|thuế giá trị gia tăng|VAT is charged at ten percent.
+three-way matching|đối chiếu 3 bên (PO, nhận hàng, hóa đơn)|Three-way matching reduces payment errors.
+fiscal year|năm tài chính|Our fiscal year ends in December.
+consolidation|hợp nhất (báo cáo)|Consolidation of the five subsidiaries is complex.
+intercompany|giao dịch nội bộ tập đoàn|Intercompany balances must match.
+margin|biên lợi nhuận|Our gross margin improved to 35%.
+liquidity|khả năng thanh khoản|The bank is worried about our liquidity.
+overheads|chi phí chung|We need to cut overheads.
+asset|tài sản|Fixed assets are depreciated over five years.
+liability|nợ phải trả|Short-term liabilities have increased.
+equity|vốn chủ sở hữu|The investors own 40% of the equity.`],
+["Negotiation","Đàm phán",`leverage|lợi thế đàm phán|We have more leverage because we are their biggest client.
+concession|sự nhượng bộ|We made a small concession on price.
+counter-offer|đề nghị ngược lại|They rejected our price and made a counter-offer.
+bottom line|giới hạn cuối cùng|Our bottom line is a 5% discount, no more.
+walk away|rút khỏi đàm phán|We are prepared to walk away if the terms don't change.
+win-win|đôi bên cùng có lợi|We're looking for a win-win solution.
+common ground|điểm chung|Let's start with the areas where we have common ground.
+trade-off|sự đánh đổi|There's a trade-off between price and delivery time.
+deadlock|bế tắc|The talks reached a deadlock over payment terms.
+compromise|sự thỏa hiệp|Both sides had to compromise.
+terms and conditions|điều khoản và điều kiện|Please review the terms and conditions carefully.
+payment terms|điều khoản thanh toán|We'd like payment terms of 60 days.
+non-negotiable|không thể thương lượng|The delivery date is non-negotiable.
+tentative|tạm thời, chưa chốt|We have a tentative agreement.
+binding|có tính ràng buộc|This document is not legally binding.
+clause|điều khoản|We need to add a penalty clause.
+penalty|tiền phạt|There is a penalty for late delivery.
+volume discount|chiết khấu theo số lượng|We can offer a volume discount above 1,000 units.
+in principle|về nguyên tắc|We agree in principle, but the details need work.
+meet halfway|mỗi bên nhượng một nửa|Could we meet halfway on the price?
+on the table|đang được đưa ra bàn|Everything is on the table at this stage.
+renegotiate|đàm phán lại|We want to renegotiate the contract next year.
+counterpart|người đồng cấp bên kia|My counterpart at the supplier is very experienced.
+draft agreement|bản dự thảo thỏa thuận|We'll send you a draft agreement by Friday.
+deal-breaker|điều kiện không có thì không ký|Lack of local support is a deal-breaker for us.
+stall|câu giờ, trì hoãn|They are stalling because they need approval from head office.
+close the deal|chốt hợp đồng|We closed the deal after three meetings.
+mutually beneficial|cùng có lợi|We want a mutually beneficial partnership.
+service level agreement|thỏa thuận mức dịch vụ (SLA)|The service level agreement guarantees a four-hour response.
+BATNA|phương án tốt nhất nếu không đạt thỏa thuận|Our BATNA is to stay with the current vendor.`],
+["Leadership & management","Lãnh đạo và quản lý",`empower|trao quyền|We want to empower teams to make decisions.
+accountable|chịu trách nhiệm giải trình|Each manager is accountable for their budget.
+accountability|trách nhiệm giải trình|We need clear accountability for each task.
+morale|tinh thần làm việc|Team morale dropped after the restructuring.
+underperform|làm việc dưới kỳ vọng|One team member has been underperforming for months.
+constructive feedback|góp ý mang tính xây dựng|Constructive feedback helps people grow.
+one-to-one|buổi gặp riêng 1-1|I have one-to-ones with my team every two weeks.
+coach|kèm cặp, huấn luyện|She coaches new managers.
+succession plan|kế hoạch kế nhiệm|We need a succession plan for key roles.
+vision|tầm nhìn|The CEO shared her vision for the next five years.
+align|thống nhất, đồng bộ|We need to align our goals with the company strategy.
+prioritise|ưu tiên|We must prioritise the projects with the highest return.
+restructure|tái cấu trúc|The company restructured its sales division.
+resistance to change|sự chống đối thay đổi|There was strong resistance to change in the finance team.
+buy-in|sự đồng thuận, ủng hộ|We need buy-in from the department heads.
+escalate|báo lên cấp trên|If the issue isn't fixed by Friday, escalate it to me.
+initiative|sáng kiến; tính chủ động|She takes the initiative without being asked.
+KPI|chỉ số hiệu suất chính|Our main KPI is on-time delivery.
+headcount|số lượng nhân sự|We can't increase headcount this year.
+retention|việc giữ chân nhân viên|Staff retention has improved since we introduced flexible hours.
+delegation|sự ủy quyền, giao việc|Effective delegation frees up your time for strategy.
+conflict resolution|giải quyết xung đột|She is excellent at conflict resolution.
+decisive|quyết đoán|In a crisis, leaders must be decisive.
+transparent|minh bạch|Be transparent about the reasons for the decision.
+foster|thúc đẩy, nuôi dưỡng|We want to foster a culture of trust.
+oversee|phụ trách, giám sát|He oversees three regional offices.
+spearhead|dẫn dắt (một dự án)|She spearheaded the ERP project.
+stakeholder management|quản lý các bên liên quan|Stakeholder management takes most of my time.
+lead by example|làm gương|Managers should lead by example.
+psychological safety|cảm giác an toàn để lên tiếng|Psychological safety helps teams admit mistakes early.`],
+["Strategy & business","Chiến lược và kinh doanh",`streamline|tinh gọn|We streamlined the approval process.
+optimise|tối ưu hóa|We need to optimise our inventory levels.
+scalable|có thể mở rộng|The new system is fully scalable.
+viable|khả thi|Is this plan financially viable?
+feasibility study|nghiên cứu khả thi|We carried out a feasibility study.
+business case|đề án kinh doanh|Please prepare a business case for the new module.
+return on investment|lợi tức đầu tư (ROI)|The return on investment is expected within two years.
+cost-effective|hiệu quả về chi phí|Outsourcing is more cost-effective.
+benchmark|so sánh với chuẩn|We benchmarked our costs against competitors.
+due diligence|thẩm định|The buyer is doing due diligence on our company.
+merger|sáp nhập|The merger was approved last month.
+acquisition|thương vụ mua lại|The acquisition will double our market share.
+subsidiary|công ty con|We have subsidiaries in Laos and Cambodia.
+shareholder|cổ đông|Shareholders approved the dividend.
+outsource|thuê ngoài|We outsource payroll to a specialist firm.
+procurement|mua sắm, thu mua|Procurement must approve all new suppliers.
+supply chain|chuỗi cung ứng|The supply chain was disrupted by the storm.
+contingency plan|kế hoạch dự phòng|We need a contingency plan in case the vendor fails.
+mitigate|giảm thiểu|We took steps to mitigate the risk.
+implication|hệ quả, hàm ý|What are the financial implications?
+in the long run|về lâu dài|In the long run, automation will save money.
+substantial|đáng kể, lớn|We made substantial savings.
+undermine|làm suy yếu|Constant changes undermine the team's confidence.
+reinforce|củng cố|The results reinforce our strategy.
+pivotal|then chốt|This contract is pivotal for our growth.
+inherent|vốn có|There are inherent risks in any migration.
+comprehensive|toàn diện|We need a comprehensive review of our processes.
+discrepancy|sự không khớp|The auditor found a discrepancy in the inventory figures.
+put forward|đưa ra (đề xuất)|She put forward a strong proposal.
+going forward|từ nay trở đi|Going forward, all invoices will be approved online.`]];
+{const have=new Set(VOC.flatMap(t=>t.w.map(w=>w[0].toLowerCase())));ADVRAW.forEach(([t,vi,raw])=>VOC.push({t,vi,adv:true,base:false,w:raw.trim().split("\n").map(l=>l.split("|").map(s=>s.trim()).concat("C1+")).filter(w=>!have.has(w[0].toLowerCase()))}))}
+
+SC.push(
+{id:"c1-vendor",e:"💼",lv:"C1",t:"Negotiating an ERP licence",vi:"Đàm phán giá license ERP",me:"Linh",c:"Bạn (Linh) đại diện công ty đàm phán với nhà cung cấp ERP. Báo giá đang cao hơn ngân sách khoảng 15%. Mục tiêu: giảm giá mà vẫn giữ quan hệ tốt, và có thêm đào tạo người dùng.",
+d:[["Mark","Thanks for your time, Linh. Have you had a chance to review our proposal?","Cảm ơn chị đã dành thời gian. Chị đã xem đề xuất của chúng tôi chưa?"],
+["Linh","We have, and we're impressed with the product. That said, the licence fee is around fifteen percent above our budget.","Rồi, và chúng tôi đánh giá cao sản phẩm. Dù vậy, phí license cao hơn ngân sách khoảng 15%."],
+["Mark","I understand, but the price reflects the level of local support we provide.","Tôi hiểu, nhưng mức giá phản ánh mức hỗ trợ tại chỗ chúng tôi cung cấp."],
+["Linh","We appreciate that. However, we've received a comparable offer from another vendor. Would there be any flexibility on the price if we signed a three-year contract?","Chúng tôi trân trọng điều đó. Tuy nhiên, chúng tôi đã nhận báo giá tương đương từ nhà cung cấp khác. Có thể linh hoạt về giá nếu ký hợp đồng 3 năm không?"],
+["Mark","Possibly. If you commit to three years, we could reduce the fee by eight percent.","Có thể. Nếu cam kết 3 năm, chúng tôi giảm được 8%."],
+["Linh","That's a step in the right direction. Could you also include training for our end users? That would make it much easier to get approval internally.","Đó là bước tiến đúng hướng. Anh có thể thêm đào tạo người dùng cuối không? Như vậy việc phê duyệt nội bộ sẽ dễ hơn nhiều."]],
+p:[["That said, the fee is above our budget.","Dù vậy, mức phí cao hơn ngân sách."],["Would there be any flexibility on the price if we signed a longer contract?","Có thể linh hoạt về giá nếu chúng tôi ký hợp đồng dài hơn không?"],["We've received a comparable offer from another vendor.","Chúng tôi đã nhận báo giá tương đương từ nhà cung cấp khác."],["That's a step in the right direction.","Đó là một bước tiến đúng hướng."],["That would make it much easier to get approval internally.","Điều đó giúp việc phê duyệt nội bộ dễ hơn nhiều."]],
+rp:[{w:"Mark",s:"This is our best price. We can't go any lower.",o:[["I understand. Before we close the door on price, could we look at other variables, such as payment terms or the length of the contract?",1,"Tốt: không đối đầu, mở rộng các biến số đàm phán ngoài giá."],["Then we'll have to go with the other vendor.",0,"Dọa rút lui quá sớm làm mất cơ hội đàm phán. Chỉ dùng khi đó thật sự là phương án thay thế (BATNA)."],["OK, we accept.",0,"Chấp nhận ngay khiến bạn bỏ lỡ các nhượng bộ khác như đào tạo, hỗ trợ, điều khoản thanh toán."]]},
+{w:"Mark",s:"If we give you the discount, we'd need payment upfront.",o:[["Upfront payment would be difficult for our cash flow. Would you consider quarterly payments in return for a longer commitment?",1,"Tốt: nêu lý do và đề xuất trao đổi, mỗi nhượng bộ đổi lấy một điều kiện."],["No, that's impossible.",0,"Từ chối cứng, không đưa phương án."],["Fine, whatever you need.",0,"Nhượng bộ mà không đổi lại gì."]]},
+{w:"Mark",s:"So, do we have a deal?",o:[["We're close. Let me summarise what we've agreed, and I'll confirm in writing once I've spoken to our CFO.",1,"Tốt: tóm tắt thỏa thuận và xin phê duyệt nội bộ, không cam kết vượt thẩm quyền."],["Yes, definitely. Let's sign now.",0,"Cam kết khi chưa có phê duyệt nội bộ là rủi ro."],["Maybe. I don't know.",0,"Thiếu rõ ràng, làm đối tác mất niềm tin."]]}]},
+{id:"c1-scope",e:"🧭",lv:"C1",t:"Handling a late change request",vi:"Xử lý yêu cầu thay đổi phút chót",me:"Huy",c:"Bạn (Huy) là trưởng dự án ERP. Ngay trước go-live, khách muốn thêm báo cáo hợp nhất. Bạn cần giữ quan hệ tốt nhưng không để phình phạm vi.",
+d:[["Ms. Tan","Huy, we'd like to add the consolidation report before go-live. It's essential for our board.","Huy, chúng tôi muốn thêm báo cáo hợp nhất trước go-live. Nó rất quan trọng với hội đồng quản trị."],
+["Huy","I understand why it matters. Just to be clear, it wasn't part of the original scope, so we'd need to handle it through a change request.","Tôi hiểu vì sao nó quan trọng. Để rõ ràng, việc này không nằm trong phạm vi ban đầu, nên cần đi qua quy trình yêu cầu thay đổi."],
+["Ms. Tan","But surely it's a small change?","Nhưng chắc đây chỉ là thay đổi nhỏ chứ?"],
+["Huy","Unfortunately not. It affects the data model and the intercompany process, so our initial estimate is around fifteen days of work.","Tiếc là không. Nó ảnh hưởng mô hình dữ liệu và quy trình giao dịch nội bộ, ước tính ban đầu khoảng 15 ngày công."],
+["Ms. Tan","We can't move go-live. The auditors arrive in March.","Chúng tôi không thể dời go-live. Kiểm toán đến vào tháng 3."],
+["Huy","Then I'd suggest we go live on schedule with the current scope and deliver the report in phase two, in time for the March audit.","Vậy tôi đề xuất go-live đúng hạn với phạm vi hiện tại và giao báo cáo ở giai đoạn 2, kịp đợt kiểm toán tháng 3."]],
+p:[["Just to be clear, it wasn't part of the original scope.","Để rõ ràng, việc này không nằm trong phạm vi ban đầu."],["We'd need to handle it through a change request.","Chúng ta cần xử lý qua yêu cầu thay đổi."],["It affects the data model.","Nó ảnh hưởng đến mô hình dữ liệu."],["Our initial estimate is around fifteen days of work.","Ước tính ban đầu là khoảng 15 ngày công."],["I'd suggest we go live on schedule with the current scope.","Tôi đề xuất go-live đúng hạn với phạm vi hiện tại."]],
+rp:[{w:"Ms. Tan",s:"Can't your team just add it quickly? It's only one report.",o:[["I'd love to help, but it touches several processes. Let me do a quick impact analysis so we can decide based on facts.",1,"Tốt: không từ chối thẳng, đưa về đánh giá tác động."],["Sure, we'll squeeze it in.",0,"Nhận thêm việc mà không đánh giá là nguyên nhân phổ biến của phình phạm vi và trễ go-live."],["No. It's not in the contract.",0,"Đúng về hợp đồng nhưng nghe cứng nhắc, làm xấu quan hệ."]]},
+{w:"Ms. Tan",s:"Who's going to pay for these extra days?",o:[["That's something we'd need to agree on. One option is to share the cost, since the requirement emerged late on both sides.",1,"Tốt: mở phương án, dùng 'One option is' để mềm mỏng."],["You will, obviously.",0,"Thiếu ngoại giao."],["Don't worry, it's free.",0,"Làm miễn phí tạo tiền lệ xấu cho các yêu cầu sau."]]},
+{w:"Ms. Tan",s:"OK. What do you need from us?",o:[["We'd need written sign-off on the change request and a decision on the timeline by Friday, so that we can plan resources.",1,"Tốt: yêu cầu cụ thể, có hạn chót và lý do."],["Nothing, we'll handle it.",0,"Thiếu phê duyệt bằng văn bản là rủi ro tranh chấp sau này."],["Just trust us.",0,"Không chuyên nghiệp trong quản lý dự án."]]}]},
+{id:"c1-cfo",e:"📊",lv:"C1",t:"Explaining results to the CFO",vi:"Giải trình kết quả với CFO",me:"Mai",c:"Bạn (Mai) là trưởng phòng kế toán, trình bày kết quả khóa sổ tháng cho CFO. Chi phí vượt kế hoạch và có chênh lệch khi đối chiếu ngân hàng.",
+d:[["Mr. Wong","Mai, walk me through the month-end results.","Mai, trình bày cho tôi kết quả khóa sổ tháng."],
+["Mai","Certainly. Overall, revenue was in line with the forecast, but operating expenses came in four percent over budget.","Vâng. Nhìn chung doanh thu sát dự báo, nhưng chi phí hoạt động vượt ngân sách 4%."],
+["Mr. Wong","What's driving the variance?","Điều gì gây ra chênh lệch?"],
+["Mai","It's mainly marketing. The trade fair costs were booked this month rather than spread over the quarter, so it's a timing difference rather than overspending.","Chủ yếu là marketing. Chi phí hội chợ ghi nhận hết trong tháng này thay vì phân bổ cho cả quý, nên đây là chênh lệch thời điểm, không phải chi vượt."],
+["Mr. Wong","And the bank reconciliation? I heard there was an issue.","Còn đối chiếu ngân hàng? Tôi nghe nói có vấn đề."],
+["Mai","There's a discrepancy of around twelve thousand dollars, which we've traced to duplicate supplier payments. We've already contacted the supplier and expect a refund by the end of next week.","Có khoản chênh khoảng 12.000 đô, chúng tôi đã tìm ra là do thanh toán trùng cho nhà cung cấp. Chúng tôi đã liên hệ và dự kiến nhận hoàn tiền trước cuối tuần sau."]],
+p:[["Overall, revenue was in line with the forecast.","Nhìn chung doanh thu sát với dự báo."],["Operating expenses came in four percent over budget.","Chi phí hoạt động vượt ngân sách 4%."],["It's a timing difference rather than overspending.","Đây là chênh lệch thời điểm, không phải chi vượt."],["We've traced it to duplicate payments.","Chúng tôi đã tìm ra nguyên nhân là thanh toán trùng."],["Let me walk you through the figures.","Để tôi trình bày lần lượt các số liệu."]],
+rp:[{w:"Mr. Wong",s:"Why didn't anyone flag this earlier?",o:[["That's a fair point. We spotted it during reconciliation on day two, and going forward we'll run a duplicate-payment check every week.",1,"Tốt: nhận góp ý, giải thích ngắn và đưa biện pháp phòng ngừa."],["It's not my team's fault.",0,"Phòng thủ, đổ lỗi."],["I don't know.",0,"Thiếu trách nhiệm giải trình."]]},
+{w:"Mr. Wong",s:"Will this affect our quarterly forecast?",o:[["Only marginally. Once the refund comes in, the impact on the quarter should be less than half a percent.",1,"Tốt: trả lời thẳng, có số liệu, dùng 'should' để rào đón."],["Maybe, maybe not.",0,"Mơ hồ, không có số liệu."],["Yes, it's a disaster.",0,"Phóng đại, gây hoang mang."]]},
+{w:"Mr. Wong",s:"What do you need from me?",o:[["Just your approval to tighten the payment workflow, so that payments over ten thousand dollars need a second sign-off.",1,"Tốt: yêu cầu rõ, có ngưỡng cụ thể."],["Nothing really.",0,"Bỏ lỡ cơ hội xin hỗ trợ để khắc phục gốc rễ."],["More staff, please.",0,"Yêu cầu không gắn với vấn đề vừa nêu."]]}]},
+{id:"c1-lead",e:"🧑‍💼",lv:"C1",t:"A difficult conversation with your team",vi:"Góp ý thẳng với nhân viên",me:"Nam",c:"Bạn (Nam) là trưởng nhóm. Khoa trễ hạn liên tục hai tháng. Bạn cần góp ý thẳng nhưng tôn trọng, tìm nguyên nhân và cùng thống nhất kế hoạch.",
+d:[["Nam","Thanks for making time, Khoa. I wanted to talk about the last two months. I've noticed that several deadlines have slipped, including the vendor reconciliation.","Cảm ơn Khoa đã dành thời gian. Anh muốn nói về hai tháng vừa qua. Anh thấy nhiều hạn chót bị trễ, kể cả việc đối chiếu nhà cung cấp."],
+["Khoa","I know. I've been struggling to keep up.","Em biết. Em đang xoay xở không kịp."],
+["Nam","I appreciate you being honest. Can you help me understand what's getting in the way?","Cảm ơn em đã thẳng thắn. Em giúp anh hiểu điều gì đang cản trở được không?"],
+["Khoa","Since the ERP go-live, I've been answering a lot of user questions, so my own tasks keep getting pushed back.","Từ khi go-live ERP, em phải trả lời rất nhiều câu hỏi của người dùng, nên việc của em cứ bị đẩy lùi."],
+["Nam","That's useful to know. Let's agree on a plan. I'll ask the support team to take over first-line questions, and you focus on reconciliations. Does that sound workable?","Thông tin này hữu ích. Mình thống nhất kế hoạch nhé. Anh sẽ nhờ nhóm hỗ trợ nhận các câu hỏi đầu tiên, em tập trung đối chiếu. Như vậy có khả thi không?"],
+["Khoa","Yes, that would really help.","Dạ, như vậy giúp em nhiều lắm."]],
+p:[["I've noticed that several deadlines have slipped.","Tôi nhận thấy nhiều hạn chót đã bị trễ."],["Can you help me understand what's getting in the way?","Bạn giúp tôi hiểu điều gì đang cản trở được không?"],["I appreciate you being honest.","Cảm ơn bạn đã thẳng thắn."],["Let's agree on a plan.","Hãy cùng thống nhất một kế hoạch."],["Does that sound workable?","Như vậy có khả thi với bạn không?"]],
+rp:[{w:"Khoa",s:"Is something wrong? You wanted to see me.",o:[["Nothing serious, but I'd like to talk about some missed deadlines and see how I can support you.",1,"Tốt: nêu thẳng chủ đề, giọng hỗ trợ, không buộc tội."],["Yes. Your work has been terrible.",0,"Công kích con người thay vì nói về hành vi cụ thể."],["Oh, nothing, just a chat.",0,"Né tránh vấn đề khiến buổi nói chuyện mất tác dụng."]]},
+{w:"Khoa",s:"Honestly, everyone else is late too.",o:[["That may be true, and I'll look at that separately. Right now I'd like to focus on your workload and what would help you.",1,"Tốt: ghi nhận nhưng đưa cuộc nói chuyện về đúng trọng tâm."],["That's no excuse.",0,"Đúng nhưng đóng cửa đối thoại."],["Really? Who?",0,"Lạc đề, biến buổi góp ý thành buổi tố cáo."]]},
+{w:"Khoa",s:"OK. So what happens now?",o:[["Let's meet again in two weeks to review progress. If anything gets in the way before then, come to me straight away.",1,"Tốt: có mốc theo dõi và mở kênh hỗ trợ."],["Nothing. Just do better.",0,"Không có kế hoạch theo dõi cụ thể."],["If it happens again, you're out.",0,"Đe dọa làm mất niềm tin, không phải cách lãnh đạo hiệu quả."]]}]},
+{id:"c1-steer",e:"🏛️",lv:"C1",t:"Go/no-go at the steering committee",vi:"Khuyến nghị go/no-go với ban chỉ đạo",me:"Trang",c:"Bạn (Trang) là quản lý dự án, trình bày khuyến nghị go-live cho ban chỉ đạo ERP. Còn 3 lỗi nghiêm trọng ở phân hệ thanh toán.",
+d:[["Mr. Lee","Trang, are we ready to go live next month?","Trang, tháng sau chúng ta go-live được chưa?"],
+["Trang","My recommendation is a conditional go. Ninety-five percent of test cases have passed, but three critical defects remain open in the payment module.","Khuyến nghị của tôi là go-live có điều kiện. 95% kịch bản kiểm thử đã đạt, nhưng còn 3 lỗi nghiêm trọng ở phân hệ thanh toán."],
+["Mr. Lee","How confident are you that they'll be fixed in time?","Chị tự tin đến đâu là sẽ sửa kịp?"],
+["Trang","The vendor has committed to fixing them by the fifteenth. If they're not resolved by then, we'd postpone by two weeks rather than risk incorrect supplier payments.","Nhà cung cấp cam kết sửa trước ngày 15. Nếu không xong, chúng ta sẽ dời hai tuần thay vì chấp nhận rủi ro thanh toán sai cho nhà cung cấp."],
+["Mr. Lee","Two weeks would mean missing the start of the quarter.","Dời hai tuần nghĩa là lỡ đầu quý."],
+["Trang","That's true, and I'm aware of the impact. However, going live with errors in payments would be far more costly, both financially and for our reputation with suppliers.","Đúng vậy, và tôi hiểu ảnh hưởng đó. Tuy nhiên, go-live với lỗi thanh toán sẽ tốn kém hơn nhiều, cả về tài chính lẫn uy tín với nhà cung cấp."]],
+p:[["My recommendation is a conditional go.","Khuyến nghị của tôi là go-live có điều kiện."],["Three critical defects remain open.","Còn 3 lỗi nghiêm trọng chưa xử lý."],["The vendor has committed to fixing them by the fifteenth.","Nhà cung cấp cam kết sửa trước ngày 15."],["rather than risk incorrect payments","thay vì chấp nhận rủi ro thanh toán sai"],["far more costly, both financially and for our reputation","tốn kém hơn nhiều, cả tài chính lẫn uy tín"]],
+rp:[{w:"Mr. Lee",s:"Just give me a yes or no. Are we going live?",o:[["Yes, on the condition that the three critical defects are closed by the fifteenth. If not, I'll recommend a two-week delay.",1,"Tốt: trả lời thẳng nhưng giữ điều kiện rõ ràng."],["It's complicated. There are many factors...",0,"Lãnh đạo cần câu trả lời rõ ràng, không vòng vo."],["Yes, everything is fine.",0,"Che giấu rủi ro trước ban chỉ đạo là sai lầm nghiêm trọng."]]},
+{w:"Mr. Lee",s:"The board won't be happy with a delay.",o:[["I understand. I'd rather explain a two-week delay now than explain incorrect supplier payments later.",1,"Tốt: so sánh hai rủi ro để thuyết phục."],["That's not my problem.",0,"Thiếu tinh thần trách nhiệm chung."],["Then we'll go live anyway.",0,"Đổi khuyến nghị chỉ vì áp lực làm mất uy tín chuyên môn."]]},
+{w:"Mr. Lee",s:"What do you need from this committee?",o:[["Two things: approval for the conditional go, and your support in communicating a possible delay to the board.",1,"Tốt: nêu chính xác hai việc cần ban chỉ đạo quyết."],["Nothing, we're fine.",0,"Bỏ lỡ cơ hội nhận hỗ trợ từ cấp cao."],["More budget.",0,"Yêu cầu không gắn với vấn đề đang bàn."]]}]},
+{id:"c1-escalate",e:"🚨",lv:"C1",t:"Calming an angry client after go-live",vi:"Xử lý khách hàng giận sau go-live",me:"Quan",c:"Sau go-live, hệ thống xuất 200 hóa đơn sai thuế VAT. Giám đốc khách hàng rất bực. Bạn (Quan) cần nhận trách nhiệm, đưa kế hoạch khắc phục và giữ khách.",
+d:[["Mr. Harris","Quan, we've sent out two hundred invoices with the wrong VAT. This is completely unacceptable.","Quan, chúng tôi đã gửi 200 hóa đơn sai VAT. Điều này hoàn toàn không chấp nhận được."],
+["Quan","You're absolutely right, and I apologise. This should never have happened, and we take full responsibility.","Anh hoàn toàn đúng, tôi xin lỗi. Lẽ ra việc này không được xảy ra, và chúng tôi nhận toàn bộ trách nhiệm."],
+["Mr. Harris","What are you going to do about it?","Các anh sẽ làm gì?"],
+["Quan","We've already identified the cause: a tax code was mapped incorrectly during data migration. It was corrected this morning, and no new invoices are affected.","Chúng tôi đã xác định nguyên nhân: một mã thuế bị ánh xạ sai khi chuyển đổi dữ liệu. Đã sửa sáng nay, hóa đơn mới không bị ảnh hưởng."],
+["Mr. Harris","And the two hundred invoices already sent?","Còn 200 hóa đơn đã gửi?"],
+["Quan","Our team will issue corrected invoices by tomorrow evening, and I'll send you a full incident report with the steps we're taking to prevent this from happening again.","Nhóm chúng tôi sẽ xuất hóa đơn điều chỉnh trước tối mai, và tôi sẽ gửi báo cáo sự cố đầy đủ kèm các bước ngăn việc này tái diễn."]],
+p:[["We take full responsibility.","Chúng tôi nhận toàn bộ trách nhiệm."],["This should never have happened.","Lẽ ra việc này không được xảy ra."],["We've already identified the cause.","Chúng tôi đã xác định được nguyên nhân."],["A tax code was mapped incorrectly.","Một mã thuế bị ánh xạ sai."],["to prevent this from happening again","để ngăn việc này tái diễn"]],
+rp:[{w:"Mr. Harris",s:"How could your team make such a basic mistake?",o:[["There's no excuse for it. Let me explain what went wrong and, more importantly, what we're doing to fix it.",1,"Tốt: không biện minh, chuyển sang giải pháp."],["Actually, your team approved the tax mapping.",0,"Có thể đúng, nhưng đổ lỗi lúc khách đang giận chỉ làm căng hơn. Nêu sau trong báo cáo sự cố."],["Mistakes happen in every project.",0,"Xem nhẹ ảnh hưởng tới khách."]]},
+{w:"Mr. Harris",s:"I want a discount on the next phase.",o:[["I understand why you'd ask. I can't commit to that on this call, but I'll raise it with our director and come back to you by Friday.",1,"Tốt: không hứa vượt thẩm quyền, có cam kết thời gian."],["No, that's not possible.",0,"Từ chối thẳng khi khách đang bực."],["Sure, fifty percent off.",0,"Nhượng bộ quá mức, vượt thẩm quyền."]]},
+{w:"Mr. Harris",s:"How do I know this won't happen again?",o:[["We'll add an automated tax check before every invoice run, and I'll personally review the results with your finance team for the next month.",1,"Tốt: biện pháp cụ thể và cam kết cá nhân."],["Trust me, it won't.",0,"Lời hứa không có cơ sở."],["We can't guarantee anything.",0,"Đúng về lý thuyết nhưng làm khách mất niềm tin."]]}]}
+);
+Object.assign(RPK,{
+"c1-vendor":[["understand/appreciate","payment terms/contract/other variables/look at"],["cash flow/difficult/challenging","would you consider/in return/in exchange/if we"],["summarise/summarize/recap/agreed","confirm/in writing/CFO/approval"]],
+"c1-scope":[["understand/love to help/happy to help","impact/analysis/assess"],["agree/discuss","option/share/split"],["sign-off/sign off/written/approval","by Friday/deadline/timeline"]],
+"c1-cfo":[["fair point/you're right/good point","going forward/from now on/weekly/prevent"],["only/marginally/slightly","percent/impact"],["approval/approve","workflow/second/sign-off/threshold/over"]],
+"c1-lead":[["I'd like to talk/talk about/discuss","support/help"],["may be true/understand/I hear you","focus/workload/right now"],["meet again/follow up/check in/review","two weeks/next week/progress"]],
+"c1-steer":[["on the condition/provided/as long as/if","fifteenth/15th/delay/postpone"],["understand/I know","rather/than/later/risk"],["approval/approve","support/communicate/communicating"]],
+"c1-escalate":[["no excuse/apologise/apologize/sorry","fix/explain/what we're doing"],["understand","can't commit/cannot commit/raise/come back/by Friday"],["check/automated/review","personally/next month/finance team"]]});
+
+const QC=(arr)=>arr.map(([q,o,x])=>({q,o,a:0,x}));
+GR.push(
+{t:"Hedging and diplomatic language",lv:"C1",x:"Ở C1, nói đúng chưa đủ mà phải nói khéo. Rào đón (hedging) giúp bạn nêu ý kiến hoặc phản đối mà không gây đối đầu: It seems/appears that, would seem to, tend to, arguably, to some extent, I'm not entirely convinced, You might want to.",f:"would seem to + V   |   tend to + V   |   I'm not entirely convinced that...   |   You might want to...",
+e:["The figures would seem to suggest that we're over budget.","I'm not entirely convinced that this is the best option.","You might want to check the contract before signing."],
+q:QC([["The figures ___ suggest that the project is over budget.",["would seem to","seems","are seem to","would to seem"],"would seem to: cách nói rào đón, bớt khẳng định tuyệt đối."],
+["I'm not ___ convinced that this is the best option.",["entirely","totally not","at all","very"],"not entirely convinced: phản đối nhẹ nhàng."],
+["You ___ want to check the contract before signing.",["might","must","should to","will"],"You might want to...: lời khuyên tế nhị."],
+["It ___ that the vendor misunderstood our requirements.",["appears","is appearing","appear","appeared it"],"It appears that...: nêu nhận định có rào đón."],
+["Which is the most diplomatic way to disagree?",["I see where you're coming from, but I'm not sure that's feasible.","That's wrong.","I disagree completely with you.","Your idea won't work."],"Ghi nhận trước, rồi phản đối có rào đón."],
+["ERP projects ___ to cost more than planned.",["tend","are tend","tending","tends"],"tend to + V: nói về xu hướng chung, tránh khẳng định tuyệt đối."],
+["This is, ___, the most important decision we will make this year.",["arguably","argue","arguable","argued"],"arguably: có thể cho rằng."],
+["To some ___, I agree with your proposal.",["extent","degree of","part","level"],"to some extent: ở một mức độ nào đó."]])},
+{t:"Advanced passives and distancing",lv:"C1",x:"Dùng khi muốn đưa thông tin mà không khẳng định là ý của mình, rất phổ biến trong báo cáo và họp cấp cao: It is believed/expected that..., X is said/thought/reported to + V, X is thought to have + V3 (chuyện đã xảy ra).",f:"It is + V3 + that...   |   S + is + V3 + to + V   |   S + is + V3 + to have + V3",
+e:["The new system is expected to save 20% of processing time.","It is believed that the merger will be completed by June.","The vendor is said to have lost two major clients."],
+q:QC([["The new system ___ to save 20% of processing time.",["is expected","expects","is expecting","expected"],"Bị động khoảng cách: is expected to."],
+["It ___ that the merger will be completed by June.",["is believed","believes","is believing","believed it"],"It is believed that..."],
+["The CFO is said ___ the budget last week.",["to have approved","to approve","approving","approved"],"Việc đã xảy ra: to have + V3."],
+["The vendor ___ to be in financial difficulty.",["is rumoured","rumours","is rumouring","rumoured it"],"is rumoured to: có tin đồn là."],
+["Mistakes ___ to have been made during data migration.",["appear","are appearing","appeared it","appearing"],"appear to have been + V3."],
+["The project ___ have been delayed by the audit.",["is thought to","thinks to","is thinking","thought to"],"is thought to have + V3."],
+["___ is estimated that 30% of invoices contain errors.",["It","There","This","That"],"It is estimated that..."],
+["The contract has yet ___.",["to be signed","being signed","to sign","signed"],"has yet to be + V3: vẫn chưa được..."]])},
+{t:"Conditions in negotiation",lv:"C1",x:"Trong đàm phán, mọi nhượng bộ nên đi kèm điều kiện. Dùng: provided (that), as long as, on condition that, supposing, Should you..., Were we to..., But for..., otherwise.",f:"provided that + S + V   |   Should you + V   |   Were we to + V   |   on condition that",
+e:["We can offer a 5% discount provided that you sign a two-year contract.","Should you need further information, please contact me.","Were we to increase the order, would you reduce the price?"],
+q:QC([["We can offer a 5% discount ___ you sign a two-year contract.",["provided that","unless","in case","despite"],"provided that: với điều kiện là."],
+["___ you need any further information, please contact me.",["Should","Would","Were","Had"],"Should you + V: đảo ngữ trang trọng của If you..."],
+["___ we to increase the order, would you reduce the price?",["Were","Should","Had","Would"],"Were we to + V: giả định trang trọng."],
+["We'll agree to the deadline ___ the scope stays the same.",["as long as","unless","even if","whereas"],"as long as: miễn là."],
+["___ we lowered our price, would you consider a longer contract?",["Supposing","Providing to","Unless","In case of"],"Supposing: giả sử."],
+["___ the support of the finance team, the project would have failed.",["But for","Unless","Without of","Except"],"But for + N: nếu không có."],
+["We need the approval today; ___, we will miss the deadline.",["otherwise","unless","so","therefore"],"otherwise: nếu không thì."],
+["We will only proceed ___ condition that the penalty clause is removed.",["on","in","at","under"],"on condition that."]])},
+{t:"Formal register and nominalisation",lv:"C1",x:"Báo cáo, đề xuất và email cấp cao dùng danh từ hóa: 'we implemented late' thành 'the late implementation', 'costs went up' thành 'an increase in costs'. Thay cụm động từ thân mật bằng động từ trang trọng: look into thành investigate, find out thành ascertain/determine, get rid of thành eliminate.",f:"V → N (implement → implementation)   |   phrasal verb → formal verb",
+e:["The late implementation of the system delayed the audit.","There was a sharp increase in overheads.","We intend to eliminate manual reconciliation."],
+q:QC([["The formal version of 'We need to look into the problem' is:",["The problem requires investigation.","We gotta check the problem.","The problem needs looking.","Let's look the problem."],"requires investigation: trang trọng."],
+["'Costs went up sharply.' becomes 'There was a sharp ___ in costs.'",["increase","increased","increasing","increasingly"],"Danh từ hóa: an increase in."],
+["'We implemented the system late, so...' becomes 'The late ___ of the system meant...'",["implementation","implement","implementing","implemented"],"implement thành implementation."],
+["Most formal: 'We want to ___ whether the vendor is reliable.'",["ascertain","find out","figure out","check up"],"ascertain: xác minh (trang trọng)."],
+["'Because we analysed the data...' becomes 'Following an ___ of the data...'",["analysis","analyse","analysing","analytical"],"analyse thành analysis."],
+["Most formal replacement for 'get rid of': 'We plan to ___ manual processes.'",["eliminate","get out","throw","kick out"],"eliminate: loại bỏ."],
+["'The team failed to meet the deadline.' becomes 'The team's ___ to meet the deadline...'",["failure","fail","failing","failed"],"fail thành failure."],
+["Which sentence is most appropriate in a board report?",["Revenue increased significantly in Q3.","Revenue went up loads in Q3.","We made way more money in Q3.","Revenue was kinda high in Q3."],"Văn bản cho hội đồng quản trị cần trang trọng, chính xác."]])},
+{t:"Persuasion: emphasis and concession",lv:"C1",x:"Thuyết phục ở C1 kết hợp nhấn mạnh và nhượng bộ có chủ đích: What concerns me is..., It's X that..., The point is..., All we need is..., Admittedly/Granted, ... however..., On balance, ...",f:"What + S + V + is...   |   It's X that...   |   Admittedly, ...; however, ...   |   On balance, ...",
+e:["What concerns me most is the timeline.","It's the integration, not the software, that is causing the delay.","Admittedly, the system is expensive; however, it will pay for itself in two years."],
+q:QC([["___ concerns me most is the timeline.",["What","That","Which","It"],"What + V + is...: câu chẻ nhấn mạnh."],
+["It's the integration, not the software itself, ___ is causing the delay.",["that","what","which it","who"],"It's X that..."],
+["___, the new system is expensive, but it will pay for itself in two years.",["Admittedly","Admitted","Admitting it","Admit"],"Admittedly: phải thừa nhận là."],
+["The point ___ that we cannot afford another delay.",["is","being","are","was being"],"The point is that..."],
+["Not only ___ reduce costs, but it will also improve accuracy.",["will automation","automation will","does automation will","automation"],"Not only + trợ động từ + S."],
+["All we need ___ the finance director's approval.",["is","are","being","to"],"All we need is..."],
+["___, the ERP project has been a success.",["On balance","In balance","On the balance","By balance"],"On balance: cân nhắc mọi mặt."],
+["Granted, the vendor was late; ___, we also changed the requirements twice.",["however","despite","although","because"],"Granted..., however...: nhượng bộ rồi phản biện."]])}
+);
+
+LS.push(
+{t:"Negotiation call: renewing a support contract",vi:"Đàm phán gia hạn hợp đồng hỗ trợ",type:"Đàm phán qua điện thoại",lv:"C1",ac:{Paul:"en-GB",Linh:"en-US"},
+d:[["Paul","Linh, thanks for joining. As you know, your support contract renews next month, and we're proposing a seven percent increase in line with inflation."],
+["Linh","I appreciate the heads-up, Paul. To be frank, seven percent is going to be a hard sell internally, especially given the number of unresolved tickets last quarter."],
+["Paul","That's fair. Our response times did slip, partly because of staff turnover on our side."],
+["Linh","I understand, but from our perspective we're being asked to pay more for a service that's got worse. What we'd need to see is a service level agreement with clear penalties."],
+["Paul","We could commit to a four-hour response time for critical issues, with a service credit if we miss it."],
+["Linh","That would help. And on price, could we hold this year's rate if we extend the contract to two years?"],
+["Paul","Holding the rate is difficult, but I could go to three percent for a two-year term."],
+["Linh","Three percent with the new SLA could work. Let me take that back to our CFO and get back to you by Thursday."],
+["Paul","Sounds good. I'll send over a revised proposal this afternoon."]],
+q:[{q:"Why does Paul want to increase the price?",o:["In line with inflation","Because of new features","To pay for staff bonuses","Because Linh's company has grown"]},
+{q:"What is Linh's main objection?",o:["Service has got worse but the price is going up","The contract is too long","The vendor is too far away","Support is only available in English"]},
+{q:"What does Paul offer for critical issues?",o:["A four-hour response time with a service credit","Free training","A dedicated engineer","A 24-hour response time"]},
+{q:"What does Linh propose regarding price?",o:["Keeping this year's rate for a two-year contract","Paying monthly","Cancelling the contract","Accepting the 7% increase"]},
+{q:"What is the position before Linh consults her CFO?",o:["A 3% increase with a new SLA","No increase at all","A 7% increase","A one-year extension"]}]},
+{t:"Steering committee: ERP phase two",vi:"Họp ban chỉ đạo: giai đoạn 2 dự án ERP",type:"Họp cấp cao",lv:"C1",ac:{CEO:"en-GB",Priya:"en-IN",PM:"en-US"},
+d:[["CEO","Let's move on to phase two. Priya, where do we stand on the budget?"],
+["Priya","We're currently eleven percent over the original budget, largely due to the additional data migration work in phase one. I'd be reluctant to approve phase two in full until we've seen a revised business case."],
+["PM","If I could add some context: the overrun was mostly a one-off. Most of the legacy data has now been cleaned, so phase two shouldn't face the same issue."],
+["Priya","I take your point, but I'd still want to see the numbers. What's the expected return?"],
+["PM","Our estimate is that automating intercompany reconciliation will save around two thousand hours a year, which pays back the investment within eighteen months."],
+["CEO","That's compelling. Could we split phase two, then? Start with intercompany automation, since it has the clearest return, and defer the reporting dashboards?"],
+["Priya","That would be more palatable. I could approve the first part now, subject to a monthly budget review."],
+["PM","That works for us. I'll update the plan and circulate it before the next meeting."]],
+q:[{q:"Why is the project over budget?",o:["Extra data migration work in phase one","Higher licence fees","Staff turnover","A change of vendor"]},
+{q:"What does Priya want before approving phase two in full?",o:["A revised business case","A new vendor","More staff","A shorter timeline"]},
+{q:"Why does the PM think phase two won't have the same problem?",o:["Most legacy data has already been cleaned","The vendor will pay for it","The scope is smaller","The team is bigger"]},
+{q:"What is the expected payback period?",o:["Within eighteen months","Within two years","Within eleven months","Within six months"]},
+{q:"What is finally agreed?",o:["Start with intercompany automation, with monthly budget reviews","Approve phase two in full","Cancel phase two","Start with the reporting dashboards"]}]},
+{t:"Leadership talk: leading through change",vi:"Bài nói: lãnh đạo qua giai đoạn thay đổi",type:"Bài nói chuyên đề",lv:"C1",ac:{Speaker:"en-AU"},
+d:[["Speaker","When we rolled out our new ERP system, I made a mistake that I suspect many leaders make. I assumed that if the system was good, people would naturally want to use it."],
+["Speaker","They didn't. Within a month, half of the finance team had gone back to their spreadsheets, and our reports were less reliable than before."],
+["Speaker","What I eventually realised was that resistance to change is rarely about the technology itself. It's about people feeling that they've lost control, or that their expertise no longer counts."],
+["Speaker","So we changed our approach. Rather than training everyone at once, we identified a small group of respected colleagues in each team and made them champions. They tested new features first and shared tips with their peers."],
+["Speaker","We also stopped measuring success purely by system usage. Instead, we asked teams what had become easier, and we shared those stories in every monthly meeting."],
+["Speaker","Within three months, spreadsheet use had dropped by eighty percent. More importantly, people were suggesting improvements to the system themselves."],
+["Speaker","If there's one lesson I'd pass on, it's this: people don't resist change; they resist being changed. Involve them early, and they'll carry the project for you."]],
+q:[{q:"What mistake did the speaker make at first?",o:["Assuming people would use a good system automatically","Choosing the wrong vendor","Training staff too early","Spending too much on the project"]},
+{q:"According to the speaker, resistance to change is mainly about...",o:["people feeling a loss of control or value","the cost of the technology","poor internet connections","a lack of time"]},
+{q:"What role did the 'champions' play?",o:["Testing features first and helping colleagues","Reporting problems to management","Writing the training manual","Replacing the finance team"]},
+{q:"How did they measure success after changing their approach?",o:["By asking teams what had become easier","Only by system usage","By counting training hours","By the number of complaints"]},
+{q:"What does 'people resist being changed' mean?",o:["People dislike change forced on them without involvement","People never accept new systems","People prefer old technology","People want to change jobs"]}]}
+);
+
+WR.push(
+{lv:"C1",t:"Confirm negotiated terms",vi:"Email xác nhận điều khoản sau đàm phán",type:"Email trang trọng C1",min:180,max:240,
+task:"After a meeting with an ERP vendor, write an email to their sales director, Mark, summarising the terms you agreed and the points that are still open.",
+pts:["Thank him and state the purpose","Summarise the agreed terms (price, contract length, training)","State the open points clearly","Set out next steps with a deadline","Make clear that agreement is subject to internal approval"],
+phr:["Further to our meeting on..., I am writing to confirm...","Subject to approval by our CFO, we agreed in principle to...","In return, we will...","However, two points remain open. Firstly,... Secondly,...","I would be grateful if you could send a revised proposal by..."],
+s:"Dear Mark,\n\nThank you for meeting with us on Tuesday. Further to our discussion, I am writing to confirm the main terms we agreed and to outline the points that remain open.\n\nSubject to approval by our CFO, we agreed in principle to a three-year licence for 120 users at a fee eight percent below your original proposal. In return, we will commit to the full term and pay quarterly in advance. You also confirmed that end-user training for up to forty staff will be included at no additional cost.\n\nHowever, two points remain open. Firstly, we would need the service level agreement to include a four-hour response time for critical issues, together with service credits if this is not met. Secondly, we would like clarification on how future upgrades will be priced, as this was not covered in the draft agreement.\n\nI would be grateful if you could send a revised proposal reflecting these points by Friday 14 March, so that we can present it to our board the following week.\n\nThank you again for your flexibility. I look forward to finalising the agreement.\n\nKind regards,\nLinh Tran\nHead of Finance Systems"},
+{lv:"C1",t:"Business case for an ERP module",vi:"Đề xuất mua phân hệ ERP (business case)",type:"Đề xuất nội bộ C1",min:180,max:240,
+task:"Write an internal proposal to your CFO, Mr. Wong, recommending the purchase of an automated bank reconciliation module.",
+pts:["Describe the current problem with evidence","Explain the proposed solution","Give costs and expected return","Identify the main risk and how to mitigate it","End with a clear recommendation"],
+phr:["At present, ...","I would therefore recommend...","The total cost is estimated at...","Based on..., the investment should pay for itself within...","The main risk lies in... To mitigate this, I propose..."],
+s:"Dear Mr. Wong,\n\nProposal: automated bank reconciliation module\n\nAt present, our team reconciles twelve bank accounts manually every month. This takes approximately sixty hours and is a major reason why month-end close takes eight working days. Last quarter, two discrepancies were only identified after the reporting deadline.\n\nI would therefore recommend purchasing the automated reconciliation module offered by our current ERP vendor. The module matches bank transactions with ledger entries automatically and flags exceptions for review, allowing the team to focus on investigating discrepancies rather than matching transactions line by line.\n\nThe total cost is estimated at USD 18,000 in the first year, including implementation, and USD 6,000 annually thereafter. Based on a saving of fifty hours per month, the investment should pay for itself within fourteen months, while also shortening the close by at least two days.\n\nThe main risk lies in the quality of our bank data. To mitigate this, I propose a four-week pilot with our two largest accounts before full rollout.\n\nGiven the potential savings and the improvement in reporting accuracy, I would welcome the opportunity to discuss this proposal at your convenience.\n\nKind regards,\nMai Nguyen\nAccounting Manager"},
+{lv:"C1",t:"Escalation: project delay",vi:"Thông báo dự án trễ go-live cho khách",type:"Email trang trọng C1",min:180,max:240,
+task:"Your ERP project will miss its go-live date. Write to the client's finance director, Ms. Tan, explaining the situation.",
+pts:["State the issue clearly in the first paragraph","Explain the cause without blaming the client","Give the impact and the new timeline","Describe actions to reduce the impact","Offer a call or meeting"],
+phr:["I am writing to inform you that...","Although the issue originates from..., it is our responsibility to resolve it.","Our current estimate is that...","To reduce the impact further, we will...","I appreciate that this is disappointing news."],
+s:"Dear Ms. Tan,\n\nI am writing to inform you that we will not be able to go live on 1 April as planned, and to explain how we propose to minimise the impact on your team.\n\nDuring final testing last week, we identified errors in the way intercompany transactions are posted between your three subsidiaries. Although the issue originates from the data migration, it is our responsibility to resolve it, and we should have detected it earlier.\n\nOur current estimate is that the corrections and a further round of testing will require two additional weeks, which would move go-live to 15 April. This date still allows your team to complete the March close in the legacy system, so we do not expect any disruption to your quarterly reporting.\n\nTo reduce the impact further, we will assign two additional consultants to the project at no extra cost and provide daily progress updates to your project manager until go-live.\n\nI appreciate that this is disappointing news, and I would welcome the opportunity to discuss it with you in person. Would you be available for a call on Thursday or Friday this week?\n\nYours sincerely,\nHuy Pham\nProject Director"},
+{lv:"C1",t:"Announce a change to your team",vi:"Thông báo thay đổi quy trình cho team",type:"Email lãnh đạo C1",min:180,max:240,
+task:"You are introducing a second approval step for large supplier payments in the finance department. Write an email to your team explaining the change and gaining their support.",
+pts:["Say what is changing and when","Explain why, with evidence","Explain how it affects them in practice","Describe the support available","Invite feedback"],
+phr:["I would like to let you know about a change to...","I know this adds a step, so I want to explain the reasoning behind it.","In practice, the change will affect...","To make sure it does not slow us down, ...","I would genuinely value your input."],
+s:"Dear team,\n\nI would like to let you know about a change to the way we approve supplier payments, which will come into effect on 1 June.\n\nFrom that date, all payments above USD 10,000 will require approval from two people in the ERP system rather than one. I know this adds a step to a process that already feels busy, so I want to explain the reasoning behind it.\n\nLast quarter, we made duplicate payments totalling more than USD 12,000. In each case, the error was caught only during reconciliation, weeks after the money had left our account. A second approval is a simple control that would have prevented every one of these cases, and it is also something our auditors have recommended.\n\nIn practice, the change will affect around fifteen percent of payments. To make sure it does not slow us down, Khoa will run two short training sessions next week, and approvers will receive automatic reminders in the system.\n\nI would genuinely value your input. If you can see a way to make the process smoother, please raise it at our team meeting on Friday or send me a message directly.\n\nThank you for your support.\n\nBest regards,\nNam"}
+);
+
+const LT_C1_TEXT="<b>Why ERP projects fail</b><br><br>Industry surveys consistently suggest that a significant proportion of ERP projects exceed their budgets or fail to deliver the expected benefits. Tempting as it is to blame the software, the root causes tend to lie elsewhere.<br><br>The most common culprit is unclear ownership. When an ERP project is perceived as an 'IT project', business leaders often disengage, leaving technical teams to make decisions about processes they do not fully understand. The result is a system that works as designed but not as the business needs.<br><br>A second factor is excessive customisation. Organisations frequently try to replicate their existing processes in the new system rather than adapting to standard practice. Each customisation may seem justified in isolation, yet collectively they increase cost, complicate upgrades and lock the organisation into its old ways of working.<br><br>Finally, change management is routinely underfunded. Training is often reduced to a few sessions shortly before go-live, by which point resistance has already formed. Successful projects, by contrast, treat user involvement as a continuous process that begins during requirement gathering.";
+const LT_C2_TEXT="<b>The illusion of precision</b><br><br>Few artefacts of corporate life inspire as much misplaced confidence as the financial forecast. Presented to two decimal places and wrapped in the language of models and scenarios, forecasts project an authority that their underlying assumptions rarely warrant.<br><br>The problem is not that forecasts are wrong (they almost invariably are) but that their apparent precision discourages scrutiny. A revenue projection of 14.27 million invites debate about the decimal point rather than about whether the market will grow at all.<br><br>Some finance leaders have responded by abandoning point estimates altogether in favour of ranges and explicitly stated assumptions. This approach is less satisfying to boards accustomed to a single number, yet it arguably produces better decisions, since it forces discussion of what would have to be true for a given outcome to materialise.<br><br>None of this implies that forecasting is futile. Rather, its value lies less in the number it produces than in the conversations it provokes.";
+const GV="Ngữ pháp và từ vựng";
+LT.C1={name:"C1",need:15,items:[
+{sec:GV,q:"___ the vendor deliver on time, we will extend the contract.",o:["Should","Would","Were","Had"]},
+{sec:GV,q:"The project, ___ success depended on user adoption, was finally completed.",o:["whose","which","that","of which"]},
+{sec:GV,q:"Little ___ how difficult the migration would be.",o:["did we realise","we realised","we did realise","realised we"]},
+{sec:GV,q:"The figures are believed ___ incorrectly last year.",o:["to have been reported","to be reported","having reported","to report"]},
+{sec:GV,q:"I'd sooner we ___ the meeting than rushed the decision.",o:["postponed","postpone","will postpone","had postpone"]},
+{sec:GV,q:"Choose the most formal: 'We need to ___ the root cause.'",o:["identify","find out","figure out","dig up"]},
+{sec:GV,q:"The two companies failed to reach a ___ over payment terms.",o:["consensus","concession","consent","conclusion"]},
+{sec:GV,q:"Our competitors have a clear ___ over us on price.",o:["edge","top","lead to","front"]},
+{sec:GV,q:"The new controls will ___ the risk of duplicate payments.",o:["mitigate","militate","mediate","migrate"]},
+{sec:GV,q:"We need to ___ our IT strategy with the board's priorities.",o:["align","line","adjust to","equal"]},
+{sec:GV,q:"Her proposal was well ___ by the steering committee.",o:["received","accepted to","taken in","got"]},
+{sec:GV,q:"There was a ___ between the bank statement and the ledger.",o:["discrepancy","disparity of","distinction","discretion"]},
+{sec:"Đọc",passage:LT_C1_TEXT,q:"According to the writer, where do the main causes of ERP failure usually lie?",o:["Outside the software itself","In the software","In hardware problems","In the vendor's pricing"]},
+{sec:"Đọc",passage:LT_C1_TEXT,q:"What happens when an ERP project is seen as an 'IT project'?",o:["Business leaders become less involved","Costs automatically fall","Users learn faster","The vendor takes control"]},
+{sec:"Đọc",passage:LT_C1_TEXT,q:"What does the writer say about individual customisations?",o:["Each may seem reasonable, but together they cause problems","They are always unnecessary","They make upgrades easier","They are required by vendors"]},
+{sec:"Đọc",passage:LT_C1_TEXT,q:"What distinguishes successful projects, according to the last paragraph?",o:["Users are involved continuously from the start","Training happens just before go-live","They spend less on training","They skip requirement gathering"]},
+{sec:"Nghe",audio:"I hear what you're saying about the timeline, and I don't dispute that it's tight. What I'd push back on is the idea that cutting testing is the way to save time. If anything, that's where we can least afford to compromise.",q:"What is the speaker's position?",o:["Testing should not be reduced","The timeline is not tight","Testing should be cut","The project should be cancelled"]},
+{sec:"Nghe",audio:"On the face of it, outsourcing payroll looks cheaper. But once you factor in the cost of managing the provider and the risk of errors, the savings are marginal at best.",q:"What does the speaker think about outsourcing payroll?",o:["The real savings are small","It is much cheaper","It has no risks","It should be done immediately"]},
+{sec:"Nghe",audio:"We're not saying no to the merger. We're saying not yet. Until the due diligence is complete, committing would be premature.",q:"What is the speaker's view on the merger?",o:["It is too early to commit","They reject it completely","They want to commit now","Due diligence is unnecessary"]},
+{sec:"Nghe",audio:"Frankly, the numbers speak for themselves. Since we introduced the new workflow, invoice processing time has halved, and we haven't had a single duplicate payment.",q:"What has happened since the new workflow was introduced?",o:["Processing time has halved and there are no duplicate payments","Processing time has doubled","There are more duplicate payments","Nothing has changed"]}]};
+LT.C2={name:"C2",need:15,items:[
+{sec:GV,q:"Were it not for the auditor's intervention, the error ___ unnoticed.",o:["would have gone","would go","had gone","will have gone"]},
+{sec:GV,q:"So complex ___ that few people fully understood it.",o:["was the system","the system was","did the system","the system did"]},
+{sec:GV,q:"It's high time the board ___ responsibility for the failure.",o:["took","takes","had taken","will take"]},
+{sec:GV,q:"Not once ___ to consult the end users.",o:["did they think","they thought","they did think","thought they"]},
+{sec:GV,q:"The CEO's speech was ___ with vague promises.",o:["peppered","salted","sprinkled with","spiced"]},
+{sec:GV,q:"The vendor's response was, to put it ___, disappointing.",o:["mildly","softly","gently","lightly"]},
+{sec:GV,q:"We need to separate the wheat from the ___ in these proposals.",o:["chaff","grain","straw","husk"]},
+{sec:GV,q:"The decision was taken against the ___ of the finance team.",o:["advice","advise","advisory","advising"]},
+{sec:GV,q:"Her argument was ___ by a lack of reliable data.",o:["undermined","underwent","underlined","undertaken"]},
+{sec:GV,q:"The negotiations have reached a delicate ___.",o:["juncture","junction","joint","jointure"]},
+{sec:GV,q:"His explanation did little to ___ the investors' fears.",o:["allay","alloy","ally","allot"]},
+{sec:GV,q:"The figures had been ___ to give a more favourable impression.",o:["massaged","messaged","massacred","managed"]},
+{sec:"Đọc",passage:LT_C2_TEXT,q:"What is the writer's main criticism of financial forecasts?",o:["Their precision discourages questioning of assumptions","They are always too optimistic","They take too long to prepare","They ignore decimal points"]},
+{sec:"Đọc",passage:LT_C2_TEXT,q:"Why does the writer mention '14.27 million'?",o:["To show how precision shifts debate to trivial details","To give an example of an accurate forecast","To criticise a specific company","To show strong market growth"]},
+{sec:"Đọc",passage:LT_C2_TEXT,q:"How do boards tend to react to forecast ranges?",o:["They find them less satisfying than a single number","They strongly prefer them","They ignore them","They are not allowed to use them"]},
+{sec:"Đọc",passage:LT_C2_TEXT,q:"What is the writer's overall conclusion?",o:["Forecasting is valuable mainly for the discussions it creates","Forecasting should be abandoned","Point estimates are always better","Boards should prepare forecasts themselves"]},
+{sec:"Nghe",audio:"Far be it from me to second-guess the board, but I'd have thought that a decision of this magnitude merited rather more than a twenty-minute discussion.",q:"What is the speaker implying?",o:["The decision was made too hastily","The board is always right","The meeting was too long","The decision was unimportant"]},
+{sec:"Nghe",audio:"It's not so much that the strategy is flawed as that it's been executed half-heartedly. Give it the resources it was promised, and I suspect it would deliver.",q:"According to the speaker, what is the real problem?",o:["The strategy has not been properly resourced","The strategy is fundamentally wrong","There are too many resources","The strategy has already succeeded"]},
+{sec:"Nghe",audio:"Whilst I wouldn't go so far as to call the audit findings alarming, they do point to a pattern that we'd be ill-advised to ignore.",q:"How does the speaker view the audit findings?",o:["Not alarming, but significant enough to act on","Extremely alarming","Completely irrelevant","Very positive"]},
+{sec:"Nghe",audio:"Had we listened to the warehouse staff from the outset, we'd have spared ourselves six months of workarounds. Lesson learned, albeit the expensive way.",q:"What lesson does the speaker draw?",o:["They should have listened to frontline staff earlier","Workarounds are a good long-term solution","The warehouse staff were wrong","The project was cheap"]}]};
+
 /* ===================== STATE ===================== */
 const KEY="worktalk_b1b2_v1";
-function defS(){return{xp:0,streak:0,last:null,sc:{},gr:{},w:{},a2:null,mock:[],rate:0.9,showVi:false,ls:{},wr:{},err:{},grR:{},grLog:{},mseen:{},ret:{n:0,ok:0}}}
+function defS(){return{xp:0,streak:0,last:null,sc:{},gr:{},w:{},a2:null,mock:[],rate:0.9,showVi:false,ls:{},wr:{},err:{},grR:{},grLog:{},mseen:{},ret:{n:0,ok:0},lvl:{},lvlLog:[],ext:{},goal:"b2"}}
 let S=defS();
 try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(S,JSON.parse(raw))}catch(e){}
 {const d=defS();Object.keys(d).forEach(k=>{if(S[k]==null)S[k]=d[k]})}
+if(S.a2>=8)S.lvl.A2=1;
 Object.keys(S.w).forEach(k=>{if(typeof S.w[k]==="number")S.w[k]={b:S.w[k],d:0}});
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function dstr(d){return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
 function dayIdx(){return Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/864e5)}
 function addXP(n){const t=dstr(new Date());if(S.last!==t){const y=new Date();y.setDate(y.getDate()-1);S.streak=(S.last===dstr(y))?S.streak+1:1;S.last=t}S.xp+=n;save();updTop()}
 function updTop(){document.getElementById("cStreak").textContent="🔥 "+(S.streak||0);document.getElementById("cXp").textContent=S.xp+" XP"}
-const ALLW=[];VOC.forEach((tp,ti)=>tp.w.forEach(w=>ALLW.push({w:w[0],m:w[1],x:w[2],lv:w[3]||"",ti,base:tp.base})));
-const MAINW=ALLW.filter(x=>!x.base);
+const ALLW=[];VOC.forEach((tp,ti)=>tp.w.forEach(w=>ALLW.push({w:w[0],m:w[1],x:w[2],lv:w[3]||"",ti,base:tp.base,adv:!!tp.adv})));
+const MAINW=ALLW.filter(x=>!x.base&&!x.adv),ADVW=ALLW.filter(x=>x.adv);
 const LVORD={B1:0,"":1,B2:2,C1:3,A2:4,A1:4};
-const lvTag=l=>l?l:"cụm từ";
+const lvTag=l=>l==="C1+"?"C1 chuyên ngành":l?l:"cụm từ";
 const INT=[0,1,3,7,14,30];
 Object.keys(S.gr).forEach((i,n)=>{if(!S.grR[i])S.grR[i]={b:1,d:dayIdx()+3+(n%5)}});
 const wb=w=>S.w[w]?S.w[w].b:0;
 function learned(){return MAINW.filter(x=>wb(x.w)>=4).length}
 function dueList(){const t=dayIdx();return ALLW.filter(x=>S.w[x.w]&&S.w[x.w].d<=t)}
-function newList(){return MAINW.filter(x=>!S.w[x.w]).map((x,i)=>({x,i})).sort((a,b)=>(LVORD[a.x.lv]-LVORD[b.x.lv])||(a.i-b.i)).map(o=>o.x)}
+function learnedAdv(){return ADVW.filter(x=>wb(x.w)>=4).length}
+function newList(){const m=newMain();if(S.goal!=="c1")return m;const a=ADVW.filter(x=>!S.w[x.w]);const out=[];let i=0,j=0;while(i<a.length||j<m.length){if(i<a.length)out.push(a[i++]);if(i<a.length)out.push(a[i++]);if(j<m.length)out.push(m[j++])}return out}
+function newMain(){return MAINW.filter(x=>!S.w[x.w]).map((x,i)=>({x,i})).sort((a,b)=>(LVORD[a.x.lv]-LVORD[b.x.lv])||(a.i-b.i)).map(o=>o.x)}
 
 function addErr(id){if(!id)return;S.err[id]={b:0,d:dayIdx()+1};save()}
 function errUpdate(id,ok){const e=S.err[id]||{b:0,d:0};const t=dayIdx();if(ok){e.b++;if(e.b>=3){delete S.err[id];save();return}e.d=t+INT[e.b+1]}else{e.b=0;e.d=t+1}S.err[id]=e;save()}
@@ -1593,9 +2159,11 @@ function reg(text,who){T.push(text);const k=T.length-1;WHO[k]=who||0;return k}
 let voices=[];
 function loadVoices(){try{voices=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang))}catch(e){}}
 if("speechSynthesis" in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
-function voiceFor(who){if(!voices.length)return null;const us=voices.filter(v=>/en[-_]US/i.test(v.lang)),gb=voices.filter(v=>/en[-_]GB/i.test(v.lang));const a=us[0]||voices[0];const b=gb[0]||us[1]||voices[1]||a;return who?b:a}
+function accVoices(loc){return voices.filter(v=>v.lang.replace("_","-").toLowerCase().startsWith(loc.toLowerCase()))}
+function hasAccent(loc){return accVoices(loc).length>0}
+function voiceFor(who){if(!voices.length)return null;if(typeof who==="string"){const [loc,n]=who.split("#");const L=accVoices(loc);if(L.length)return L[(+n||0)%L.length];return voiceFor(+n||0)}const us=voices.filter(v=>/en[-_]US/i.test(v.lang)),gb=voices.filter(v=>/en[-_]GB/i.test(v.lang));const a=us[0]||voices[0];const b=gb[0]||us[1]||voices[1]||a;return who?b:a}
 function say(text,who,rate){return new Promise(res=>{if(!("speechSynthesis" in window)){toast("Trình duyệt này không đọc được. Hãy dùng Chrome hoặc Safari.");return res()}
-speechSynthesis.cancel();setTimeout(()=>{const u=new SpeechSynthesisUtterance(text);const v=voiceFor(who||0);u.lang="en-US";if(v){u.voice=v;u.lang=v.lang}u.rate=rate||S.rate;let done=false;const fin=()=>{if(!done){done=true;res()}};u.onend=fin;u.onerror=fin;setTimeout(fin,Math.max(4000,text.length*150));speechSynthesis.speak(u)},60)})}
+speechSynthesis.cancel();setTimeout(()=>{const u=new SpeechSynthesisUtterance(text);const v=voiceFor(who||0);u.lang=typeof who==="string"?who.split("#")[0]:"en-US";if(v){u.voice=v;u.lang=v.lang}u.rate=rate||S.rate;let done=false;const fin=()=>{if(!done){done=true;res()}};u.onend=fin;u.onerror=fin;setTimeout(fin,Math.max(4000,text.length*150));speechSynthesis.speak(u)},60)})}
 function sayK(k){say(T[k],WHO[k])}
 
 /* ===================== SPEECH: RECOGNITION ===================== */
@@ -1645,12 +2213,13 @@ function stopAll(){playTok++;try{speechSynthesis.cancel()}catch(e){}if(activeRec
 let R={tab:"home"},Q=null,G=null,FC=null,LQ=null,playTok=0;
 function go(tab,extra){stopAll();FC=null;R=Object.assign({tab},extra||{});Q=null;render();window.scrollTo(0,0)}
 function render(){T=[];WHO={};MICCB={};const v=document.getElementById("view");
-if(Q){v.innerHTML=Q.over?Q.resHTML:quizHTML()}else v.innerHTML=({home:vHome,sc:vSc,pron:vPron,ls:vLs,wr:vWr,gr:vGr,voc:vVoc,test:vTest})[R.tab]();
-const cur=R.tab==="pron"?"sc":R.tab;document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-current",b.dataset.t===cur?"page":"false"));updTop()}
+if(Q){v.innerHTML=Q.over?Q.resHTML:quizHTML()}else v.innerHTML=({home:vHome,sc:vSc,pron:vPron,ls:vLs,wr:vWr,gr:vGr,voc:vVoc,test:vTest,sync:vSync})[R.tab]();
+const cur=R.tab==="pron"?"sc":R.tab==="sync"?"home":R.tab;document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-current",b.dataset.t===cur?"page":"false"));updTop()}
 
 /* ===================== HOME ===================== */
-function todayPlan(){const di=dayIdx();let s=SC.findIndex(x=>!S.sc[x.id]);if(s<0)s=di%SC.length;let g=GR.findIndex((x,i)=>!S.gr[i]);if(g<0)g=di%GR.length;
-let l=LS.findIndex((x,i)=>S.ls[i]==null);if(l<0)l=di%LS.length;let w=WR.findIndex((x,i)=>!(S.wr[i]&&S.wr[i].done));if(w<0)w=di%WR.length;return{s,g,l,w,snd:di%SOUNDS.length}}
+function inGoal(lv){return S.goal==="c1"?lv==="C1":lv!=="C1"}
+function pickIdx(arr,done){const di=dayIdx();let pool=arr.map((x,i)=>i).filter(i=>inGoal(arr[i].lv||""));if(!pool.length)pool=arr.map((x,i)=>i);const f=pool.find(i=>!done(i));return f!=null?f:pool[di%pool.length]}
+function todayPlan(){const di=dayIdx();return{s:pickIdx(SC,i=>S.sc[SC[i].id]),g:pickIdx(GR,i=>S.gr[i]),l:pickIdx(LS,i=>S.ls[i]!=null),w:pickIdx(WR,i=>S.wr[i]&&S.wr[i].done),snd:di%SOUNDS.length}}
 function vHome(){const p=todayPlan();const s=SC[p.s],g=GR[p.g],sd=SOUNDS[p.snd],l=LS[p.l],w=WR[p.w];const lastMock=S.mock.length?S.mock[S.mock.length-1]:null;
 const due=dueList().length,nw=Math.min(10,newList().length),ed=errDue().length,gd=grDue();
 const d=new Date();const dn=["Chủ nhật","Thứ Hai","Thứ Ba","Thứ Tư","Thứ Năm","Thứ Sáu","Thứ Bảy"][d.getDay()];
@@ -1664,17 +2233,19 @@ const mainTask={sc:{ic:"💬",t:s.t,sub:"Nói: hội thoại, mẫu câu, nhập
 const mk=mainPick[0];core.push(mainTask[mk]);
 const extra=[mainTask.sc,mainTask.gr,d.getDay()%2?mainTask.ls:mainTask.wr].filter(x=>x!==mainTask[mk]);extra.push({ic:"🎙️",t:"Phát âm: "+sd.t,sub:sd.ipa+", nghe và nói",on:"go('pron',{id:"+p.snd+"})"});
 const next=core.find(x=>!x.done);
-let h='<section class="hero"><p class="day">'+dn+', '+d.getDate()+'/'+(d.getMonth()+1)+'. Tình huống hôm nay:</p><h1><span>'+esc(s.t)+'</span></h1><p class="vi">'+esc(s.vi)+'</p><div class="hvbar"></div></section>';
+let h,top=["C2","C1","B2","B1","A2"].find(k=>S.lvl[k]);h='<section class="hero"><p class="day">'+dn+', '+d.getDate()+'/'+(d.getMonth()+1)+(top?'. Đã qua bài kiểm tra '+top:'')+'. Tình huống hôm nay:</p><h1><span>'+esc(s.t)+'</span></h1><p class="vi">'+esc(s.vi)+'</p><div class="hvbar"></div></section>';
 if(S.a2===null)h+='<div class="card"><b>Bắt đầu bằng bài kiểm tra nền tảng A2</b><p class="note">App này dạy B1–B2 và coi như bạn đã vững A1–A2. Làm 10 câu (khoảng 3 phút) để chắc nền tảng đã đủ.</p><button class="btn hv" onclick="startA2()">Làm bài A2</button></div>';
 if(next)h+='<button class="btn hv wide big" style="margin:6px 0 2px" onclick="'+next.on+'">Học tiếp: '+esc(next.t)+'</button>';
 h+='<h2 style="font-size:20px;margin:16px 0 2px">Tối thiểu hôm nay</h2><p class="note" style="margin-top:0">Khoảng 15–20 phút. Chỉ cần xong phần này là giữ được chuỗi ngày học.</p><div class="plan">'+core.map(x=>taskBtn(x.ic,x.t,x.sub,x.done,x.on)).join("")+'</div>';
 h+='<h2 style="font-size:18px;margin:16px 0 2px">Nếu còn thời gian</h2><div class="plan">'+extra.map(x=>taskBtn(x.ic,x.t,x.sub,x.done,x.on)).join("")+'</div>';
 h+='<h2 style="font-size:20px;margin:20px 0 8px">Tiến độ</h2><div class="stats">'+
-stat(learned()+"/"+MAINW.length,"từ B1–B2 đã thuộc (nhớ đúng sau ≥7 ngày)")+stat(Object.keys(S.gr).length+"/"+GR.length,"chủ điểm ngữ pháp đạt")+
+stat(learned()+"/"+MAINW.length,"từ B1–B2 đã thuộc (nhớ đúng sau ≥7 ngày)")+(S.goal==="c1"?stat(learnedAdv()+"/"+ADVW.length,"từ C1 chuyên ngành đã thuộc"):"")+stat(Object.keys(S.gr).length+"/"+GR.length,"chủ điểm ngữ pháp đạt")+
 stat(Object.keys(S.sc).length+"/"+SC.length,"tình huống nói")+stat(Object.keys(S.ls).length+"/"+LS.length,"bài nghe dài")+
 stat(Object.values(S.wr).filter(x=>x.done).length+"/"+WR.length,"bài viết hoàn thành")+stat(lastMock?lastMock.lvl:"–",lastMock?"lần thi thử gần nhất":"chưa thi thử")+'</div>';
+h+='<div class="card"><b>Mục tiêu học</b><div class="row" style="margin-top:8px"><button class="btn '+(S.goal!=="c1"?"hv":"ghost")+'" onclick="setGoal(\'b2\')">B1–B2 công sở</button><button class="btn '+(S.goal==="c1"?"hv":"ghost")+'" onclick="setGoal(\'c1\')">C1–C2 chuyên ngành</button></div><p class="note">'+(S.goal==="c1"?"Kế hoạch hằng ngày ưu tiên đàm phán, ERP, kế toán, lãnh đạo; từ chuyên ngành C1 được đưa vào lượt ôn, xen với từ B2 còn thiếu.":"Kế hoạch tập trung giao tiếp công sở B1–B2. Chuyển sang C1–C2 khi đã vững B2 (nên qua bài kiểm tra lên B2 trước).")+'</p></div>';
 h+=metricsHTML();
-h+='<div class="card"><b>Tốc độ đọc mẫu</b><div class="row" style="margin-top:8px"><button class="btn '+(S.rate<0.85?"hv":"ghost")+'" onclick="setRate(0.75)">Chậm</button><button class="btn '+(S.rate>=0.85&&S.rate<1?"hv":"ghost")+'" onclick="setRate(0.9)">Vừa</button><button class="btn '+(S.rate>=1?"hv":"ghost")+'" onclick="setRate(1)">Tự nhiên</button></div><p class="note">Chấm phát âm chạy tốt nhất trên Chrome (Android, máy tính) và Safari (iPhone). Cần cho phép micro và có mạng.</p></div>';
+h+='<div class="card"><b>Tốc độ đọc mẫu</b><div class="row" style="margin-top:8px"><button class="btn '+(S.rate<0.85?"hv":"ghost")+'" onclick="setRate(0.75)">Chậm</button><button class="btn '+(S.rate>=0.85&&S.rate<1?"hv":"ghost")+'" onclick="setRate(0.9)">Vừa</button><button class="btn '+(S.rate>=1&&S.rate<1.1?"hv":"ghost")+'" onclick="setRate(1)">Tự nhiên</button><button class="btn '+(S.rate>=1.1?"hv":"ghost")+'" onclick="setRate(1.15)">Nhanh (C1)</button></div><p class="note">Chấm phát âm chạy tốt nhất trên Chrome (Android, máy tính) và Safari (iPhone). Cần cho phép micro và có mạng.</p></div>';
+h+='<div class="card"><b>Đổi máy (điện thoại ↔ laptop)</b><p class="note">Tiến độ lưu trên từng trình duyệt. Tạo mã chuyển ở máy này rồi dán vào máy kia, tiến độ hai máy sẽ được gộp lại.</p><button class="btn ghost" onclick="go(\'sync\')">Chuyển tiến độ</button></div>';
 h+='<p class="foot">Tiến độ lưu trên trình duyệt này. <button class="link" onclick="resetAll()">Xóa tiến độ</button></p>';return h}
 function metricsHTML(){const t=dayIdx();const r=S.ret;const ret=r.n?Math.round(r.ok/r.n*100)+"%":"–";
 const over=Object.values(S.w).filter(x=>x.d<t-2).length;const logs=Object.values(S.grLog).filter(x=>x.re!=null);
@@ -1682,14 +2253,16 @@ const gr=logs.length?Math.round(logs.reduce((a,x)=>a+x.re,0)/logs.length)+"% (l�
 return '<div class="card"><b>Học có vào không?</b><div class="stats" style="margin-top:8px">'+stat(ret,"nhớ đúng khi ôn sau ≥7 ngày"+(r.n?" ("+r.n+" lần)":""))+stat(gr,"điểm kiểm tra lại ngữ pháp")+stat(String(over),"từ quá hạn ôn trên 2 ngày")+stat(String(Object.keys(S.err).length),"câu sai đang chờ ôn")+'</div><p class="note">Nhớ sau 7 ngày dưới 80% nghĩa là cần ôn đều hơn. Số từ quá hạn tăng dần nghĩa là mỗi ngày đang học quá nhiều từ mới.</p></div>'}
 function stat(b,s){return '<div class="stat"><b>'+esc(b)+'</b><small>'+esc(s)+'</small></div>'}
 function taskBtn(ic,t,sub,done,on){return '<button class="task '+(done?"done":"")+'" onclick="'+on+'"><span class="ico">'+ic+'</span><span><b>'+esc(t)+'</b><small>'+esc(sub)+'</small></span><span class="st">'+(done?"Xong":"Làm")+'</span></button>'}
+function setGoal(g){if(g==='c1'&&!S.lvl.B2&&!confirm('Bạn chưa qua bài kiểm tra lên B2. Vẫn chuyển sang mục tiêu C1–C2?'))return;S.goal=g;save();render();toast(g==='c1'?'Đã chuyển sang lộ trình C1–C2 chuyên ngành':'Đã chuyển về lộ trình B1–B2')}
 function setRate(r){S.rate=r;save();render();say("This is how fast I will speak.")}
 function resetAll(){if(confirm("Xóa toàn bộ tiến độ trên trình duyệt này?")){S=defS();save();render()}}
 
+function grpMap(arr,fn){const a=[],b=[];arr.forEach((x,i)=>((x.lv==="C1")?b:a).push(fn(x,i)));if(!b.length)return a.join("");const head='</div><h2 class="grp">Lộ trình C1 chuyên ngành</h2><p class="note">ERP, kế toán, đàm phán, lãnh đạo. Nội dung ở mức C1, tốc độ nói nhanh hơn, ngôn ngữ ngoại giao và trang trọng hơn.</p><div class="tickets">';const head2='</div><h2 class="grp">B1–B2 công sở</h2><div class="tickets">';return S.goal==="c1"?b.join("")+head2+a.join(""):a.join("")+head+b.join("")}
 /* ===================== SPEAKING: SCENARIOS ===================== */
 function speakSeg(a){return '<div class="seg" style="grid-template-columns:1fr 1fr" role="tablist"><button role="tab" aria-selected="'+(a==="sc")+'" onclick="go(\'sc\')">Tình huống</button><button role="tab" aria-selected="'+(a==="pron")+'" onclick="go(\'pron\')">Phát âm</button></div>'}
 function vSc(){if(R.id!=null)return vScDetail();
 return '<h1 class="pg">Nói</h1>'+speakSeg("sc")+'<p class="note">'+SC.length+' tình huống thật ở nơi làm việc. Mỗi tình huống: nghe hội thoại và nói theo, học mẫu câu, rồi nhập vai chọn cách nói phù hợp.</p><div class="tickets">'+
-SC.map((s,i)=>'<button class="ticket '+(S.sc[s.id]?"done":"")+'" onclick="go(\'sc\',{id:'+i+'})"><span class="em">'+s.e+'</span><span><b>'+esc(s.t)+'</b><small>'+esc(s.vi)+'</small></span><span>'+(S.sc[s.id]?'<span class="ck">✓ Xong</span>':'<span class="lv">'+s.lv+'</span>')+'</span></button>').join("")+'</div>'}
+grpMap(SC,(s,i)=>'<button class="ticket '+(S.sc[s.id]?"done":"")+'" onclick="go(\'sc\',{id:'+i+'})"><span class="em">'+s.e+'</span><span><b>'+esc(s.t)+'</b><small>'+esc(s.vi)+'</small></span><span>'+(S.sc[s.id]?'<span class="ck">✓ Xong</span>':'<span class="lv">'+s.lv+'</span>')+'</span></button>')+'</div>'}
 function spIdx(s,name){return name===s.d[0][0]?0:1}
 function vScDetail(){const s=SC[R.id];const st=R.st||"d";
 let h='<button class="back" onclick="go(\'sc\')">‹ Tất cả tình huống</button><div class="schead"><span class="lv">'+s.lv+'</span><h1>'+esc(s.t)+'</h1><p class="vi">'+esc(s.vi)+'</p><p class="ctx">'+esc(s.c)+'</p></div>'+
@@ -1743,26 +2316,31 @@ function startStress(){const items=shuffle(STRESS).slice(0,12).map(([w,sy,a,sp])
 startQuiz({title:"Trọng âm từ",items,back:"pron",done:r=>{addXP(r.right);return resSimple(r,"Danh từ và tính từ 2 âm tiết thường nhấn âm đầu, động từ 2 âm tiết thường nhấn âm sau. Từ đuôi -tion, -sion, -ic nhấn ngay trước đuôi.")}})}
 
 /* ===================== LISTENING ===================== */
-function vLs(){if(R.id==null)return '<h1 class="pg">Nghe</h1><p class="note">Các đoạn hội thoại dài như ngoài đời: cuộc họp, cuộc gọi, buổi hướng dẫn. Đọc câu hỏi trước, nghe tối đa 2 lần như khi thi, rồi mới xem lời thoại.</p><div class="tickets">'+
-LS.map((l,i)=>'<button class="ticket '+(S.ls[i]!=null?"done":"")+'" onclick="go(\'ls\',{id:'+i+'})"><span class="em">🎧</span><span><b>'+esc(l.t)+'</b><small>'+esc(l.vi)+'</small></span><span>'+(S.ls[i]!=null?'<span class="ck">'+S.ls[i]+'/5</span>':'<span class="lv">'+esc(l.type)+'</span>')+'</span></button>').join("")+'</div>';
+function lsWho(L,sp){return L.ac?(L.ac[sp]||"en-US"):(sp===L.d[0][0]?0:1)}
+function accLine(L,short){if(!L.ac)return "";const locs=[...new Set(Object.values(L.ac).map(x=>x.split("#")[0]))];return locs.map(l=>ACN[l]+(!short&&voices.length&&!hasAccent(l)?" (máy chưa có giọng này)":"")).join(", ")}
+function vLs(){if(R.id==null)return '<h1 class="pg">Nghe</h1><p class="note">'+LS.length+' bài nghe nhiều dạng: cuộc họp, cuộc gọi, bản tin, podcast, phỏng vấn, thông báo, lời nhắn thoại, video hướng dẫn. Mỗi bài dùng nhiều giọng (Mỹ, Anh, Úc, Ấn Độ) nếu máy bạn có sẵn giọng đó. Đọc câu hỏi trước, nghe tối đa 2 lần như khi thi, rồi mới xem lời thoại.</p><div class="tickets">'+
+grpMap(LS,(l,i)=>'<button class="ticket '+(S.ls[i]!=null?"done":"")+'" onclick="go(\'ls\',{id:'+i+'})"><span class="em">🎧</span><span><b>'+esc(l.t)+'</b><small>'+esc(l.type)+(l.ac?', giọng '+esc(accLine(l,1)):"")+'</small></span><span>'+(S.ls[i]!=null?'<span class="ck">'+S.ls[i]+'/5</span>':'<span class="lv">'+(l.lv||"B1")+'</span>')+'</span></button>')+'</div>'+
+'<h2 style="font-size:20px;margin:22px 0 4px">Nguồn nghe người thật</h2><p class="note">Giọng máy trong app giúp luyện cấu trúc, nhưng tai cần quen với người thật nói. Mỗi tuần nghe 2–3 bài từ các nguồn miễn phí này. Cách nghe: lần 1 không xem transcript, ghi 3 ý chính. Lần 2 xem transcript. Sau đó nói theo 5 câu bạn thích.</p><div class="phr">'+
+EXT.map((e,i)=>'<div class="exi"><span class="lv">'+e.lv+'</span> <b>'+esc(e.t)+'</b><p class="note" style="margin:6px 0">'+esc(e.d)+'</p><div class="row"><a class="btn ghost" href="'+e.u+'" target="_blank" rel="noopener">Mở trang</a><button class="btn ghost" onclick="extDone('+i+')">Đã nghe 1 bài</button><span class="note">'+(S.ext[i]?"Đã nghe "+S.ext[i]+" bài":"")+'</span></div></div>').join("")+'</div>';
 const L=LS[R.id];if(!LQ||LQ.id!==R.id)LQ={id:R.id,ans:{},checked:false,showT:false,plays:0,opt:L.q.map(q=>shuffle(q.o.map((t,i)=>({t,ok:i===0}))))};
-let h='<button class="back" onclick="go(\'ls\')">‹ Nghe</button><span class="lv">'+esc(L.type)+'</span><h1 class="pg">'+esc(L.t)+'</h1><p class="vi">'+esc(L.vi)+'</p>'+
+let h='<button class="back" onclick="go(\'ls\')">‹ Nghe</button><span class="lv">'+esc(L.type)+', '+(L.lv||"B1")+'</span><h1 class="pg">'+esc(L.t)+'</h1><p class="vi">'+esc(L.vi)+(L.ac?'. Giọng: '+esc(accLine(L)):"")+'</p>'+
 '<div class="dbar" style="margin:12px 0"><button class="btn hv big" onclick="playLs()">'+IC.play+' Nghe</button><button class="btn ghost" onclick="stopAll()">'+IC.stop+' Dừng</button><span class="note" id="lsPlays">Đã nghe: '+LQ.plays+' lần</span></div>';
 h+=L.q.map((q,qi)=>{const a=LQ.ans[qi];return '<div class="lq"><p>'+(qi+1)+'. '+esc(q.q)+'</p><div class="opts">'+LQ.opt[qi].map((o,j)=>{let c="";if(LQ.checked){if(o.ok)c="ok";else if(a===j)c="bad"}else if(a===j)c="sel";return '<button class="opt '+c+'" '+(LQ.checked?"disabled":"")+' onclick="lsPick('+qi+','+j+')">'+esc(o.t)+'</button>'}).join("")+'</div></div>'}).join("");
 if(!LQ.checked){const n=Object.keys(LQ.ans).length;h+='<button class="btn wide big" '+(n<L.q.length?"disabled":"")+' onclick="lsCheck()">'+(n<L.q.length?"Trả lời đủ "+L.q.length+" câu để kiểm tra":"Kiểm tra đáp án")+'</button>'}
 else{const sc=L.q.reduce((s,q,qi)=>s+(LQ.opt[qi][LQ.ans[qi]].ok?1:0),0);h+='<div class="fb '+(sc>=4?"ok":"bad")+'"><strong>Bạn đúng '+sc+'/'+L.q.length+'</strong>'+(sc>=4?"Tốt. Giờ nghe lại và nói theo lời thoại để luyện nói.":"Xem lời thoại, tìm chỗ bạn nghe sót, rồi nghe lại.")+'</div>';
 h+='<button class="btn ghost wide" onclick="LQ.showT=!LQ.showT;render()">'+(LQ.showT?"Ẩn lời thoại":"Xem lời thoại")+'</button>';
-if(LQ.showT)h+='<ul class="dlg">'+L.d.map(l=>{const k=reg(l[1],l[0]===L.d[0][0]?0:1);return '<li><b>'+esc(l[0])+'</b><p class="en">'+esc(l[1])+'</p>'+acts(k)+'</li>'}).join("")+'</ul>';
+if(LQ.showT)h+='<ul class="dlg">'+L.d.map(l=>{const k=reg(l[1],lsWho(L,l[0]));return '<li><b>'+esc(l[0])+(L.ac&&L.ac[l[0]]?', giọng '+ACN[L.ac[l[0]].split("#")[0]]:"")+'</b><p class="en">'+esc(l[1])+'</p>'+acts(k)+'</li>'}).join("")+'</ul>';
 h+='<div class="row" style="margin-top:14px"><button class="btn ghost" onclick="LQ=null;render()">Làm lại</button>'+(R.id<LS.length-1?'<button class="btn hv" onclick="LQ=null;go(\'ls\',{id:'+(R.id+1)+'})">Bài tiếp</button>':"")+'</div>'}
 return h}
 async function playLs(){const L=LS[R.id];const tok=++playTok;LQ.plays++;const el=document.getElementById("lsPlays");if(el)el.textContent="Đã nghe: "+LQ.plays+" lần"+(LQ.plays>2?" (thi thật chỉ nghe 2 lần)":"");
-for(const l of L.d){if(tok!==playTok)return;await say(l[1],l[0]===L.d[0][0]?0:1);await wait(350)}}
+for(const l of L.d){if(tok!==playTok)return;await say(l[1],lsWho(L,l[0]));await wait(350)}}
+function extDone(i){S.ext[i]=(S.ext[i]||0)+1;save();addXP(5);toast("Đã ghi nhận. +5 XP");render()}
 function lsPick(qi,j){LQ.ans[qi]=j;render()}
 function lsCheck(){const L=LS[R.id];LQ.checked=true;stopAll();L.q.forEach((q,qi)=>{if(!LQ.opt[qi][LQ.ans[qi]].ok)addErr('ls:'+R.id+':'+qi)});const sc=L.q.reduce((s,q,qi)=>s+(LQ.opt[qi][LQ.ans[qi]].ok?1:0),0);S.ls[R.id]=Math.max(S.ls[R.id]||0,sc);save();addXP(sc*3);render()}
 
 /* ===================== WRITING ===================== */
 function vWr(){if(R.id==null)return '<h1 class="pg">Viết</h1><p class="note">'+WR.length+' đề email công sở. Tự viết trước, tự kiểm tra bằng checklist, rồi mới mở bài mẫu để so sánh. Bài nháp được lưu tự động.</p><div class="tickets">'+
-WR.map((w,i)=>{const st=S.wr[i];return '<button class="ticket '+(st&&st.done?"done":"")+'" onclick="go(\'wr\',{id:'+i+'})"><span class="em">✍️</span><span><b>'+esc(w.t)+'</b><small>'+esc(w.vi)+', '+w.min+'–'+w.max+' từ</small></span><span>'+(st&&st.done?'<span class="ck">✓ Xong</span>':'<span class="lv">'+(w.type==="Email thân mật"?"Thân mật":"Trang trọng")+'</span>')+'</span></button>'}).join("")+'</div>';
+grpMap(WR,(w,i)=>{const st=S.wr[i];return '<button class="ticket '+(st&&st.done?"done":"")+'" onclick="go(\'wr\',{id:'+i+'})"><span class="em">✍️</span><span><b>'+esc(w.t)+'</b><small>'+esc(w.vi)+', '+w.min+'–'+w.max+' từ</small></span><span>'+(st&&st.done?'<span class="ck">✓ Xong</span>':'<span class="lv">'+(w.lv==="C1"?"C1":w.type==="Email thân mật"?"Thân mật":"Trang trọng")+'</span>')+'</span></button>'})+'</div>';
 const w=WR[R.id];const st=S.wr[R.id]||(S.wr[R.id]={t:"",ck:{}});const n=wcount(st.t);const cks=WR_GEN.concat(w.pts.map(p=>"Có ý: "+p));
 let h='<button class="back" onclick="go(\'wr\')">‹ Viết</button><span class="lv">'+esc(w.type)+', '+w.min+'–'+w.max+' từ</span><h1 class="pg">'+esc(w.t)+'</h1>'+
 '<div class="ctx"><p style="margin:0 0 6px;font-weight:700">'+esc(w.task)+'</p><p style="margin:0">Bài viết cần có:</p><ul style="margin:4px 0 0;padding-left:20px">'+w.pts.map(p=>'<li>'+esc(p)+'</li>').join("")+'</ul></div>'+
@@ -1786,8 +2364,8 @@ function wrCk(i,v){S.wr[R.id].ck[i]=v;wrCheckDone(R.id)}
 function vGr(){if(R.id!=null){const g=GR[R.id];
 return '<button class="back" onclick="go(\'gr\')">‹ Ngữ pháp</button><span class="lv">'+g.lv+'</span><h1 class="pg">'+esc(g.t)+'</h1><p>'+esc(g.x)+'</p><div class="form">'+esc(g.f)+'</div><h2 style="font-size:18px;margin:14px 0 4px">Ví dụ ở nơi làm việc</h2><div class="ex">'+
 g.e.map(e=>{const k=reg(e);return '<div class="exi"><p class="en" style="margin:0">'+esc(e)+'</p>'+acts(k)+'</div>'}).join("")+'</div><button class="btn hv wide big" onclick="startGr('+R.id+')">Làm '+g.q.length+' câu luyện tập</button>'}
-return '<h1 class="pg">Ngữ pháp B1–B2</h1><p class="note">'+GR.length+' chủ điểm, mỗi chủ điểm 8 câu luyện. Đạt từ 6/8 là hoàn thành.</p><div class="tickets">'+
-GR.map((g,i)=>'<button class="ticket '+(S.gr[i]?"done":"")+'" onclick="go(\'gr\',{id:'+i+'})"><span class="em" style="font-family:var(--fh);font-size:18px;font-weight:800;color:var(--sub)">'+(i+1)+'</span><span><b>'+esc(g.t)+'</b><small>'+esc(g.f)+'</small></span><span>'+(S.gr[i]?'<span class="ck">✓ Đạt</span>':'<span class="lv">'+g.lv+'</span>')+'</span></button>').join("")+'</div>'}
+return '<h1 class="pg">Ngữ pháp</h1><p class="note">'+GR.length+' chủ điểm, mỗi chủ điểm 8 câu luyện. Đạt từ 6/8 là hoàn thành.</p><div class="tickets">'+
+grpMap(GR,(g,i)=>'<button class="ticket '+(S.gr[i]?"done":"")+'" onclick="go(\'gr\',{id:'+i+'})"><span class="em" style="font-family:var(--fh);font-size:18px;font-weight:800;color:var(--sub)">'+(i+1)+'</span><span><b>'+esc(g.t)+'</b><small>'+esc(g.f)+'</small></span><span>'+(S.gr[i]?'<span class="ck">✓ Đạt</span>':'<span class="lv">'+g.lv+'</span>')+'</span></button>')+'</div>'}
 function startGr(i){const g=GR[i];const need=Math.ceil(g.q.length*0.75);startQuiz({title:g.t,items:g.q.map((q,j)=>Object.assign({eid:'gr:'+i+':'+j},q)),back:"gr",backId:i,done:r=>{if(r.right>=need&&!S.gr[i]){S.gr[i]=1;S.grR[i]={b:1,d:dayIdx()+7};S.grLog[i]={first:Math.round(r.right/r.n*100)};save()}addXP(r.right*2);return resSimple(r,r.right>=need?"Bạn đã đạt chủ điểm này.":"Đọc lại phần giải thích rồi làm lại để đạt "+need+"/"+g.q.length+".",i<GR.length-1?'<button class="btn hv" onclick="go(\'gr\',{id:'+(i+1)+'})">Chủ điểm tiếp</button>':"")}})}
 
 function startRetest(i){const g=GR[i];const items=shuffle(g.q.map((q,j)=>Object.assign({eid:'gr:'+i+':'+j},q))).slice(0,4);
@@ -1807,11 +2385,11 @@ function vVoc(){if(FC)return flashHTML();
 if(R.id!=null){const tp=VOC[R.id];const n=tp.w.filter(w=>wb(w[0])>=4).length;
 return '<button class="back" onclick="go(\'voc\')">‹ Từ vựng</button><h1 class="pg">'+esc(tp.t)+'</h1><p class="vi">'+esc(tp.vi)+'. Đã thuộc '+n+'/'+tp.w.length+'.</p>'+(tp.base?'<p class="note">Các từ này thuộc A1–A2 theo danh sách Oxford 3000/5000. Không nằm trong lượt ôn hằng ngày, chỉ học khi bạn muốn củng cố nền.</p>':"")+'<button class="btn hv" style="margin:12px 0" onclick="startFlash('+R.id+')">Học chủ đề này bằng thẻ</button><ul class="wlist">'+
 tp.w.map(w=>{const k=reg(w[0]);return '<li><span><b>'+esc(w[0])+'</b> <span class="lv" style="font-size:11.5px">'+lvTag(w[3])+'</span> <small>'+esc(w[1])+'</small><br><small><i>'+esc(w[2])+'</i></small></span><span class="row"><span class="dots" title="Mức nhớ">'+dots(wb(w[0]))+'</span><button class="playb" onclick="sayK('+k+')" aria-label="Nghe">'+IC.play+'</button></span></li>'}).join("")+'</ul>'}
-const due=dueList().length,nw=newList().length;const main=VOC.map((tp,i)=>[tp,i]).filter(([tp])=>!tp.base),base=VOC.map((tp,i)=>[tp,i]).filter(([tp])=>tp.base);
+const due=dueList().length,nw=newList().length;const main=VOC.map((tp,i)=>[tp,i]).filter(([tp])=>!tp.base&&!tp.adv),adv=VOC.map((tp,i)=>[tp,i]).filter(([tp])=>tp.adv),base=VOC.map((tp,i)=>[tp,i]).filter(([tp])=>tp.base);
 return '<h1 class="pg">Từ vựng</h1><p class="note">'+MAINW.length+' từ và cụm từ B1–B2 trong '+main.length+' chủ đề, có nhãn CEFR theo Oxford 3000/5000 (cụm từ không có trong danh sách được ghi là “cụm từ”). Từ mới được đưa vào theo thứ tự B1 trước, B2 sau.</p>'+
 '<p class="note">Cách ôn: thẻ mới thì lật thẻ và tự chấm. Từ đã nhớ 2 lần sẽ chuyển sang dạng gõ: nhìn nghĩa tiếng Việt gõ từ tiếng Anh, hoặc điền từ vào câu. Từ được tính là đã thuộc khi bạn nhớ đúng ở lần ôn cách ít nhất 7 ngày.</p>'+
 '<div class="card"><b>Hôm nay: '+due+' từ đến hạn ôn, còn '+nw+' từ mới</b><p class="note">Mỗi lượt: ôn từ đến hạn trước, sau đó thêm tối đa 10 từ mới.</p><button class="btn hv wide big" onclick="startFlash(-1)">Bắt đầu ôn</button></div><div class="tickets">'+
-main.map(([tp,i])=>{const n=tp.w.filter(w=>wb(w[0])>=4).length;return '<button class="ticket '+(n===tp.w.length?"done":"")+'" onclick="go(\'voc\',{id:'+i+'})"><span class="em" style="font-size:14px;font-family:var(--fh);font-weight:800">'+n+'/'+tp.w.length+'</span><span><b>'+esc(tp.t)+'</b><small>'+esc(tp.vi)+'</small></span><span></span></button>'}).join("")+'</div>'+
+main.map(([tp,i])=>{const n=tp.w.filter(w=>wb(w[0])>=4).length;return '<button class="ticket '+(n===tp.w.length?"done":"")+'" onclick="go(\'voc\',{id:'+i+'})"><span class="em" style="font-size:14px;font-family:var(--fh);font-weight:800">'+n+'/'+tp.w.length+'</span><span><b>'+esc(tp.t)+'</b><small>'+esc(tp.vi)+'</small></span><span></span></button>'}).join("")+'</div>'+'<h2 class="grp">Từ vựng C1 chuyên ngành</h2><p class="note">'+ADVW.length+' thuật ngữ ERP, kế toán, đàm phán, lãnh đạo và chiến lược. Nhãn “C1 chuyên ngành” do app phân loại theo lĩnh vực, không lấy từ danh sách Oxford. '+(S.goal==="c1"?"Các từ này đang được đưa vào lượt ôn hằng ngày.":"Chọn mục tiêu C1–C2 ở trang chính để đưa các từ này vào lượt ôn hằng ngày.")+'</p><div class="tickets">'+adv.map(([tp,i])=>{const n=tp.w.filter(w=>wb(w[0])>=4).length;return '<button class="ticket '+(n===tp.w.length?"done":"")+'" onclick="go(\'voc\',{id:'+i+'})"><span class="em" style="font-size:14px;font-family:var(--fh);font-weight:800">'+n+'/'+tp.w.length+'</span><span><b>'+esc(tp.t)+'</b><small>'+esc(tp.vi)+'</small></span><span class="lv">C1</span></button>'}).join("")+'</div>'+
 base.map(([tp,i])=>'<div class="card"><b>'+esc(tp.vi)+' ('+tp.w.length+' từ)</b><p class="note">Những từ A1–A2 đã có trong bản trước, giữ lại để bạn ôn nhanh nếu cần. Không tính vào tiến độ B1–B2.</p><button class="btn ghost" onclick="go(\'voc\',{id:'+i+'})">Xem và ôn</button></div>').join("")}
 function dots(b){let s="";for(let i=0;i<5;i++)s+='<i class="'+(i<b?"on":"")+'"></i>';return s}
 function escRe(x){return x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
@@ -1872,21 +2450,39 @@ RUBRIC.map((c,i)=>'<div><p style="margin:0 0 4px;font-size:15px">'+esc(c)+'</p><
 const all=RUBRIC.every((c,i)=>Q.rub[i]!=null);return h+'<button class="btn wide big" '+(all?"":"disabled")+' onclick="qwNext()">'+(all?"Tiếp":"Chấm đủ 4 tiêu chí để tiếp tục")+'</button>'}
 function qwSubmit(){const n=wcount(Q.wt);if(n<10&&!confirm("Bài viết mới có "+n+" từ. Vẫn nộp?"))return;Q.ws=1;render();window.scrollTo(0,0)}
 function qwNext(){const it=Q.items[Q.i];const n=wcount(Q.wt);let sc=RUBRIC.reduce((s,c,i)=>s+Q.rub[i],0)/(RUBRIC.length*3);if(n<it.write.min*0.7)sc*=0.7;addSec(it.sec||"all",sc);Q.ws=0;Q.rub={};qNext()}
-function qAns(j){if(Q.ans!==null)return;Q.ans=j;const it=Q.items[Q.i];const ok=it._o[j].ok;addSec(it.sec||"all",ok?1:0);if(ok)Q.right++;if(it.eid){if(Q.errMode)errUpdate(it.eid,ok);else if(!ok)addErr(it.eid)}if(Q.silent){qNext();return}render()}
+function qAns(j){if(Q.ans!==null)return;Q.ans=j;const it=Q.items[Q.i];const ok=it._o[j].ok;addSec(it.sec||"all",ok?1:0);if(ok)Q.right++;if(it.eid){if(Q.errMode)errUpdate(it.eid,ok);else if(!ok)addErr(it.eid)}(Q.log=Q.log||[]).push({q:it.q,ok,cor:it._o.find(o=>o.ok).t,ch:it._o[j].t,sec:it.sec});if(Q.silent){qNext();return}render()}
 function qNext(){stopAll();Q.ans=null;Q.cur=null;Q.i++;if(Q.i>=Q.items.length){Q.over=true;Q.resHTML=Q.done({right:Q.right,n:Q.items.filter(x=>x.o).length,sec:Q.sec})}render();window.scrollTo(0,0)}
 function spNext(skip){const it=Q.items[Q.i];if(!skip&&Q.cur!=null)addSec(it.sec||"all",Q.cur);qNext()}
 function resSimple(r,msg,extra){return '<div class="card result"><div class="num">'+r.right+'/'+r.n+'</div><p>câu đúng</p><p class="note">'+esc(msg)+'</p><div class="row" style="justify-content:center"><button class="btn ghost" onclick="quitQuiz()">Quay lại</button>'+(extra||"")+'</div></div>'}
 
 /* ===================== TESTS ===================== */
+const LADDER=[{k:"A2",t:"Nền tảng A2",sub:"10 câu ngữ pháp và từ vựng. Qua khi đúng từ 8/10.",go:"startA2()",need:null},
+{k:"B1",t:"Kiểm tra lên B1",sub:"20 câu: ngữ pháp và từ vựng, đọc, nghe. Qua khi đúng từ 15/20.",go:"startLT('B1')",need:"A2"},
+{k:"B2",t:"Kiểm tra lên B2",sub:"20 câu ở độ khó B2. Qua khi đúng từ 15/20.",go:"startLT('B2')",need:"B1"},
+{k:"C1",t:"Kiểm tra lên C1",sub:"20 câu C1 về ERP, tài chính, đàm phán. Qua khi đúng từ 15/20.",go:"startLT('C1')",need:"B2"},
+{k:"C2",t:"Kiểm tra lên C2",sub:"20 câu C2: cấu trúc hiếm, thành ngữ, hàm ý tinh tế. Qua khi đúng từ 15/20.",go:"startLT('C2')",need:"C1"}];
+function ladderHTML(){const last=k=>{const l=S.lvlLog.filter(x=>x.k===k).pop();return l?" Lần gần nhất: "+l.s+"/"+l.n+" ("+l.d.split("-").reverse().join("/")+").":""};
+return '<div class="card"><b>Kiểm tra lên cấp</b><p class="note">Làm lần lượt: qua A2 thì mở bài B1, qua B1 thì mở bài B2. Mỗi bài kiểm tra đúng trình độ đó, khác với bài thi thử tổng hợp bên dưới.</p><div class="plan">'+
+LADDER.map(x=>{const pass=!!S.lvl[x.k],open=!x.need||S.lvl[x.need];return '<button class="task '+(pass?"done":"")+'" '+(open?'onclick="'+x.go+'"':'disabled style="opacity:.55;cursor:default"')+'><span class="ico">'+(pass?"✅":open?"🎯":"🔒")+'</span><span><b>'+x.t+'</b><small>'+(open?x.sub+last(x.k):"Mở khi qua bài "+x.need+".")+'</small></span><span class="st">'+(pass?"Đã qua":open?"Làm":"Khóa")+'</span></button>'}).join("")+
+'</div><p class="note">Bài kiểm tra giữ cố định để so sánh các lần làm. Nếu chưa qua, hãy học thêm 1–2 tuần rồi làm lại, đừng làm lại ngay vì sẽ nhớ đáp án.</p></div>'}
+function startLT(k){const T0=LT[k];startQuiz({title:"Kiểm tra lên "+k,items:T0.items.map(it=>Object.assign({a:0},it)),back:"test",silent:true,done:r=>{
+const pass=r.right>=T0.need;if(pass)S.lvl[k]=1;S.lvlLog.push({k,s:r.right,n:r.n,d:dstr(new Date())});save();addXP(r.right*2);
+const secs=Object.keys(r.sec).map(n=>({n,v:r.sec[n].r/r.sec[n].n}));const weak=secs.slice().sort((a,b)=>a.v-b.v)[0];const wrong=(Q.log||[]).filter(x=>!x.ok);
+const nk={B1:"B2",B2:"C1",C1:"C2"}[k];const next=nk?'<button class="btn hv" onclick="startLT(\''+nk+'\')">Làm bài kiểm tra lên '+nk+'</button>':"";
+return '<div class="card result"><div class="num">'+r.right+'/'+r.n+'</div><div class="lvl">'+(pass?"Đã qua "+k:"Chưa qua "+k)+'</div><p class="note">'+(pass?(k==="C2"?"Bạn đã qua bài C2 trong app. Bài này chỉ đo ngữ pháp, từ vựng, đọc và nghe. Muốn có kết quả chính thức cho công việc, hãy cân nhắc C1 Advanced, C2 Proficiency hoặc IELTS 7.5 trở lên.":k==="B2"?"Bạn đã qua B2. Bài kiểm tra lên C1 đã mở. Nếu công việc cần đàm phán và báo cáo chuyên ngành, hãy chuyển mục tiêu sang C1–C2 ở trang chính.":"Bạn đã qua "+k+". Bài kiểm tra lên "+nk+" đã được mở."):"Cần đúng từ "+T0.need+"/"+r.n+". Phần yếu nhất: "+esc(weak.n)+". Học thêm 1–2 tuần rồi làm lại.")+'</p><div class="brk">'+
+secs.map(x=>'<div><span>'+esc(x.n)+'</span><span class="bar"><i style="width:'+Math.round(x.v*100)+'%"></i></span><b>'+Math.round(x.v*100)+'%</b></div>').join("")+'</div>'+
+(wrong.length?'<details style="text-align:left"><summary>Xem '+wrong.length+' câu sai</summary><ul style="margin:8px 0 0;padding-left:18px">'+wrong.map(x=>'<li style="margin-bottom:6px">'+esc(x.q)+'<br><small>Bạn chọn: '+esc(x.ch)+'. Đáp án: <b>'+esc(x.cor)+'</b></small></li>').join("")+'</ul></details>':"")+
+'<div class="row" style="justify-content:center;margin-top:10px">'+(pass?next:"")+(pass&&k==="B2"&&S.goal!=="c1"?'<button class="btn ghost" onclick="S.goal=\'c1\';save();quitQuiz()">Chuyển mục tiêu sang C1–C2</button>':"")+'<button class="btn ghost" onclick="quitQuiz()">Về trang thi</button></div></div>'}})}
+
 const SEC=[["Phần 1: Ngữ pháp và từ vựng","Ngữ pháp, từ vựng"],["Phần 2: Đọc","Đọc"],["Phần 3: Nghe","Nghe"],["Phần 4: Viết","Viết"],["Phần 5: Nói","Nói"]];
 const lvlOf=p=>p>=80?"B2":p>=65?"B1+":p>=45?"B1":"Dưới B1";
 function vTest(){const hist=S.mock.slice(-6).reverse();
-return '<h1 class="pg">Thi thử</h1><div class="card"><b>Nền tảng A2</b><p class="note">10 câu ngữ pháp và từ vựng A1–A2. Đạt từ 8/10 là đủ nền để học B1–B2.'+(S.a2!==null?" Lần gần nhất: "+S.a2+"/10.":"")+'</p><button class="btn ghost" onclick="startA2()">Làm bài A2</button></div>'+
+return '<h1 class="pg">Thi thử</h1>'+ladderHTML()+
 '<div class="card"><b>Thi thử đủ 5 kỹ năng (khoảng 40–50 phút)</b><p class="note">Mô phỏng cấu trúc kiểu Aptis: Ngữ pháp và từ vựng (30 câu), Đọc (2 bài), Nghe (7 câu), Viết (1 email, tự chấm theo tiêu chí), Nói (2 câu đọc to, 2 câu trả lời tự do).</p><p class="note">Mỗi lần thi, câu hỏi được rút từ kho, ưu tiên câu bạn chưa gặp, nên làm lại vẫn đo được tiến bộ. Kho hiện đủ cho khoảng 2–3 đề khác nhau. Đây không phải đề chính thức và chưa được chuẩn hóa.</p><button class="btn hv big" onclick="startMock()">Bắt đầu thi thử</button></div>'+
 (hist.length?'<h2 style="font-size:18px;margin:16px 0 6px">Lịch sử thi thử</h2><ul class="wlist">'+hist.map(m=>'<li><span><b>'+esc(m.lvl)+'</b> <small>'+m.pct+'%</small>'+(m.sk?'<br><small>'+Object.entries(m.sk).map(([k,v])=>esc(k)+" "+v+"%").join(", ")+'</small>':"")+'</span><small>'+esc(m.d)+'</small></li>').join("")+'</ul>':"")}
 function pick(pool,n,pre){const sc=pool.map((x,i)=>({x,i,r:Math.random(),seen:S.mseen[pre+i]?1:0})).sort((a,b)=>(a.seen-b.seen)||(a.r-b.r)).slice(0,n);sc.forEach(o=>S.mseen[pre+o.i]=1);return sc.map(o=>o.x)}
-function startA2(){startQuiz({title:"Kiểm tra nền tảng A2",items:A2,back:"test",done:r=>{S.a2=r.right;save();addXP(r.right);const ok=r.right>=8;
-return '<div class="card result"><div class="num">'+r.right+'/10</div><div class="lvl">'+(ok?"Nền A2 vững":"Cần củng cố A2")+'</div><p class="note">'+(ok?"Bạn đã sẵn sàng cho nội dung B1–B2 trong app.":"Nên ôn lại thì hiện tại, quá khứ, so sánh hơn, giới từ cơ bản trước, rồi quay lại. Bạn vẫn có thể học tiếp, nhưng sẽ thấy B1 khá khó.")+'</p><div class="row" style="justify-content:center"><button class="btn hv" onclick="go(\'home\')">Về trang chính</button></div></div>'}})}
+function startA2(){startQuiz({title:"Kiểm tra nền tảng A2",items:A2,back:"test",done:r=>{S.a2=r.right;const ok=r.right>=8;if(ok)S.lvl.A2=1;S.lvlLog.push({k:"A2",s:r.right,n:10,d:dstr(new Date())});save();addXP(r.right);
+return '<div class="card result"><div class="num">'+r.right+'/10</div><div class="lvl">'+(ok?"Nền A2 vững":"Cần củng cố A2")+'</div><p class="note">'+(ok?"Bạn đã sẵn sàng cho nội dung B1–B2 trong app.":"Nên ôn lại thì hiện tại, quá khứ, so sánh hơn, giới từ cơ bản trước, rồi quay lại. Bạn vẫn có thể học tiếp, nhưng sẽ thấy B1 khá khó.")+'</p><div class="row" style="justify-content:center">'+(ok?'<button class="btn hv" onclick="startLT(\'B1\')">Làm bài kiểm tra lên B1</button>':'')+'<button class="btn ghost" onclick="go(\'test\')">Về trang thi</button></div></div>'}})}
 function startMock(){const it=[],add=(sec,arr,extra)=>arr.forEach(x=>it.push(Object.assign({sec},extra||{},x)));
 add(SEC[0][0],pick(MOCK_G.concat(MOCK_G2),18,"g"));add(SEC[0][0],pick(MOCK_V.concat(MOCK_V2),12,"v"));
 const em=pick(READ_POOL.filter(r=>r.kind==="email"),1,"re")[0],ar=pick(READ_POOL.filter(r=>r.kind==="article"),1,"ra")[0];
@@ -1904,6 +2500,43 @@ const tip={"Ngữ pháp, từ vựng":"Ôn từ vựng mỗi ngày và làm lạ
 return '<div class="card result"><p class="note">Mức ước lượng</p><div class="lvl">'+lvl+'</div><div class="num">'+pct+'%</div><div class="brk">'+
 res.map(x=>x.v==null?'<div><span>'+x.n+'</span><span class="note" style="grid-column:span 2">Không tính (bỏ qua hoặc trình duyệt không hỗ trợ)</span></div>':'<div><span>'+x.n+'</span><span class="bar"><i style="width:'+Math.round(x.v*100)+'%"></i></span><b>'+lvlOf(x.v*100)+'</b></div>').join("")+
 '</div><p class="note">Kỹ năng yếu nhất: <b>'+esc(weak.n)+'</b>. '+esc(tip[weak.n])+'</p><p class="note">Viết là điểm tự chấm, Nói chỉ đo độ rõ và độ dài. Muốn biết trình độ chính xác, bạn cần thi chứng chỉ thật.</p><div class="row" style="justify-content:center"><button class="btn ghost" onclick="quitQuiz()">Quay lại</button><button class="btn hv" onclick="go(\'home\')">Về kế hoạch hôm nay</button></div></div>'}})}
+
+/* ===================== SYNC (đổi máy) ===================== */
+let SYNC={code:"",msg:""};
+function b64u(u8){let s="";for(let i=0;i<u8.length;i+=0x8000)s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
+function unb64u(str){str=str.replace(/-/g,"+").replace(/_/g,"/");while(str.length%4)str+="=";const bin=atob(str);const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u}
+async function makeCode(){const data=JSON.stringify(Object.assign({v:1,at:Date.now()},S));
+if(window.CompressionStream){const cs=new Blob([data]).stream().pipeThrough(new CompressionStream("gzip"));return "WT1."+b64u(new Uint8Array(await new Response(cs).arrayBuffer()))}
+return "WT0."+b64u(new TextEncoder().encode(data))}
+async function readCode(code){code=(code||"").trim().replace(/\s+/g,"");const pre=code.slice(0,4),u=unb64u(code.slice(4));let txt;
+if(pre==="WT1."){if(!window.DecompressionStream)throw new Error("Trình duyệt này quá cũ để đọc mã nén. Hãy cập nhật trình duyệt.");txt=await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream("gzip"))).text()}
+else if(pre==="WT0.")txt=new TextDecoder().decode(u);else throw new Error("Mã không đúng định dạng. Mã luôn bắt đầu bằng WT1. hoặc WT0.");
+const o=JSON.parse(txt);if(!o||o.v!==1)throw new Error("Mã không hợp lệ.");return o}
+function mergeS(o){const t=S;const dn=x=>{if(!x)return 0;const [y,m,d]=String(x).split("-").map(Number);return y*10000+m*100+d};
+t.xp=Math.max(t.xp||0,o.xp||0);
+if(dn(o.last)>dn(t.last)){t.last=o.last;t.streak=o.streak||0}else if(o.last===t.last)t.streak=Math.max(t.streak||0,o.streak||0);
+["sc","gr","mseen","lvl"].forEach(k=>Object.keys(o[k]||{}).forEach(x=>{if(o[k][x])t[k][x]=o[k][x]}));
+["ls","ext"].forEach(k=>Object.keys(o[k]||{}).forEach(x=>{t[k][x]=Math.max(t[k][x]||0,o[k][x]||0)}));
+Object.keys(o.wr||{}).forEach(x=>{const a=t.wr[x],b=o.wr[x];if(!a||(b.done&&!a.done)||(!a.done&&(b.t||"").length>(a.t||"").length))t.wr[x]=b});
+Object.keys(o.w||{}).forEach(x=>{const a=t.w[x],b=o.w[x];if(!a||b.b>a.b||(b.b===a.b&&b.d>a.d))t.w[x]=b});
+Object.keys(o.err||{}).forEach(x=>{if(!t.err[x])t.err[x]=o.err[x]});
+Object.keys(o.grR||{}).forEach(x=>{const a=t.grR[x],b=o.grR[x];if(!a||b.b>a.b)t.grR[x]=b});
+Object.keys(o.grLog||{}).forEach(x=>{t.grLog[x]=Object.assign({},o.grLog[x],t.grLog[x]||{})});
+const key=m=>[m.d,m.pct,m.lvl,m.k,m.s].join("|");
+["mock","lvlLog"].forEach(k=>{const seen=new Set((t[k]||[]).map(key));(o[k]||[]).forEach(m=>{if(!seen.has(key(m))){t[k].push(m);seen.add(key(m))}});t[k]=t[k].slice(-40)});
+if(o.a2!=null)t.a2=Math.max(t.a2||0,o.a2);if(o.ret&&o.ret.n>(t.ret.n||0))t.ret=o.ret;save()}
+function vSync(){return '<button class="back" onclick="go(\'home\')">‹ Hôm nay</button><h1 class="pg">Chuyển tiến độ</h1>'+
+'<p class="note">App không có tài khoản hay máy chủ, nên tiến độ nằm trong trình duyệt của từng máy. Để chuyển, bạn tạo một <b>mã chuyển</b> ở máy cũ rồi dán vào máy mới. Mã chứa toàn bộ tiến độ (từ vựng, ngữ pháp, bài viết nháp...), nên khá dài: hãy gửi cho chính bạn qua Zalo, Messenger hoặc email, hoặc tải thành file.</p>'+
+'<div class="card"><b>Bước 1. Ở máy đang có tiến độ</b><div class="row" style="margin-top:8px"><button class="btn hv" onclick="syncMake()">Tạo mã chuyển</button></div>'+
+(SYNC.code?'<textarea id="scode" readonly style="min-height:120px;font-family:monospace;font-size:12px">'+esc(SYNC.code)+'</textarea><p class="note">'+SYNC.code.length.toLocaleString()+' ký tự. Mã được tạo lúc '+new Date().toLocaleTimeString()+'.</p><div class="row"><button class="btn" onclick="syncCopy()">Sao chép mã</button><button class="btn ghost" onclick="syncFile()">Tải file mã</button></div>':"")+'</div>'+
+'<div class="card"><b>Bước 2. Ở máy mới</b><p class="note">Dán mã vào đây, hoặc chọn file mã đã tải. Tiến độ sẽ được <b>gộp</b>: mỗi phần giữ kết quả tốt hơn của hai máy, không xóa gì.</p><textarea id="sin" placeholder="Dán mã bắt đầu bằng WT1. ở đây..." style="min-height:100px;font-family:monospace;font-size:12px"></textarea><div class="row" style="margin-top:8px"><button class="btn hv" onclick="syncImport()">Nhập tiến độ</button><label class="btn ghost" style="cursor:pointer">Chọn file<input type="file" accept=".txt,text/plain" style="display:none" onchange="syncReadFile(this)"></label></div>'+(SYNC.msg?'<div class="fb '+(SYNC.ok?"ok":"bad")+'">'+esc(SYNC.msg)+'</div>':"")+'</div>'+
+'<p class="note">Mẹo: học chủ yếu trên một máy, và tạo mã mới mỗi lần đổi sang máy kia. Muốn đồng bộ tự động bằng một mã ngắn thì app cần có máy chủ (ví dụ Firebase), có thể làm ở bản sau.</p>'}
+async function syncMake(){try{SYNC.code=await makeCode();SYNC.msg="";render()}catch(e){toast("Không tạo được mã: "+e.message)}}
+async function syncCopy(){try{await navigator.clipboard.writeText(SYNC.code);toast("Đã sao chép mã")}catch(e){const t=document.getElementById("scode");if(t){t.select();try{document.execCommand("copy");toast("Đã sao chép mã")}catch(x){toast("Hãy bôi đen mã và sao chép thủ công")}}}}
+function syncFile(){const b=new Blob([SYNC.code],{type:"text/plain"});const a=document.createElement("a");const d=new Date();a.href=URL.createObjectURL(b);a.download="worktalk-tien-do-"+d.getFullYear()+(d.getMonth()+1)+d.getDate()+".txt";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+async function syncImport(txt){const v=txt!=null?txt:(document.getElementById("sin")||{}).value;if(!v||!v.trim()){toast("Hãy dán mã trước");return}
+try{const o=await readCode(v);const before=learned();mergeS(o);SYNC.ok=true;SYNC.msg="Đã gộp tiến độ từ mã tạo lúc "+new Date(o.at).toLocaleString()+". Từ đã thuộc: "+before+" → "+learned()+"."}catch(e){SYNC.ok=false;SYNC.msg="Không đọc được mã. "+(e.message||"")}render()}
+function syncReadFile(inp){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>syncImport(String(r.result));r.readAsText(f)}
 
 render();
 </script>
