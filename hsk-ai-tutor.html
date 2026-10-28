@@ -600,6 +600,7 @@ function loadVoices(){if(HAS_TTS)VOICES=speechSynthesis.getVoices()||[]}
 function zhVoice(){return VOICES.find(v=>/zh[-_]CN/i.test(v.lang))||VOICES.find(v=>/^zh/i.test(v.lang)&&!/HK|TW/i.test(v.lang))||VOICES.find(v=>/^(zh|cmn)/i.test(v.lang))}
 if(HAS_TTS){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;setTimeout(loadVoices,500);setTimeout(loadVoices,2000)}
 function speak(text,rate=.8){
+  seqId++;
   if(!HAS_TTS){toast('Trình duyệt này không có chức năng đọc. Hãy mở bằng Safari (iPhone) hoặc Chrome (Android).');return}
   loadVoices();
   const v=zhVoice();
@@ -667,8 +668,8 @@ function startSess(extra=0){
 }
 window.startSess=startSess;
 window.endSess=()=>{sess=null;render()};
-window.flip=()=>{if(!sess||sess.flip)return;sess.flip=true;render();speak(sess.q[sess.i].h)};
-window.rate=(r)=>{
+window.flip=()=>{if(!sess||sess.flip)return;sess.flip=true;render();const w=sess.q[sess.i];speakSeq([{t:w.h},{t:w.ex}],1)};
+window.rate=(r)=>{stopSeq();
   const w=sess.q[sess.i],t=today();let c=S.cards[w.id];
   if(!c){c=S.cards[w.id]={box:0,due:t,wrong:0,first:t};
     if(sess.extra>0&&newQuota()===0)sess.extra--; else S.newLog[t]=(S.newLog[t]||0)+1;}
@@ -1280,7 +1281,7 @@ const L4G=[
   ()=>{const ns=['五','六','七','八','九','十'],n=pick(ns);return {s:`我女儿今年${n}岁了。`,q:'他女儿几岁了？',ans:n+'岁',others:shuffle(ns.filter(x=>x!==n)).slice(0,2).map(x=>x+'岁'),vi:`Năm nay con gái tôi ${NUMV[n]} tuổi.`}},
   ()=>{const T=pick([['火车','tàu hỏa'],['出租车','taxi']]);return {s:`我爸爸坐${T[0]}去上班。`,q:'他爸爸怎么去上班？',ans:'坐'+T[0],others:['坐飞机',T[0]==='火车'?'坐出租车':'坐火车'],vi:`Bố tôi đi làm bằng ${T[1]}.`}}];
 const PARTS=[
-  {id:'L1',sec:'L',name:'Nghe · Phần 1',guide:'Nghe một cụm từ (phát 2 lần). Chọn ✓ nếu khớp với tranh, ✗ nếu không khớp.'},
+  {id:'L1',sec:'L',name:'Nghe · Phần 1',guide:'Nghe một cụm từ. Chọn ✓ nếu khớp với tranh, ✗ nếu không khớp.'},
   {id:'L2',sec:'L',name:'Nghe · Phần 2',guide:'Nghe một câu, chọn tranh đúng.'},
   {id:'L3',sec:'L',name:'Nghe · Phần 3',guide:'Nghe một đoạn hội thoại (hai giọng), chọn tranh đúng.'},
   {id:'L4',sec:'L',name:'Nghe · Phần 4',guide:'Nghe một câu và một câu hỏi, chọn đáp án đúng.'},
@@ -1330,7 +1331,7 @@ function tick(){if(!X||X.done)return;const left=Math.max(0,Math.round((X.end-Dat
   if(el){el.textContent='⏱ '+fmt(left);el.classList.toggle('late',left<300)}if(left<=0){xSubmit(true)}}
 window.xStart=()=>{const py=document.getElementById('xpy');X={qs:buildExam(),i:0,py:py?py.checked:true,end:Date.now()+35*60*1000,done:false};
   clearInterval(xTimer);xTimer=setInterval(tick,1000);renderExam();xPlay()};
-function xPlay(){const q=X&&X.qs[X.i];if(q&&q.audio&&!X.done)speakSeq(q.audio)}
+function xPlay(){const q=X&&X.qs[X.i];if(q&&q.audio&&!X.done)speakSeq(q.audio,1)}
 window.xReplay=()=>{const q=X.qs[X.i];if(q.audio)speakSeq(q.audio,1)};
 window.xPick=(k)=>{X.qs[X.i].pick=k;renderExam()};
 window.xGo=(d)=>{stopSeq();X.i=Math.max(0,Math.min(X.qs.length-1,X.i+d));renderExam();xPlay();window.scrollTo(0,0)};
@@ -1405,7 +1406,7 @@ function renderExam(){
     <div class="bar"><i style="width:${answered/X.qs.length*100}%"></i></div>
     <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:12px"><b>${pt.name}</b><span class="small muted">Câu ${X.i+1}/40</span></div>
     ${firstOfPart?`<div class="note tone" style="margin-top:8px"><span style="color:var(--ink)">${pt.guide}</span></div>`:`<p class="small muted" style="margin:4px 0 0">${pt.guide}</p>`}
-    ${q.audio?`<div style="text-align:center;margin:12px 0 4px"><button class="btn soft" onclick="xReplay()">🔊 Nghe lại</button><div class="small muted" style="margin-top:4px">App tự phát 2 lần như đề thật.</div></div>`:''}
+    ${q.audio?`<div style="text-align:center;margin:12px 0 4px"><button class="btn soft" onclick="xReplay()">🔊 Nghe lại</button><div class="small muted" style="margin-top:4px">App tự phát 1 lần. Cần thì bấm Nghe lại.</div></div>`:''}
     <section class="q-prompt" style="padding-top:8px">${qBody(q)}</section>
     <div class="${cls}">${optHtml}</div>
     <div class="row" style="margin-top:14px"><button class="btn ghost" ${X.i===0?'disabled':''} onclick="xGo(-1)">← Câu trước</button>
