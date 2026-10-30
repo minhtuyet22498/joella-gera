@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Today Checklist</title>
+<style>
+:root{
+  --bg:#EDF0F3; --surface:#FFFFFF; --ink:#1B2A3A; --muted:#5E6B7A; --line:#D6DCE3;
+  --accent:#1F6F78; --accent-soft:#DCEDEE;
+  --red:#B8322A; --red-soft:#F7E1DF; --amber:#9A6412; --amber-soft:#F8EBD3;
+  --chip:#E6EAEF; --done:#8A95A2;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121821; --surface:#1A222D; --ink:#E4E9EF; --muted:#9AA6B4; --line:#2C3644;
+    --accent:#5FB7C0; --accent-soft:#1D3337;
+    --red:#F07C72; --red-soft:#3A2120; --amber:#E2B157; --amber-soft:#3A2D16;
+    --chip:#25303D; --done:#6B7684; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121821; --surface:#1A222D; --ink:#E4E9EF; --muted:#9AA6B4; --line:#2C3644;
+  --accent:#5FB7C0; --accent-soft:#1D3337;
+  --red:#F07C72; --red-soft:#3A2120; --amber:#E2B157; --amber-soft:#3A2D16;
+  --chip:#25303D; --done:#6B7684; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:28px 18px 64px}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Header */
+header{margin-bottom:22px}
+.dayname{font-size:15px;color:var(--muted);margin:0}
+.date{font-size:44px;line-height:1.05;font-weight:700;letter-spacing:-.02em;margin:2px 0 14px;font-variant-numeric:tabular-nums}
+.progress{display:flex;align-items:center;gap:12px}
+.bar{flex:1;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.bar span{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .3s}
+.stat{font-size:14px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.stat b{color:var(--ink)}
+
+.notice{background:var(--amber-soft);color:var(--amber);border-radius:6px;padding:8px 12px;font-size:14px;margin-bottom:16px}
+.notice[hidden]{display:none}
+
+/* Add */
+.add{display:grid;grid-template-columns:1fr 150px auto;gap:8px;margin-bottom:26px}
+.add input{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:10px 12px}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:9px 14px;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .btn.primary{color:#0E1A1C}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.primary{color:#0E1A1C}}
+.btn:hover{border-color:var(--accent)}
+
+/* Sections */
+section{margin-bottom:22px}
+section h2{font-size:16px;font-weight:650;margin:0 0 6px;display:flex;align-items:baseline;gap:8px}
+section h2 .count{font-size:13px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
+section.overdue h2{color:var(--red)}
+section.today h2{color:var(--amber)}
+ul{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+section.overdue ul{border-left:4px solid var(--red)}
+section.today ul{border-left:4px solid var(--amber)}
+li{display:grid;grid-template-columns:auto 1fr auto auto;gap:4px 12px;padding:11px 12px;border-top:1px solid var(--line);align-items:start}
+li:first-child{border-top:0}
+li input[type=checkbox]{width:19px;height:19px;margin:2px 0 0;accent-color:var(--accent);cursor:pointer}
+.t{font-weight:500;overflow-wrap:anywhere}
+.due{text-align:right;font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.late{display:block;font-size:12px;color:var(--red);font-weight:600}
+section.today .due{color:var(--amber);font-weight:600}
+.del{border:0;background:none;color:var(--muted);cursor:pointer;padding:0 2px;font-size:18px;line-height:1;opacity:.5}
+li:hover .del,.del:focus-visible{opacity:1}
+.meta{grid-column:2/-1;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:12.5px;color:var(--muted)}
+.chip{background:var(--chip);border-radius:4px;padding:1px 7px;font-weight:600;color:var(--ink);text-decoration:none;font-variant-numeric:tabular-nums}
+a.chip:hover{background:var(--accent-soft);color:var(--accent)}
+.carry{background:var(--amber-soft);color:var(--amber);border-radius:4px;padding:1px 7px;font-weight:600}
+section.done .t,section.done .due{text-decoration:line-through;color:var(--done)}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:8px;padding:22px;text-align:center;color:var(--muted)}
+
+/* Sync panel */
+details.sync{margin-top:36px;border-top:1px solid var(--line);padding-top:16px}
+details.sync summary{cursor:pointer;font-weight:600}
+details.sync p{color:var(--muted);font-size:14px;margin:8px 0 12px}
+.sync h3{font-size:14px;margin:16px 0 6px}
+.sync textarea{width:100%;min-height:84px;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:10px;font-size:12.5px;word-break:break-all;resize:vertical}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.msg{font-size:13px;color:var(--accent);min-height:1.4em;margin-top:6px}
+.msg.err{color:var(--red)}
+
+@media (max-width:560px){
+  .date{font-size:34px}
+  .add{grid-template-columns:1fr 1fr}
+  .add .title{grid-column:1/-1}
+}
+@media (prefers-reduced-motion:reduce){.bar span{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="dayname" id="dayname"></p>
+    <h1 class="date" id="date"></h1>
+    <div class="progress">
+      <div class="bar" aria-hidden="true"><span id="bar" style="width:0"></span></div>
+      <div class="stat" id="stat"></div>
+    </div>
+  </header>
+
+  <div class="notice" id="notice" role="status" hidden>Trình duyệt không cho lưu dữ liệu, danh sách chỉ giữ đến khi đóng trang. Dùng mã tiến độ bên dưới để mang đi.</div>
+
+  <div class="add">
+    <input class="title" id="fTitle" autocomplete="off" placeholder="Thêm việc, bắt đầu bằng động từ" aria-label="Tên việc">
+    <input id="fDue" type="date" aria-label="Hạn">
+    <button class="btn primary" id="addBtn" type="button">Thêm việc</button>
+  </div>
+
+  <main id="list"></main>
+
+  <details class="sync">
+    <summary>Mã tiến độ (chuyển sang trình duyệt khác)</summary>
+    <p>Dữ liệu chỉ lưu trong trình duyệt này. Khi đổi máy hoặc trình duyệt, tạo mã ở đây, copy, rồi dán vào ô “Nhập mã” ở trình duyệt kia. Ô nhập cũng nhận danh sách JSON.</p>
+
+    <h3>Xuất mã</h3>
+    <textarea id="outCode" readonly placeholder="Bấm “Tạo mã” để lấy mã tiến độ"></textarea>
+    <div class="actions">
+      <button class="btn" id="genBtn" type="button">Tạo mã</button>
+      <button class="btn primary" id="copyBtn" type="button">Copy mã</button>
+    </div>
+
+    <h3>Nhập mã</h3>
+    <textarea id="inCode" placeholder="Dán mã tiến độ vào đây"></textarea>
+    <div class="actions">
+      <button class="btn primary" id="mergeBtn" type="button">Gộp vào danh sách</button>
+      <button class="btn" id="replaceBtn" type="button">Thay toàn bộ danh sách</button>
+    </div>
+    <div class="msg" id="syncMsg" role="status"></div>
+  </details>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var KEY = "today-checklist-items";
+  var CODE_PREFIX = "TC1.";
+  var SOURCES = { jira:"Jira", hub:"Product Hub", memory:"Lịch", manual:"Tự thêm" };
+  var DAYS = ["Chủ nhật","Thứ Hai","Thứ Ba","Thứ Tư","Thứ Năm","Thứ Sáu","Thứ Bảy"];
+  var DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+  var items = [];
+  var storageOk = true;
+  var today = "";
+
+  /* ---------- Date helpers (local time) ---------- */
+  function pad(n){ return (n < 10 ? "0" : "") + n; }
+  function fmt(d){ return d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate()); }
+  function parse(s){ var p = s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+  function diffDays(a, b){ // b - a, in whole days
+    var A = parse(a), B = parse(b);
+    return Math.round((Date.UTC(B.getFullYear(),B.getMonth(),B.getDate()) - Date.UTC(A.getFullYear(),A.getMonth(),A.getDate())) / 864e5);
+  }
+  function ddmm(s){ var p = s.split("-"); return p[2] + "/" + p[1]; }
+  function weekEnd(t){
+    var d = parse(t), dow = d.getDay();
+    var add = (5 - dow + 7) % 7; if (add === 0) add = 7; // Friday → next Friday
+    d.setDate(d.getDate() + add); return fmt(d);
+  }
+
+  /* ---------- Storage ---------- */
+  function load(){
+    try {
+      var raw = localStorage.getItem(KEY);
+      var arr = raw ? JSON.parse(raw) : [];
+      items = Array.isArray(arr) ? arr.map(normalize).filter(Boolean) : [];
+    } catch(e){ storageOk = false; items = items || []; }
+  }
+  function save(){
+    try { localStorage.setItem(KEY, JSON.stringify(items)); storageOk = true; }
+    catch(e){ storageOk = false; }
+    document.getElementById("notice").hidden = storageOk;
+  }
+
+  function uid(){ return "i" + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+  function normalize(o){
+    if (!o || typeof o !== "object") return null;
+    var title = typeof o.title === "string" ? o.title.trim() : "";
+    if (!title) return null;
+    var done = o.done === true;
+    var doneAt = (typeof o.done_at === "string" && DATE_RE.test(o.done_at)) ? o.done_at : (done ? today : "");
+    return {
+      id: (typeof o.id === "string" && o.id) ? o.id : uid(),
+      title: title,
+      source: SOURCES[o.source] ? o.source : "manual",
+      ref: typeof o.ref === "string" ? o.ref.trim() : "",
+      link: typeof o.link === "string" ? o.link.trim() : "",
+      due: (typeof o.due === "string" && DATE_RE.test(o.due)) ? o.due : "",
+      added: (typeof o.added === "string" && DATE_RE.test(o.added)) ? o.added : today,
+      done: done,
+      done_at: done ? doneAt : ""
+    };
+  }
+  function safeLink(u){ return /^https?:\/\//i.test(u) ? u : ""; }
+
+  /* ---------- Render ---------- */
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; }); }
+
+  function group(){
+    var wEnd = weekEnd(today);
+    var g = { overdue:[], today:[], week:[], later:[], nodue:[], done:[] };
+    items.forEach(function(it){
+      if (it.done){ if (it.done_at === today) g.done.push(it); return; }
+      if (!it.due) g.nodue.push(it);
+      else if (it.due < today) g.overdue.push(it);
+      else if (it.due === today) g.today.push(it);
+      else if (it.due <= wEnd) g.week.push(it);
+      else g.later.push(it);
+    });
+    var sorter = function(a,b){
+      var da = a.due || "9999-99-99", db = b.due || "9999-99-99";
+      if (da !== db) return da < db ? -1 : 1;
+      return a.title.localeCompare(b.title, "vi");
+    };
+    Object.keys(g).forEach(function(k){ g[k].sort(sorter); });
+    return g;
+  }
+
+  var SECTIONS = [
+    ["overdue","Quá hạn"], ["today","Hôm nay"], ["week","Trong tuần"],
+    ["later","Sắp tới"], ["nodue","Không deadline"], ["done","Đã xong hôm nay"]
+  ];
+
+  function rowHtml(it, key){
+    var due = "";
+    if (it.due){
+      due = ddmm(it.due);
+      if (key === "overdue") due += '<span class="late">trễ ' + diffDays(it.due, today) + ' ngày</span>';
+    }
+    var meta = [];
+    meta.push('<span>' + SOURCES[it.source] + '</span>');
+    if (!it.done && it.added < today){
+      meta.push('<span class="carry">mang sang ' + diffDays(it.added, today) + ' ngày</span>');
+    }
+    return '<li data-id="' + esc(it.id) + '">' +
+      '<input type="checkbox" ' + (it.done ? "checked" : "") + ' aria-label="Đánh dấu xong: ' + esc(it.title) + '">' +
+      '<span class="t">' + esc(it.title) + '</span>' +
+      '<span class="due">' + due + '</span>' +
+      '<button class="del" type="button" title="Xoá việc" aria-label="Xoá việc: ' + esc(it.title) + '">×</button>' +
+      '<div class="meta">' + meta.join("") + '</div>' +
+    '</li>';
+  }
+
+  function render(){
+    var now = parse(today);
+    document.getElementById("dayname").textContent = DAYS[now.getDay()];
+    document.getElementById("date").textContent = pad(now.getDate()) + "/" + pad(now.getMonth()+1) + "/" + now.getFullYear();
+
+    var g = group();
+    var open = g.overdue.length + g.today.length + g.week.length + g.later.length + g.nodue.length;
+    var doneToday = g.done.length;
+    var total = open + doneToday;
+    document.getElementById("bar").style.width = (total ? Math.round(doneToday / total * 100) : 0) + "%";
+    document.getElementById("stat").innerHTML = "Còn <b>" + open + "</b> việc, xong <b>" + doneToday + "</b> hôm nay";
+
+    var html = "";
+    SECTIONS.forEach(function(s){
+      var list = g[s[0]];
+      if (!list.length) return;
+      html += '<section class="' + s[0] + '"><h2>' + s[1] + ' <span class="count">' + list.length + '</span></h2><ul>' +
+        list.map(function(it){ return rowHtml(it, s[0]); }).join("") + '</ul></section>';
+    });
+    if (!html) html = '<div class="empty">Chưa có việc nào cho hôm nay. Thêm việc ở ô phía trên, hoặc dán mã tiến độ ở cuối trang.</div>';
+    document.getElementById("list").innerHTML = html;
+    document.getElementById("notice").hidden = storageOk;
+  }
+
+  /* ---------- Actions ---------- */
+  function find(id){ for (var i=0;i<items.length;i++) if (items[i].id === id) return items[i]; return null; }
+
+  document.getElementById("list").addEventListener("change", function(e){
+    if (e.target.type !== "checkbox") return;
+    var it = find(e.target.closest("li").dataset.id); if (!it) return;
+    it.done = e.target.checked;
+    it.done_at = it.done ? today : "";
+    save(); render();
+  });
+  document.getElementById("list").addEventListener("click", function(e){
+    var b = e.target.closest(".del"); if (!b) return;
+    var id = b.closest("li").dataset.id, it = find(id);
+    if (it && confirm("Xoá “" + it.title + "” khỏi danh sách?")){
+      items = items.filter(function(x){ return x.id !== id; });
+      save(); render();
+    }
+  });
+
+  function addItem(){
+    var tIn = document.getElementById("fTitle"), dIn = document.getElementById("fDue");
+    var title = tIn.value.trim();
+    if (!title){ tIn.focus(); return; }
+    items.push(normalize({
+      id: uid(), title: title, source: "manual", ref: "", link: "",
+      due: dIn.value, added: today, done: false, done_at: ""
+    }));
+    save(); render();
+    tIn.value = ""; dIn.value = ""; tIn.focus();
+  }
+  document.getElementById("addBtn").addEventListener("click", addItem);
+  ["fTitle","fDue"].forEach(function(id){
+    document.getElementById(id).addEventListener("keydown", function(e){
+      if (e.key === "Enter" && !e.isComposing){ e.preventDefault(); addItem(); }
+    });
+  });
+
+  /* ---------- Progress code ---------- */
+  function toB64(str){
+    var bytes = new TextEncoder().encode(str), bin = "";
+    for (var i=0;i<bytes.length;i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+  function fromB64(b64){
+    var bin = atob(b64), bytes = new Uint8Array(bin.length);
+    for (var i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+  function msg(text, isErr){
+    var m = document.getElementById("syncMsg");
+    m.textContent = text; m.className = "msg" + (isErr ? " err" : "");
+  }
+  function genCode(){
+    var code = CODE_PREFIX + toB64(JSON.stringify({ v:1, exported: today, items: items }));
+    document.getElementById("outCode").value = code;
+    return code;
+  }
+  function parseCode(text){
+    var s = text.trim();
+    if (!s) throw new Error("Chưa dán mã.");
+    var data;
+    if (s.charAt(0) === "[" || s.charAt(0) === "{") data = JSON.parse(s);
+    else {
+      s = s.replace(/\s+/g, "");
+      if (s.indexOf(CODE_PREFIX) === 0) s = s.slice(CODE_PREFIX.length);
+      data = JSON.parse(fromB64(s));
+    }
+    var arr = Array.isArray(data) ? data : (data && Array.isArray(data.items) ? data.items : null);
+    if (!arr) throw new Error("Mã không đúng định dạng.");
+    return arr.map(normalize).filter(Boolean);
+  }
+
+  document.getElementById("genBtn").addEventListener("click", function(){
+    genCode(); msg("Đã tạo mã cho " + items.length + " việc.");
+  });
+  document.getElementById("copyBtn").addEventListener("click", function(){
+    var ta = document.getElementById("outCode");
+    var code = genCode();
+    function fallback(){
+      ta.focus(); ta.select();
+      try { document.execCommand("copy"); msg("Đã copy mã."); }
+      catch(e){ msg("Không copy tự động được. Chọn mã trong ô và copy thủ công.", true); }
+    }
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(code).then(function(){ msg("Đã copy mã."); }, fallback);
+    } else fallback();
+  });
+  document.getElementById("mergeBtn").addEventListener("click", function(){
+    try {
+      var incoming = parseCode(document.getElementById("inCode").value);
+      var added = 0, updated = 0;
+      incoming.forEach(function(n){
+        var cur = find(n.id);
+        if (!cur){ items.push(n); added++; return; }
+        // Giữ ngày vào danh sách sớm nhất; đã xong ở bất kỳ bên nào thì tính là xong
+        cur.title = n.title; cur.source = n.source; cur.ref = n.ref; cur.link = n.link; cur.due = n.due;
+        if (n.added < cur.added) cur.added = n.added;
+        if (n.done && !cur.done){ cur.done = true; cur.done_at = n.done_at; }
+        updated++;
+      });
+      save(); render();
+      document.getElementById("inCode").value = "";
+      msg("Đã gộp: thêm " + added + " việc, cập nhật " + updated + " việc.");
+    } catch(e){ msg(e.message && e.message.indexOf("Chưa") === 0 ? e.message : "Mã không hợp lệ. Kiểm tra lại đã copy đủ mã chưa.", true); }
+  });
+  document.getElementById("replaceBtn").addEventListener("click", function(){
+    try {
+      var incoming = parseCode(document.getElementById("inCode").value);
+      if (!confirm("Thay toàn bộ " + items.length + " việc hiện tại bằng " + incoming.length + " việc trong mã?")) return;
+      items = incoming; save(); render();
+      document.getElementById("inCode").value = "";
+      msg("Đã thay danh sách bằng " + incoming.length + " việc từ mã.");
+    } catch(e){ msg(e.message && e.message.indexOf("Chưa") === 0 ? e.message : "Mã không hợp lệ. Kiểm tra lại đã copy đủ mã chưa.", true); }
+  });
+
+  /* ---------- Day rollover ---------- */
+  function tick(){
+    var t = fmt(new Date());
+    if (t !== today){ today = t; render(); }
+  }
+  document.addEventListener("visibilitychange", function(){ if (!document.hidden){ load(); today = ""; tick(); } });
+  setInterval(tick, 60000);
+
+  today = fmt(new Date());
+  load();
+  save();
+  render();
+})();
+</script>
+</body>
+</html>
