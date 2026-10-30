@@ -3,6 +3,10 @@
 Bộ sưu tập web app nhỏ, mỗi app là một file HTML duy nhất. Mở bằng trình duyệt điện thoại hoặc máy tính, không cần cài đặt.
  
 🌐 Trang chính: https://minhtuyet22498.github.io/joella-gera/
+## Today CheckList
+- Tự quản lí check list bản thân
+
+▶️ **[Mở app](https://minhtuyet22498.github.io/joella-gera/today-checklist.html)**
  
 ## 📚 Học tập
  
