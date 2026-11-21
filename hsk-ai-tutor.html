@@ -36,7 +36,7 @@ main{max-width:640px;margin:0 auto;padding:18px 16px calc(100px + env(safe-area-
 
 /* tabs */
 .tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--paper);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center}
-.tabs button{flex:1;max-width:124px;background:none;border:0;padding:4px 0;color:var(--muted);font-size:12px;font-weight:500;display:flex;flex-direction:column;align-items:center;cursor:pointer;border-radius:10px}
+.tabs button{flex:1;min-width:0;max-width:110px;background:none;border:0;padding:4px 0;color:var(--muted);font-size:11px;font-weight:500;display:flex;flex-direction:column;align-items:center;cursor:pointer;border-radius:10px;white-space:nowrap}
 .tabs .ic{font-family:var(--han);font-size:23px;line-height:1.25;font-weight:700}
 .tabs button[aria-current="true"]{color:var(--jade-2)}
 .tabs button[aria-current="true"] .ic{color:var(--seal)}
@@ -123,6 +123,14 @@ p{margin:0 0 10px}
 .ok{color:var(--jade)}
 .bad{color:var(--seal);text-decoration:underline wavy;text-underline-offset:6px;text-decoration-thickness:1.5px}
 
+/* radicals */
+.rad-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
+.rad-card{display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;padding:12px 6px 10px;border:1px solid var(--line);border-radius:14px;background:var(--paper);cursor:pointer;font:inherit;color:inherit;line-height:1.3}
+.rad-card.seen{border-color:var(--jade)}
+.rad-r{font-size:38px;font-weight:700;color:var(--seal);line-height:1.25}
+.rad-card b{font-size:13px}
+.hl{color:var(--seal)}
+.chip.rad-ch{font-size:22px;padding:2px 12px}
 /* read */
 .rd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 .rd-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--paper);cursor:pointer;font:inherit;color:inherit}
@@ -251,6 +259,7 @@ select{font:inherit;padding:8px 10px;border-radius:10px;border:1.5px solid var(-
 <main id="view"></main>
 <nav class="tabs" aria-label="Chức năng">
   <button data-tab="learn"><span class="ic">学</span>Học</button>
+  <button data-tab="rad"><span class="ic">部</span>Bộ thủ</button>
   <button data-tab="speak"><span class="ic">说</span>Nói</button>
   <button data-tab="analyze"><span class="ic">读</span>Đọc</button>
   <button data-tab="test"><span class="ic">考</span>Thi thử</button>
@@ -668,6 +677,7 @@ const BADGES=[
   {id:'pr4',ic:'音',name:'Phát âm chuẩn',desc:'Qua cả 4 chặng phát âm',ok:()=>S.pron&&S.pron.stage>=4},
   {id:'ex120',ic:'证',name:'Đạt thi thử',desc:'Thi thử chuẩn HSK1 từ 120/200',ok:()=>(S.stats.exams||[]).some(e=>e.l+e.r>=120)},
   {id:'rd12',ic:'读',name:'Mọt sách',desc:'Đọc hết 12 bài đọc',ok:()=>READS.every(r=>(S.reads||{})[r.id])},
+  {id:'rad40',ic:'部',name:'Thông bộ thủ',desc:'Xem hết 40 bộ thủ',ok:()=>RADS.every(R=>(S.radSeen||{})[R.r])},
   {id:'an10',ic:'析',name:'Soi ngữ pháp',desc:'Phân tích 10 câu',ok:()=>S.stats.analyze>=10},
 ];
 function checkBadges(){
@@ -679,8 +689,8 @@ function checkBadges(){
 /* ---------- router ---------- */
 let TAB='learn';
 function go(tab){TAB=tab;if(typeof stopSeq==='function')stopSeq();document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===tab));render();window.scrollTo(0,0)}
-document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{if(b.dataset.tab==='speak'&&TAB==='speak'){spHome();return}if(b.dataset.tab==='analyze'&&TAB==='analyze'){rd.open=null;rd.info=null;stopSeq();render();return}if(b.dataset.tab!==TAB||TAB==='learn'){if(TAB==='speak')stopRec();go(b.dataset.tab)}});
-function render(){meters();({learn:renderLearn,speak:renderSpeak,analyze:renderReadTab,test:renderTest,me:renderMe})[TAB]()}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{if(b.dataset.tab==='speak'&&TAB==='speak'){spHome();return}if(b.dataset.tab==='rad'&&TAB==='rad'){rq.open=null;rq.quiz=null;render();return}if(b.dataset.tab==='analyze'&&TAB==='analyze'){rd.open=null;rd.info=null;stopSeq();render();return}if(b.dataset.tab!==TAB||TAB==='learn'){if(TAB==='speak')stopRec();go(b.dataset.tab)}});
+function render(){meters();({learn:renderLearn,speak:renderSpeak,analyze:renderReadTab,rad:renderRad,test:renderTest,me:renderMe})[TAB]()}
 
 /* ================= HỌC (flashcards + SRS) ================= */
 let sess=null;
@@ -785,6 +795,7 @@ function renderCard(){
           <button class="icon-btn" aria-label="Nghe câu ví dụ" onclick="event.stopPropagation();say(BY['${w.h}'].ex)">🔊</button></div>
         </div>
         <div class="row" style="justify-content:center;gap:18px"><button class="link" onclick="event.stopPropagation();say('${w.h}')">🔊 Nghe lại</button><button class="link" onclick="event.stopPropagation();openWrite('${w.h}')">✍️ Tập viết</button></div>
+        ${radChips(w.h)?`<div class="chips" style="justify-content:center;margin:10px 0 0">${radChips(w.h)}</div>`:''}
         <div id="write-box" onclick="event.stopPropagation()"></div>
       </div>
     </article>
@@ -1428,6 +1439,7 @@ function winfoHtml(){
   if(!w)return '<div id="winfo"></div>';
   return `<div id="winfo" class="winfo"><span class="han" style="font-size:30px;font-weight:700">${w.h}</span><span style="flex:1"><b>${esc(w.p)}</b><br><span class="small">${esc(w.m)}</span></span>
     <button class="icon-btn" aria-label="Nghe" onclick="say('${w.h}')">🔊</button>
+    ${[...w.h].some(c=>CHAR2RAD[c]!==undefined)?`<button class="icon-btn" aria-label="Xem bộ thủ" onclick="openRad(CHAR2RAD[[...'${w.h}'].find(c=>CHAR2RAD[c]!==undefined)])" style="font-family:var(--han)">部</button>`:''}
     ${BY[w.h]&&!S.cards[w.h]?`<button class="btn soft" style="min-height:40px;padding:6px 10px;font-size:13px" onclick="wAdd('${w.h}')">+ Ôn</button>`:''}
     <button class="icon-btn" aria-label="Đóng" onclick="rd.info=null;document.getElementById('winfo').outerHTML='<div id=&quot;winfo&quot;></div>'">✕</button></div>`;
 }
@@ -1673,6 +1685,75 @@ function renderExam(){
       <div class="qgrid">${X.qs.map((x,i)=>`<button class="${x.pick!==null?'done':''} ${i===X.i?'cur':''}" onclick="xJump(${i})">${i+1}</button>`).join('')}</div>
       <button class="btn gold block" style="margin-top:10px" onclick="xSubmit()">Nộp bài</button></details>`;
   tick();
+}
+
+/* ================= BỘ THỦ ================= */
+const RADS=[["口", "", "Khẩu", "miệng", 3, "bên trái hoặc bên trong", "吗呢叫名喂号吃喝商听喜哪哥只口吧唱司可后和", "Hình cái miệng. Liên quan ăn, uống, nói, gọi: 吃 ăn, 喝 uống, 叫 gọi, 唱 hát, 听 nghe. Trợ từ cuối câu 吗, 呢, 吧 cũng có 口 vì đó là âm phát ra từ miệng."], ["亻", "人", "Nhân đứng", "người", 2, "bên trái", "你他们候做作住什便件休人个今会以", "Hình người đứng. Chữ có 亻 thường nói về người và việc người làm: 你 bạn, 他 anh ấy, 做 làm. Mẹo: 休 nghỉ = người 亻 tựa gốc cây 木."], ["讠", "言", "Ngôn", "lời nói", 2, "bên trái", "谢请认识说读话语谁课", "Dạng giản thể của 言 (lời nói). Liên quan nói năng, ngôn ngữ: 说 nói, 话 lời, 语 ngữ, 请 mời, 谢 cảm ơn, 课 bài giảng."], ["木", "", "Mộc", "cây, gỗ", 4, "bên trái hoặc bên dưới", "果杯校桌椅本机样条", "Hình cái cây. Liên quan cây và đồ làm bằng gỗ: 桌 bàn, 椅 ghế, 杯 cốc, 果 quả. Mẹo: 本 gốc = cây 木 có vạch đánh dấu ở gốc."], ["日", "", "Nhật", "mặt trời, ngày", 4, "bên trái hoặc bên trên", "是明昨时星早晚日", "Hình mặt trời. Liên quan ngày, thời gian, ánh sáng: 早 sớm, 晚 muộn, 时 giờ, 昨 hôm qua. Mẹo: 明 sáng = mặt trời 日 + mặt trăng 月."], ["月", "肉", "Nguyệt / Nhục", "mặt trăng; thịt, cơ thể", 4, "bên trái hoặc bên phải", "朋期服有能脑月", "Hình mặt trăng → tháng, thời gian: 月 tháng, 期 kỳ. Lưu ý: ở nhiều chữ, 月 thật ra là biến thể của 肉 (thịt) nên liên quan cơ thể: 脑 não."], ["女", "", "Nữ", "phụ nữ", 3, "bên trái", "她好妈姐妹奶", "Hình người phụ nữ. Liên quan phụ nữ: 妈 mẹ, 姐 chị, 妹 em gái, 她 cô ấy. Mẹo: 好 tốt = mẹ 女 bên con 子."], ["心", "忄", "Tâm", "trái tim, tình cảm", 4, "bên dưới; bên trái viết 忄", "想怎您息忙", "Hình trái tim. Liên quan suy nghĩ, cảm xúc: 想 nghĩ, 忙 bận (lòng rối). Mẹo: 您 ngài = 你 đặt trên 心, gọi người khác bằng cả tấm lòng."], ["八", "", "Bát", "tám, tách ra", 2, "bên trên hoặc bên dưới", "关六八兴公", "Hai nét tách ra hai bên. Có trong các chữ 八 tám, 六 sáu, 公 chung, 关 đóng, 兴 hứng."], ["宀", "", "Miên", "mái nhà", 3, "bên trên", "客家它宜", "Hình mái nhà. Liên quan nhà cửa: 家 nhà, 客 khách (người đến nhà). Mẹo: 家 = con lợn 豕 nuôi dưới mái nhà, xưa có lợn mới thành nhà."], ["辶", "", "Sước", "bước đi", 3, "bao bên trái và dưới", "这边还道", "Hình bước chân trên đường. Liên quan đi lại, đường sá: 道 con đường, 边 bên cạnh, 还 trở về."], ["子", "", "Tử", "đứa con", 3, "bên dưới hoặc bên trái", "字学孩子", "Hình đứa trẻ. Liên quan con trẻ, học hành: 孩 trẻ con, 学 học. Mẹo: 字 chữ = đứa con 子 ngồi học dưới mái nhà 宀."], ["氵", "水", "Thủy (ba chấm thủy)", "nước", 3, "bên trái", "没汉漂水", "Ba giọt nước, dạng của 水. Liên quan nước: 汉 (sông Hán), 漂 trôi. 没 có 氵 vì nghĩa gốc là chìm xuống nước."], ["十", "", "Thập", "mười", 2, "bên dưới hoặc bên trên", "十午千半", "Số mười. Có trong 千 nghìn, 午 trưa, 半 nửa."], ["艹", "草", "Thảo", "cỏ", 3, "bên trên", "茶菜苹", "Hình cỏ non mọc. Liên quan cây cỏ, rau, trái: 茶 trà, 菜 rau, 苹 (táo)."], ["囗", "", "Vi", "vây quanh", 3, "bao quanh", "四回国", "Khung vây bốn phía. Mẹo: 国 nước = viên ngọc 玉 được giữ trong biên giới; 回 về = vòng nhỏ trong vòng lớn."], ["雨", "", "Vũ", "mưa", 8, "bên trên", "雨零雪", "Hình mưa rơi từ mây. Liên quan thời tiết: 雪 tuyết. Mẹo: 零 số không, nghĩa gốc là mưa lác đác, lẻ tẻ."], ["目", "", "Mục", "con mắt", 5, "bên trái hoặc bên dưới", "看睡真", "Hình con mắt. Liên quan nhìn: 睡 ngủ (nhắm mắt). Mẹo: 看 nhìn = bàn tay 手 che trên mắt 目 để nhìn xa."], ["土", "", "Thổ", "đất", 3, "bên trái hoặc bên dưới", "在块坐", "Hình mặt đất. Mẹo: 坐 ngồi = hai người 人 ngồi trên đất 土."], ["王", "玉", "Ngọc", "ngọc", 4, "bên trái", "现玩班", "Khi đứng bên trái, 王 là dạng của 玉 (ngọc), không phải \"vua\". Mẹo: 玩 chơi, nghĩa gốc là cầm ngọc ngắm nghía."], ["白", "", "Bạch", "màu trắng", 5, "bên trái hoặc bên trên", "的白百", "Màu trắng. Có trong 白 trắng, 百 trăm, 的."], ["大", "", "Đại", "to lớn", 3, "bên trên hoặc bên dưới", "天大太", "Hình người dang rộng tay chân → to lớn. Mẹo: 天 trời = khoảng trên đầu người 大; 太 quá = to 大 thêm một chấm."], ["巾", "", "Cân", "khăn, vải", 3, "bên phải hoặc bên dưới", "师市常", "Hình tấm khăn treo. Có trong 师 thầy, 市 chợ, 常 thường."], ["儿", "", "Nhân đi", "đôi chân người", 2, "bên dưới", "儿先元", "Hình đôi chân người đang đi. Có trong 儿 trẻ con, 先 trước, 元 đầu tiên."], ["扌", "手", "Thủ (tài gảy)", "tay", 3, "bên trái", "打找手", "Dạng của 手 (bàn tay). Liên quan việc làm bằng tay: 打 đánh, gọi (điện), 找 tìm."], ["灬", "火", "Hỏa (bốn chấm hỏa)", "lửa", 4, "bên dưới", "点热火", "Bốn chấm là ngọn lửa, dạng của 火. Liên quan lửa, nhiệt: 热 nóng, 点 (nghĩa gốc là chấm, đốt)."], ["阝", "阜 / 邑", "Phụ (trái) · Ấp (phải)", "gò đất · thành ấp", 2, "bên trái hoặc bên phải", "院那都", "Cùng hình 阝 nhưng khác nghĩa theo vị trí. Bên trái là 阜 (gò đất, công trình): 院 sân, viện. Bên phải là 邑 (thành ấp): 都 thành phố, 那."], ["饣", "食", "Thực", "ăn", 3, "bên trái", "饭饺", "Dạng của 食 (ăn uống). Liên quan đồ ăn: 饭 cơm, 饺 sủi cảo."], ["钅", "金", "Kim", "kim loại, vàng", 5, "bên trái", "钟钱", "Dạng của 金 (kim loại, vàng). Liên quan kim loại, tiền bạc: 钱 tiền, 钟 chuông, đồng hồ."], ["犭", "犬", "Khuyển", "con chó, thú vật", 3, "bên trái", "猫狗", "Dạng của 犬 (con chó). Liên quan con vật: 猫 mèo, 狗 chó."], ["门", "門", "Môn", "cánh cửa", 3, "bao bên ngoài", "间问", "Hình cánh cửa. Mẹo: 问 hỏi = cái miệng 口 ở cửa 门; 间 khoảng giữa = mặt trời 日 lọt qua khe cửa."], ["走", "", "Tẩu", "chạy, đi", 7, "bao bên trái và dưới", "起超", "Hình người đang chạy. Liên quan di chuyển: 起 dậy, 超 vượt qua (siêu thị = chợ vượt trội)."], ["见", "見", "Kiến", "nhìn thấy", 4, "bên dưới hoặc bên phải", "见觉", "Hình con mắt trên đôi chân → nhìn thấy. Có trong 见 gặp, 觉 cảm thấy."], ["广", "", "Nghiễm", "mái nhà dựa vách", 3, "bao bên trên và trái", "店床", "Mái nhà dựa vào vách. Liên quan nhà, chỗ ở: 店 cửa hàng. Mẹo: 床 giường = gỗ 木 kê dưới mái nhà."], ["欠", "", "Khiếm", "há miệng", 4, "bên phải", "欢歌", "Hình người há miệng. Liên quan phát ra âm thanh: 歌 bài hát, 欢 vui (cười há miệng)."], ["彳", "", "Xích", "bước chân trái", 3, "bên trái", "很得", "Hình bước chân. Có trong 很 rất, 得."], ["亠", "", "Đầu", "cái nắp", 2, "bên trên", "京亮", "Nét chấm và nét ngang như cái nắp. Có trong 京 kinh đô, 亮 sáng."], ["纟", "糸", "Mịch", "sợi tơ", 3, "bên trái", "给系", "Dạng của 糸 (sợi tơ). Có trong 给 cho, 关系 quan hệ (như sợi dây nối)."], ["夕", "", "Tịch", "buổi chiều tối", 3, "bên trên hoặc bên trái", "多外", "Hình trăng khuyết buổi chiều. Mẹo: 多 nhiều = hai buổi tối 夕 chồng lên nhau."], ["小", "", "Tiểu", "nhỏ", 3, "bên trên", "小少", "Nhỏ bé. Có trong 小 nhỏ, 少 ít (nhỏ thêm một nét)."]].map(([r,full,hv,vi,st,pos,chars,tip])=>({r,full,hv,vi,st,pos,chars:[...chars],tip}));
+const CHAR2RAD={};RADS.forEach((R,i)=>R.chars.forEach(c=>CHAR2RAD[c]=i));
+const radWords=(R,ch)=>WORDS.filter(w=>[...w.h].some(c=>ch?c===ch:R.chars.includes(c)));
+let rq={open:null,ch:null,quiz:null};
+window.openRad=(i)=>{rq.open=i;rq.ch=null;rq.quiz=null;S.radSeen=S.radSeen||{};const first=!S.radSeen[RADS[i].r];S.radSeen[RADS[i].r]=today();save();if(first)addXP(1);checkBadges();if(TAB!=='rad')go('rad');else{render();window.scrollTo(0,0)}};
+window.radCh=(c)=>{rq.ch=rq.ch===c?null:c;render()};
+function radChips(h){
+  const seen=new Set();
+  return [...h].map(c=>{const i=CHAR2RAD[c];if(i===undefined||seen.has(c))return '';seen.add(c);const R=RADS[i];
+    return `<button class="chip" onclick="event.stopPropagation();openRad(${i})"><span class="han">${c}</span> · bộ <span class="han">${R.r}</span> ${esc(R.hv.split(' (')[0])}</button>`}).join('');
+}
+function hlWord(h,R){return [...h].map(c=>R.chars.includes(c)?`<span class="hl">${c}</span>`:c).join('')}
+window.radQuizStart=()=>{
+  const learnedChars=new Set();WORDS.forEach(w=>{if(S.cards[w.id])[...w.h].forEach(c=>learnedChars.add(c))});
+  let pool=Object.keys(CHAR2RAD);const lp=pool.filter(c=>learnedChars.has(c));if(lp.length>=10)pool=lp;
+  const qs=shuffle(pool).slice(0,10).map(c=>{const ri=CHAR2RAD[c];const opts=shuffle([ri,...shuffle(RADS.map((_,i)=>i).filter(i=>i!==ri)).slice(0,3)]);
+    const w=WORDS.find(w=>w.h===c)||WORDS.find(w=>w.h.includes(c));return {c,ri,opts,ans:opts.indexOf(ri),pick:null,w}});
+  rq.quiz={qs,i:0,ok:0,done:false};rq.open=null;render();
+};
+window.radQPick=(k)=>{const Q=rq.quiz,q=Q.qs[Q.i];if(q.pick!==null)return;q.pick=k;if(k===q.ans){Q.ok++;addXP(1)}render()};
+window.radQNext=()=>{const Q=rq.quiz;Q.i++;if(Q.i>=Q.qs.length){Q.done=true;S.stats.radq=Math.max(S.stats.radq||0,Q.ok);save();checkBadges()}render()};
+function renderRad(){
+  if(rq.quiz)return renderRadQuiz();
+  if(rq.open!==null)return renderRadDetail();
+  const seen=S.radSeen||{},cov=Object.keys(CHAR2RAD).length;
+  $('#view').innerHTML=`<h1>Bộ thủ</h1>
+    <p class="muted small">${RADS.length} bộ thủ có trong ${cov} chữ Hán của 300 từ HSK1. Biết bộ là đoán được chữ thuộc nhóm nghĩa nào và nhớ mặt chữ nhanh hơn. Bộ dùng nhiều nhất xếp trước.</p>
+    <button class="btn block" style="margin:6px 0 14px" onclick="radQuizStart()">🎯 Luyện đoán bộ thủ (10 câu)</button>
+    <div class="rad-grid">${RADS.map((R,i)=>{const ws=radWords(R),dn=ws.filter(w=>S.cards[w.id]).length;
+      return `<button class="rad-card ${seen[R.r]?'seen':''}" onclick="openRad(${i})"><span class="rad-r han">${R.r}</span><b>${esc(R.hv)}</b><span class="small muted">${esc(R.vi)}</span>
+        <span class="small muted">${R.chars.length} chữ · ${dn}/${ws.length} từ</span><span class="bar" style="height:4px;width:100%;margin-top:4px"><i style="width:${ws.length?dn/ws.length*100:0}%"></i></span></button>`}).join('')}</div>`;
+}
+function renderRadDetail(){
+  const R=RADS[rq.open],ws=radWords(R,rq.ch);
+  $('#view').innerHTML=`<div class="sess-top"><button class="link" onclick="rq.open=null;render()">← Bộ thủ</button><span class="small muted">${rq.open+1}/${RADS.length}</span></div>
+    <section class="panel" style="display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center">
+      ${grid(R.r,96)}
+      <div><h1 style="margin:0">Bộ ${esc(R.hv)}</h1><p style="margin:2px 0 4px">${esc(R.vi)}</p>
+        <p class="small muted" style="margin:0">${R.full?`Dạng đầy đủ: <span class="han" style="font-size:18px;color:var(--ink)">${R.full}</span> · `:''}${R.st} nét · ${esc(R.pos)}</p></div>
+    </section>
+    <div class="note tone"><b>Mẹo nhớ</b><span style="color:var(--ink)">${esc(R.tip).replace(/([\u4e00-\u9fff]+)/g,'<span class="hh">$1</span>')}</span></div>
+    <h2>${R.chars.length} chữ HSK1 có bộ ${R.r}</h2>
+    <p class="small muted" style="margin-top:-4px">Chạm vào một chữ để lọc các từ chứa chữ đó.</p>
+    <div class="chips">${R.chars.map(c=>`<button class="chip rad-ch ${rq.ch===c?'on':''}" onclick="radCh('${c}')">${c}</button>`).join('')}</div>
+    <h2>Từ vựng liên quan (${ws.length})</h2>
+    <section class="panel" style="padding:4px 14px">${ws.map(w=>`<div class="w" style="grid-template-columns:96px 1fr auto"><span class="h">${hlWord(w.h,R)}</span><span class="pm"><b>${esc(w.p)}</b><br>${esc(w.m)}</span>
+      <span style="display:flex;gap:6px">${S.cards[w.id]?'':`<button class="icon-btn" style="width:auto;padding:0 8px;font-size:13px" aria-label="Thêm vào ôn" onclick="wAdd('${w.h}')">+ Ôn</button>`}<button class="icon-btn" aria-label="Nghe ${w.h}" onclick="say('${w.h}')">🔊</button></span></div>`).join('')}</section>
+    <div class="row" style="margin-top:8px">${rq.open>0?`<button class="btn ghost" onclick="openRad(${rq.open-1})">← Bộ ${RADS[rq.open-1].r}</button>`:''}${rq.open<RADS.length-1?`<button class="btn" onclick="openRad(${rq.open+1})">Bộ ${RADS[rq.open+1].r} →</button>`:''}</div>`;
+}
+function renderRadQuiz(){
+  const Q=rq.quiz;
+  if(Q.done){$('#view').innerHTML=`<section class="panel" style="text-align:center;padding:26px 16px">${grid('部',90)}
+      <div class="score" style="color:${Q.ok>=8?'var(--jade)':Q.ok>=5?'var(--gold)':'var(--seal)'}">${Q.ok}/10</div>
+      <p class="muted">${Q.ok>=8?'Rất tốt, bạn đã nhận ra bộ thủ khá chắc.':'Xem lại mẹo nhớ của các bộ hay nhầm rồi làm lại nhé.'}</p>
+      <div class="row" style="margin-top:10px"><button class="btn" onclick="radQuizStart()">Làm lại</button><button class="btn ghost" onclick="rq.quiz=null;render()">Về Bộ thủ</button></div></section>`;return}
+  const q=Q.qs[Q.i],ans=q.pick!==null,R=RADS[q.ri];
+  $('#view').innerHTML=`<div class="sess-top"><button class="link" onclick="rq.quiz=null;render()">Thoát</button><span class="small muted">Câu ${Q.i+1}/10</span></div>
+    <div class="bar"><i style="width:${Q.i*10}%"></i></div>
+    <section class="q-prompt"><p class="small muted">Chữ này thuộc bộ nào?</p>${grid(q.c,120)}
+      ${q.w?`<p class="small muted" style="margin-top:8px">trong từ <span class="han" style="color:var(--ink);font-size:18px">${q.w.h}</span> ${esc(q.w.p)} · ${esc(q.w.m)}</p>`:''}</section>
+    <div class="opts" style="grid-template-columns:1fr 1fr">${q.opts.map((ri,k)=>{let c='opt hz';if(ans&&k===q.ans)c+=' right';else if(ans&&k===q.pick)c+=' wrong';
+      return `<button class="${c}" ${ans?'disabled':''} onclick="radQPick(${k})">${RADS[ri].r}<div class="small" style="font-family:var(--ui)">${esc(RADS[ri].hv)}</div></button>`}).join('')}</div>
+    ${ans?`<div class="feedback panel"><b style="color:${q.pick===q.ans?'var(--jade)':'var(--seal)'}">${q.pick===q.ans?'Đúng!':'Chưa đúng.'}</b>
+      <p style="margin:6px 0 0"><span class="han" style="font-size:22px">${q.c}</span> thuộc bộ <span class="han" style="font-size:22px">${R.r}</span> <b>${esc(R.hv)}</b> (${esc(R.vi)}).</p>
+      <p class="small muted" style="margin:4px 0 0">${esc(R.tip)}</p></div>
+      <button class="btn block" onclick="radQNext()">${Q.i<9?'Câu tiếp':'Xem kết quả'}</button>`:''}`;
 }
 
 /* ================= THÀNH TÍCH ================= */
